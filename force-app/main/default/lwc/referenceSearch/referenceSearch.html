@@ -1,0 +1,26 @@
+<template>
+    <!-- First Card 헤더-->
+    <lightning-card title="레퍼런스 오브젝트" icon-name="standard:data_mapping">
+        <div slot="actions">
+            <lightning-button label="검색" title="search action" icon-name="utility:search" class="slds-var-m-left_x-small" onclick={handleSearchClick}></lightning-button>
+        </div>
+    </lightning-card>
+    
+    <!-- Spacing -->
+    <div class="slds-var-m-top_medium"></div>
+    
+    <!-- Second Card -->
+    <lightning-card title="Search Criteria 2" icon-name="standard:search">
+        <div class="slds-grid slds-wrap">
+            <div class="slds-col slds-size_1-of-2 slds-var-p-around_small">
+                <lightning-input type="text" label="API Version" placeholder="Enter API Version" name="ApiVersion"></lightning-input>
+            </div>
+            <div class="slds-col slds-size_1-of-2 slds-var-p-around_small">
+                <lightning-input type="text" label="Supported Calls" placeholder="Enter Supported Calls" name="SupportedCalls"></lightning-input>
+            </div>
+            <div class="slds-col slds-size_1-of-2 slds-var-p-around_small">
+                <lightning-input type="text" label="Description" placeholder="Enter Description" name="Description"></lightning-input>
+            </div>
+        </div>
+    </lightning-card>
+</template>
