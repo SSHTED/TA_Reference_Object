@@ -1,8 +1,10 @@
 <template>
     <!-- First Card 헤더-->
-    <lightning-card title="레퍼런스 오브젝트" icon-name="standard:data_mapping">
+    <lightning-card title="Reference Search" icon-name="standard:data_mapping">
         <div slot="actions">
-            <lightning-button label="검색" title="search action" icon-name="utility:search" class="slds-var-m-left_x-small" onclick={handleSearchClick}></lightning-button>
+            <lightning-button label="검색" title="search action" icon-name="utility:search" class="slds-var-m-left_x-small" onclick={btnSearch}></lightning-button>
+            <lightning-button label="초기화" title="reset action" icon-name="utility:close" class="slds-var-m-left_x-small" onclick={btnReset}></lightning-button>
+
         </div>
     </lightning-card>
     
