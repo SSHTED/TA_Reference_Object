@@ -13,24 +13,80 @@
     <div class="slds-var-m-top_medium"></div>
     
     <!-- Second Card -->
-    <lightning-card title="검색 결과" icon-name="utility:expand_alt">
-        <div class="slds-grid slds-wrap">
-            <!-- 첫 번째 행: 왼쪽 -->
-            <div class="slds-col slds-size_1-of-2 slds-var-p-around_small">
-                <lightning-input type="text" label="API Version" placeholder="Enter API Version" name="ApiVersion"></lightning-input>
-            </div>
-            <!-- 첫 번째 행: 오른쪽 -->
-            <div class="slds-col slds-size_1-of-2 slds-var-p-around_small">
-                <lightning-input type="text" label="Supported Calls" placeholder="Enter Supported Calls" name="SupportedCalls"></lightning-input>
-            </div>
-            <!-- 두 번째 행: 왼쪽 -->
-            <div class="slds-col slds-size_1-of-2 slds-var-p-around_small">
-                <lightning-input type="text" label="Description" placeholder="Enter Description" name="Description"></lightning-input>
-            </div>
-            <!-- 두 번째 행: 오른쪽(비어있음) -->
-            <div class="slds-col slds-size_1-of-2 slds-var-p-around_small">
-                <!-- 추가적인 입력 필드나 요소를 이곳에 넣으실 수 있습니다. -->
-            </div>
+    <lightning-card>
+        <div>
+            <table>
+                <thead>
+                    <!-- 1 행 -->
+                    <tr>
+                        <th scope="row">
+                            <span title="Name">이름</span>
+                        </th>
+                        <td>
+                            <lightning-input type="text" placeholder="Enter Value" name="검색"></lightning-input>
+                        </td>
+                        <th scope="row">
+                            <span title="Api Version">Api Version</span>
+                        </th>
+                        <td>
+                            <lightning-input type="text" placeholder="Enter Value" name="검색"></lightning-input>
+                        </td>
+                        <th scope="row">
+                            <span title="Remove">현재 삭제된 API</span>
+                        </th>
+                        <td>
+                            <lightning-input type="checkbox" name="Remove"></lightning-input>
+                        </td>
+                    </tr>
+                    <!-- 2 행 -->
+                    <tr>
+                        <th scope="row">
+                            <span title="Supported Calls">Supported Calls</span>
+                        </th>
+                        <td>
+                            <lightning-input type="checkbox" label="create" name="create"></lightning-input>
+                            <lightning-input type="checkbox" label="delete" name="delete"></lightning-input>
+                            <lightning-input type="checkbox" label="update" name="update"></lightning-input>
+                            <lightning-input type="checkbox" label="upsert" name="upsert"></lightning-input>
+                            <lightning-input type="checkbox" label="search" name="search"></lightning-input>
+                            <lightning-input type="checkbox" label="undelete" name="undelete"></lightning-input>                       
+                        </td>
+                        <td>
+                           <lightning-input type="checkbox" label="getDeleted" name="getDeleted"></lightning-input>
+                            <lightning-input type="checkbox" label="getUpdated" name="getUpdated"></lightning-input>
+                            <lightning-input type="checkbox" label="idEnabled" name="idEnabled"></lightning-input>
+                            <lightning-input type="checkbox" label="merge" name="merge"></lightning-input>
+                            <lightning-input type="checkbox" label="retrieve" name="retrieve"></lightning-input>
+                            <lightning-input type="checkbox" label="count" name="count"></lightning-input>
+
+                        </td>
+                        <td>
+                            <lightning-input type="checkbox" label="query" name="query"></lightning-input>
+                            <lightning-input type="checkbox" label="queryAll" name="queryAll"></lightning-input>
+                            <lightning-input type="checkbox" label="describeObject" name="describeObject"></lightning-input>
+                            <lightning-input type="checkbox" label="describeSObject" name="describeSObject"></lightning-input>
+                            <lightning-input type="checkbox" label="describeLayout" name="describeLayout"></lightning-input>
+                            <lightning-input type="checkbox" label="describeSObjects" name="describeSObjects"></lightning-input>
+                            
+                        </td>
+                        <th scope="row">
+                            <span  title="Description">Description</span>
+                        </th>
+                        <td>
+                            <lightning-input type="text" placeholder="검색" name=" "></lightning-input>
+                        </td>
+                    </tr>
+                </thead>
+            </table>
         </div>
+    </lightning-card>
+
+    
+
+
+    <!-- Spacing -->
+    <div class="slds-var-m-top_medium"></div>
+
+    <lightning-card title="검색 결과" icon-name="utility:expand_alt">
     </lightning-card>
 </template>
