@@ -23,7 +23,7 @@
                             <span title="Name">이름</span>
                         </th>
                         <td>
-                            <lightning-input type="text" placeholder="Enter Value" name="검색"></lightning-input>
+                            <lightning-input type="text" placeholder="Enter Value" name="검색" onchange={handleNameChange}></lightning-input>
                         </td>
                         <th scope="row">
                             <span  title="Description">Description</span>
@@ -38,30 +38,28 @@
                             <span title="Supported Calls">Supported Calls</span>
                         </th>
                         <td>
-                            <lightning-input type="checkbox" label="create" name="create"></lightning-input>
-                            <lightning-input type="checkbox" label="delete" name="delete"></lightning-input>
-                            <lightning-input type="checkbox" label="update" name="update"></lightning-input>
-                            <lightning-input type="checkbox" label="upsert" name="upsert"></lightning-input>
-                            <lightning-input type="checkbox" label="search" name="search"></lightning-input>
-                            <lightning-input type="checkbox" label="undelete" name="undelete"></lightning-input>                       
+                            <lightning-input type="checkbox" label="create" name="create" checked={isChecked}></lightning-input>
+                            <lightning-input type="checkbox" label="delete" name="delete" checked={isChecked}></lightning-input>
+                            <lightning-input type="checkbox" label="update" name="update" checked={isChecked}></lightning-input>
+                            <lightning-input type="checkbox" label="upsert" name="upsert" checked={isChecked}></lightning-input>
+                            <lightning-input type="checkbox" label="search" name="search" checked={isChecked}></lightning-input>
+                            <lightning-input type="checkbox" label="undelete" name="undelete" checked={isChecked}></lightning-input>                       
                         </td>
                         <td>
-                           <lightning-input type="checkbox" label="getDeleted" name="getDeleted"></lightning-input>
-                            <lightning-input type="checkbox" label="getUpdated" name="getUpdated"></lightning-input>
-                            <lightning-input type="checkbox" label="idEnabled" name="idEnabled"></lightning-input>
-                            <lightning-input type="checkbox" label="merge" name="merge"></lightning-input>
-                            <lightning-input type="checkbox" label="retrieve" name="retrieve"></lightning-input>
-                            <lightning-input type="checkbox" label="count" name="count"></lightning-input>
-
+                            <lightning-input type="checkbox" label="getDeleted" name="getDeleted" checked={isChecked}></lightning-input>
+                            <lightning-input type="checkbox" label="getUpdated" name="getUpdated" checked={isChecked}></lightning-input>
+                            <lightning-input type="checkbox" label="idEnabled" name="idEnabled" checked={isChecked}></lightning-input>
+                            <lightning-input type="checkbox" label="merge" name="merge" checked={isChecked}></lightning-input>
+                            <lightning-input type="checkbox" label="retrieve" name="retrieve" checked={isChecked}></lightning-input>
+                            <lightning-input type="checkbox" label="count" name="count" checked={isChecked}></lightning-input>
                         </td>
                         <td>
-                            <lightning-input type="checkbox" label="query" name="query"></lightning-input>
-                            <lightning-input type="checkbox" label="queryAll" name="queryAll"></lightning-input>
-                            <lightning-input type="checkbox" label="describeObject" name="describeObject"></lightning-input>
-                            <lightning-input type="checkbox" label="describeSObject" name="describeSObject"></lightning-input>
-                            <lightning-input type="checkbox" label="describeLayout" name="describeLayout"></lightning-input>
-                            <lightning-input type="checkbox" label="describeSObjects" name="describeSObjects"></lightning-input>
-                            
+                            <lightning-input type="checkbox" label="query" name="query" checked={isChecked}></lightning-input>
+                            <lightning-input type="checkbox" label="queryAll" name="queryAll" checked={isChecked}></lightning-input>
+                            <lightning-input type="checkbox" label="describeObject" name="describeObject" checked={isChecked}></lightning-input>
+                            <lightning-input type="checkbox" label="describeSObject" name="describeSObject" checked={isChecked}></lightning-input>
+                            <lightning-input type="checkbox" label="describeLayout" name="describeLayout" checked={isChecked}></lightning-input>
+                            <lightning-input type="checkbox" label="describeSObjects" name="describeSObjects" checked={isChecked}></lightning-input>
                         </td>
                         <!-- -->
                         <th scope="row">
