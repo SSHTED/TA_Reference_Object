@@ -1,5 +1,5 @@
 <template>
-    <!-- First Card 헤더-->
+    <!-- 1 Card 헤더-->
     <lightning-card title="Reference Search" icon-name="standard:document">
         <div slot="actions">
             <lightning-button-Group>
@@ -12,7 +12,7 @@
     <!-- Spacing -->
     <div class="slds-var-m-top_medium"></div>
     
-    <!-- Second Card -->
+    <!-- 2 Card -->
     <lightning-card>
         <div>
             <table>
@@ -26,16 +26,10 @@
                             <lightning-input type="text" placeholder="Enter Value" name="검색"></lightning-input>
                         </td>
                         <th scope="row">
-                            <span title="Api Version">Api Version</span>
+                            <span  title="Description">Description</span>
                         </th>
                         <td>
-                            <lightning-input type="text" placeholder="Enter Value" name="검색"></lightning-input>
-                        </td>
-                        <th scope="row">
-                            <span title="Remove">현재 삭제된 API</span>
-                        </th>
-                        <td>
-                            <lightning-input type="checkbox" name="Remove"></lightning-input>
+                            <lightning-input type="text" placeholder="검색" name=" "></lightning-input>
                         </td>
                     </tr>
                     <!-- 2 행 -->
@@ -69,11 +63,18 @@
                             <lightning-input type="checkbox" label="describeSObjects" name="describeSObjects"></lightning-input>
                             
                         </td>
+                        <!-- -->
                         <th scope="row">
-                            <span  title="Description">Description</span>
+                            <span title="Remove">현재 삭제된 API</span>
                         </th>
                         <td>
-                            <lightning-input type="text" placeholder="검색" name=" "></lightning-input>
+                            <lightning-input type="checkbox" name="Remove"></lightning-input>
+                        </td>
+                        <th scope="row">
+                            <span title="Api Version">Api Version</span>
+                        </th>
+                        <td>
+                            <lightning-input type="text" placeholder="Enter Value" name="검색"></lightning-input>
                         </td>
                     </tr>
                 </thead>
@@ -81,7 +82,53 @@
         </div>
     </lightning-card>
 
-    
+    <!-- 필터 추가 -->
+    <div slot="actions">
+        <lightning-button label="펼치기" icon-name="utility:chevrondown" onclick={handleToggleMoreFilter}></lightning-button>
+    </div>
+
+    <!-- 3 Card -->
+    <template if:true={moreFilter}>
+        <lightning-card>
+            <div>
+                <table>
+                    <thead>
+                        <!-- 1 행 -->
+                        <tr>
+                            <th scope="row">
+                                <span title="SpecialAccessRules">Special Access Rules</span>
+                            </th>
+                            <td>
+                                <lightning-input type="text" placeholder="검색" name="검색"></lightning-input>
+                            </td>
+                            <th scope="row">
+                                <span title="Usage">Usage</span>
+                            </th>
+                            <td>
+                                <lightning-input type="text" placeholder="검색" name=" "></lightning-input>
+                            </td>
+                        </tr>
+                        <!-- 2 행 -->
+                        <tr>
+                            <th scope="row">
+                                <span title="Memo">Memo</span>
+                            </th>
+                            <td>
+                                <lightning-input type="text" placeholder="검색" name=" "></lightning-input>
+                            </td>
+                            <th scope="row">
+                                <span title="Link">Docs Link</span>
+                            </th>
+                            <td>
+                                <lightning-input type="text" placeholder="Enter Value" name="검색"></lightning-input>
+                            </td>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+        </lightning-card>
+    </template>
+
 
 
     <!-- Spacing -->
