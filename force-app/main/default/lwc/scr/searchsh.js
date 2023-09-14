@@ -5,13 +5,16 @@ export function toggleMoreFilter() {
 }
 
 export function resetValue(){
+    //필터 더보기
     this.moreFilter = false;
-    this.isChecked = false;
-    console.log("resetValue : ", this.moreFilter);
-    console.log("isChecked : ", this.isChecked);
-
-    this.template.querySelectorAll('lightning-input[type="checkbox"]').forEach(checkbox => {
+    //체크박스
+    const checkboxes = this.template.querySelectorAll('.selectedCheckbox');
+    checkboxes.forEach(checkbox => {
         checkbox.checked = false;
     });
-    
+
+    console.log("moreFilter : ", this.moreFilter);
+    console.log("checkboxes : ", this.checkboxes);
+
+
 }
