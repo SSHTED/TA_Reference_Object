@@ -1,0 +1,8 @@
+.checkbox-container {
+    display: flex;
+    justify-content: space-between;
+}
+
+.checkbox-column {
+    flex: 1;
+}
