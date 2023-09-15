@@ -2,8 +2,8 @@
 <LightningComponentBundle xmlns="http://soap.sforce.com/2006/04/metadata">
     <apiVersion>58.0</apiVersion>
     <isExposed>true</isExposed>
-    <!-- <masterLabel>Reference Search</masterLabel> -->
-    <description>Reference Search</description>
+    <!-- <masterLabel>Reference Search</masterLabel>
+    <description>Reference Search</description> -->
     <targets>
         <target>lightning__RecordPage</target><!-- 레코드 페이지 -->
         <target>lightning__AppPage</target><!-- 앱 페이지 -->

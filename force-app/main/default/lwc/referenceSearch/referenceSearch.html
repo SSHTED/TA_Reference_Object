@@ -24,7 +24,7 @@
                             <span title="Name">이름</span>
                         </th>
                         <td>
-                            <lightning-input class="inputValue" type="text" placeholder="검색" name=""></lightning-input>
+                            <lightning-input class="inputValue" type="text" placeholder="검색" name="name"></lightning-input>
                         </td>
                         <th scope="row">
                             <span title="Description">Description</span>
@@ -96,7 +96,7 @@
                                     </th>
                                     <td>
                                         <lightning-input class="inputValue" type="text" placeholder="검색"
-                                            name=""></lightning-input>
+                                            name="ApiVersion"></lightning-input>
                                     </td>
                                 </tr>
                             </table>
@@ -175,7 +175,7 @@
                 </tr>
             </thead>
             <tbody>
-                <template for:each={allDataList} for:item="item">
+                <template for:each={refAllData} for:item="item">
                     <tr key={item.id}>
                         <td>{item.Name}</td>
                         <td>{item.Eng_Label__c}</td>

@@ -3,7 +3,7 @@ public class ReferenceSearch {
      * init
      */
     @RemoteAction
-    @AuraEnabled
+    @AuraEnabled(cacheable=true)
     public static Map<String, Object> getInit() {
     // public static void getInit() {
         Map<String, Object> resultMap = new Map<String, Object>();

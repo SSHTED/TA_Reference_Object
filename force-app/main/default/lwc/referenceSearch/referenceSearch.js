@@ -1,14 +1,13 @@
-import { LightningElement, api, track } from 'lwc';
+import { LightningElement, api, wire ,track } from 'lwc';
 import getInit from '@salesforce/apex/ReferenceSearch.getInit';
 // import getFilterList from '@salesforce/apex/ReferenceSearch.getFilterList';
 // import (이름가져오는함수) from '@salesforce/apex/ReferenceSearch.(이름가져오는함수)';
-import { toggleMoreFilter } from './searchsh.js'; 
-import { resetValue } from './searchsh.js'; 
-import getRefAllData from '@salesforce/apex/ReferenceSearch.getRefAllData';
+import { toggleMoreFilter, resetValue, fetchInitData  } from './searchsh.js'; 
+
+
 
 export default class ReferenceSearch extends LightningElement {
     @api title = '기본제목';
-    @wire(getRefAllData) allDataList; //getRefAllData
     @track apiversion = '';
 
     @track isKorean = false;
@@ -35,7 +34,7 @@ export default class ReferenceSearch extends LightningElement {
 
     // 입력받은 텍스트가 영어일 때 공백여부를 확인하기 위한 함수
     hasWhitespaceInMiddle() {
-        let name = this.template.querySelector('[data-id="name"]').value;
+        let name = this.template.querySelector('.inputValue').value;
         const str = name;
         let result = false;
         
@@ -56,9 +55,21 @@ export default class ReferenceSearch extends LightningElement {
 
     // this.name을 파라미터로 apex 클래스에 전달후, 응답을 받고 data를 테이블 형식으로 페이지에 렌더링
     btnSearch(event) {
-        let name = this.template.querySelector('[data-id="name"]').value;
+        let name = this.template.querySelector('.inputValue').value;
         this.isKorean = this.isKoreanText(name);
         this.isEnglish = this.isEnglishText(name);
+        
+        let supportedCalls = '';
+        const checkboxes = this.template.querySelectorAll('.selectedCheckbox');
+        console.log(checkboxes.length)
+        checkboxes.forEach(checkbox => {
+            
+            if(checkbox.checked) {
+                supportedCalls += checkbox.name + ',';
+            }
+        });
+
+        console.log("checkbox : ", supportedCalls);
 
 
 
@@ -79,7 +90,7 @@ export default class ReferenceSearch extends LightningElement {
         }
 
 
-        
+        filterGroup.supportedCalls = supportedCalls;
 
 
 
@@ -144,9 +155,8 @@ export default class ReferenceSearch extends LightningElement {
 
 
 
-
-    ///////////////////////////////////////////////////////////////////////
     moreFilter = false;
+    refAllData = [];
 
     handleToggleMoreFilter() {
         console.log("필터 토글 : handleToggleMoreFilter");  
@@ -158,6 +168,11 @@ export default class ReferenceSearch extends LightningElement {
         resetValue.call(this);
     }
 
+    connectedCallback() {
+        console.log("fetchInitData 시작 : connectedCallback"); 
 
+        fetchInitData.call(this);
+    }
 
 }
+
