@@ -13,18 +13,15 @@ export function resetValue(){
     const checkboxes = this.template.querySelectorAll('.selectedCheckbox');
     checkboxes.forEach(checkbox => {
         checkbox.checked = false;
-        console.log("checkbox : ", this.checkbox);
+        console.log("checkbox : ", checkbox.checked);
     });
     //인풋박스
     const inputboxes = this.template.querySelectorAll('.inputValue');
     inputboxes.forEach(inputbox => {
         inputbox.value = '';
+        console.log("inputbox : ", inputbox.value);
+
     });
-
-
-    console.log("moreFilter : ", this.moreFilter);
-    console.log("checkboxes : ", this.checkboxes);
-    console.log("inputboxes : ", this.inputboxes);
 
 
 }

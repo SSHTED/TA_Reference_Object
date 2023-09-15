@@ -3,15 +3,17 @@
     <lightning-card title="Reference Search" icon-name="standard:document">
         <div slot="actions">
             <lightning-button-Group>
-                <lightning-button label="검색" title="search action" icon-name="utility:search" onclick={btnSearch}></lightning-button>
-                <lightning-button label="초기화" title="reset action" icon-name="utility:close" onclick={btnReset}></lightning-button>
+                <lightning-button label="검색" title="search action" icon-name="utility:search"
+                    onclick={btnSearch}></lightning-button>
+                <lightning-button label="초기화" title="reset action" icon-name="utility:close"
+                    onclick={btnReset}></lightning-button>
             </lightning-button-Group>
         </div>
     </lightning-card>
-    
+
     <!-- Spacing -->
     <div class="slds-var-m-top_medium"></div>
-    
+
     <!-- 2 Card -->
     <lightning-card>
         <div>
@@ -50,10 +52,10 @@
                                 checked={isChecked}></lightning-input>
                         </td>
                         <td>
-                            <lightning-input class="selectedCheckbox" type="checkbox" label="getDeleted" name="getDeleted"
-                                checked={isChecked}></lightning-input>
-                            <lightning-input class="selectedCheckbox" type="checkbox" label="getUpdated" name="getUpdated"
-                                checked={isChecked}></lightning-input>
+                            <lightning-input class="selectedCheckbox" type="checkbox" label="getDeleted"
+                                name="getDeleted" checked={isChecked}></lightning-input>
+                            <lightning-input class="selectedCheckbox" type="checkbox" label="getUpdated"
+                                name="getUpdated" checked={isChecked}></lightning-input>
                             <lightning-input class="selectedCheckbox" type="checkbox" label="idEnabled" name="idEnabled"
                                 checked={isChecked}></lightning-input>
                             <lightning-input class="selectedCheckbox" type="checkbox" label="merge" name="merge"
@@ -84,7 +86,7 @@
                                         <span title="Remove">현재 삭제된 API</span>
                                     </th>
                                     <td>
-                                        <lightning-input class="selectedCheckbox" type="checkbox" name="Remove"
+                                        <lightning-input class="selectedCheckbox" type="checkbox" name=""
                                             checked={isChecked}></lightning-input>
                                     </td>
                                 </tr>
@@ -93,7 +95,8 @@
                                         <span title="Api Version">Api Version</span>
                                     </th>
                                     <td>
-                                        <lightning-input class="inputValue" type="text" placeholder="Enter Value" name="검색"></lightning-input>
+                                        <lightning-input class="inputValue" type="text" placeholder="검색"
+                                            name=""></lightning-input>
                                     </td>
                                 </tr>
                             </table>
@@ -106,7 +109,8 @@
 
     <!-- 필터 추가 -->
     <div slot="actions">
-        <lightning-button label="펼치기" icon-name="utility:chevrondown" onclick={handleToggleMoreFilter}></lightning-button>
+        <lightning-button label="펼치기" icon-name="utility:chevrondown"
+            onclick={handleToggleMoreFilter}></lightning-button>
     </div>
 
     <!-- 3 Card -->
@@ -114,20 +118,21 @@
         <lightning-card>
             <div>
                 <table>
-                    <thead>
-                        <!-- 1 행 -->
+                    <thead><!-- 1 행 -->
                         <tr>
                             <th scope="row">
                                 <span title="SpecialAccessRules">Special Access Rules</span>
                             </th>
                             <td>
-                                <lightning-input class="inputValue" type="text" placeholder="검색" name="검색"></lightning-input>
+                                <lightning-input class="inputValue" type="text" placeholder="검색"
+                                    name="검색"></lightning-input>
                             </td>
                             <th scope="row">
                                 <span title="Usage">Usage</span>
                             </th>
                             <td>
-                                <lightning-input class="inputValue" type="text" placeholder="검색" name=" "></lightning-input>
+                                <lightning-input class="inputValue" type="text" placeholder="검색"
+                                    name=" "></lightning-input>
                             </td>
                         </tr>
                         <!-- 2 행 -->
@@ -136,13 +141,14 @@
                                 <span title="Memo">Memo</span>
                             </th>
                             <td>
-                                <lightning-input class="inputValue" type="text" placeholder="검색" name=" "></lightning-input>
+                                <lightning-input class="inputValue" type="text" placeholder="검색"
+                                    name=" "></lightning-input>
                             </td>
                             <th scope="row">
                                 <span title="Link">Docs Link</span>
                             </th>
-                            <td>
-                                <lightning-input class="inputValue" type="text" placeholder="Enter Value" name="검색"></lightning-input>
+                            <td><lightning-input class="inputValue" type="text" placeholder="Enter Value"
+                                    name="검색"></lightning-input>
                             </td>
                         </tr>
                     </thead>
