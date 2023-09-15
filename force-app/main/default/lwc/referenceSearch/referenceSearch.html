@@ -3,107 +3,138 @@
     <lightning-card title="Reference Search" icon-name="standard:document">
         <div slot="actions">
             <lightning-button-Group>
-                <lightning-button label="검색" title="search action" icon-name="utility:search" onclick={btnSearch}></lightning-button>
-                <lightning-button label="초기화" title="reset action" icon-name="utility:close" onclick={btnReset}></lightning-button>
+                <lightning-button label="검색" title="search action" icon-name="utility:search"
+                    onclick={btnSearch}></lightning-button>
+                <lightning-button label="초기화" title="reset action" icon-name="utility:close"
+                    onclick={btnReset}></lightning-button>
             </lightning-button-Group>
         </div>
     </lightning-card>
-    
+
     <!-- Spacing -->
     <div class="slds-var-m-top_medium"></div>
-    
+
     <!-- 2 Card -->
     <lightning-card>
         <div>
-            <table>
-                <thead>
-                    <!-- 1 행 -->
+            <table class="table">
+                <tbody>
                     <tr>
                         <th scope="row">
                             <span title="Name">이름</span>
                         </th>
                         <td>
-                            <lightning-input type="text" placeholder="Enter Value" name="검색" onchange={handleNameChange}></lightning-input>
+                            <lightning-input class="inputValue" type="text" placeholder="검색" name=""></lightning-input>
                         </td>
                         <th scope="row">
-                            <span  title="Description">Description</span>
+                            <span title="Description">Description</span>
                         </th>
                         <td>
-                            <lightning-input type="text" placeholder="검색" name=" "></lightning-input>
+                            <lightning-input class="inputValue" type="text" placeholder="검색" name=""></lightning-input>
                         </td>
                     </tr>
-                    <!-- 2 행 -->
                     <tr>
                         <th scope="row">
                             <span title="Supported Calls">Supported Calls</span>
                         </th>
                         <td>
-                            <lightning-input type="checkbox" label="create" name="create" checked={isChecked}></lightning-input>
-                            <lightning-input type="checkbox" label="delete" name="delete" checked={isChecked}></lightning-input>
-                            <lightning-input type="checkbox" label="update" name="update" checked={isChecked}></lightning-input>
-                            <lightning-input type="checkbox" label="upsert" name="upsert" checked={isChecked}></lightning-input>
-                            <lightning-input type="checkbox" label="search" name="search" checked={isChecked}></lightning-input>
-                            <lightning-input type="checkbox" label="undelete" name="undelete" checked={isChecked}></lightning-input>                       
+                            <lightning-input class="selectedCheckbox" type="checkbox" label="create" name="create"
+                                checked={isChecked}></lightning-input>
+                            <lightning-input class="selectedCheckbox" type="checkbox" label="delete" name="delete"
+                                checked={isChecked}></lightning-input>
+                            <lightning-input class="selectedCheckbox" type="checkbox" label="update" name="update"
+                                checked={isChecked}></lightning-input>
+                            <lightning-input class="selectedCheckbox" type="checkbox" label="upsert" name="upsert"
+                                checked={isChecked}></lightning-input>
+                            <lightning-input class="selectedCheckbox" type="checkbox" label="search" name="search"
+                                checked={isChecked}></lightning-input>
+                            <lightning-input class="selectedCheckbox" type="checkbox" label="undelete" name="undelete"
+                                checked={isChecked}></lightning-input>
                         </td>
                         <td>
-                            <lightning-input type="checkbox" label="getDeleted" name="getDeleted" checked={isChecked}></lightning-input>
-                            <lightning-input type="checkbox" label="getUpdated" name="getUpdated" checked={isChecked}></lightning-input>
-                            <lightning-input type="checkbox" label="idEnabled" name="idEnabled" checked={isChecked}></lightning-input>
-                            <lightning-input type="checkbox" label="merge" name="merge" checked={isChecked}></lightning-input>
-                            <lightning-input type="checkbox" label="retrieve" name="retrieve" checked={isChecked}></lightning-input>
-                            <lightning-input type="checkbox" label="count" name="count" checked={isChecked}></lightning-input>
+                            <lightning-input class="selectedCheckbox" type="checkbox" label="getDeleted"
+                                name="getDeleted" checked={isChecked}></lightning-input>
+                            <lightning-input class="selectedCheckbox" type="checkbox" label="getUpdated"
+                                name="getUpdated" checked={isChecked}></lightning-input>
+                            <lightning-input class="selectedCheckbox" type="checkbox" label="idEnabled" name="idEnabled"
+                                checked={isChecked}></lightning-input>
+                            <lightning-input class="selectedCheckbox" type="checkbox" label="merge" name="merge"
+                                checked={isChecked}></lightning-input>
+                            <lightning-input class="selectedCheckbox" type="checkbox" label="retrieve" name="retrieve"
+                                checked={isChecked}></lightning-input>
+                            <lightning-input class="selectedCheckbox" type="checkbox" label="count" name="count"
+                                checked={isChecked}></lightning-input>
                         </td>
                         <td>
-                            <lightning-input type="checkbox" label="query" name="query" checked={isChecked}></lightning-input>
-                            <lightning-input type="checkbox" label="queryAll" name="queryAll" checked={isChecked}></lightning-input>
-                            <lightning-input type="checkbox" label="describeObject" name="describeObject" checked={isChecked}></lightning-input>
-                            <lightning-input type="checkbox" label="describeSObject" name="describeSObject" checked={isChecked}></lightning-input>
-                            <lightning-input type="checkbox" label="describeLayout" name="describeLayout" checked={isChecked}></lightning-input>
-                            <lightning-input type="checkbox" label="describeSObjects" name="describeSObjects" checked={isChecked}></lightning-input>
+                            <lightning-input class="selectedCheckbox" type="checkbox" label="query" name="query"
+                                checked={isChecked}></lightning-input>
+                            <lightning-input class="selectedCheckbox" type="checkbox" label="queryAll" name="queryAll"
+                                checked={isChecked}></lightning-input>
+                            <lightning-input class="selectedCheckbox" type="checkbox" label="describeObject"
+                                name="describeObject" checked={isChecked}></lightning-input>
+                            <lightning-input class="selectedCheckbox" type="checkbox" label="describeSObject"
+                                name="describeSObject" checked={isChecked}></lightning-input>
+                            <lightning-input class="selectedCheckbox" type="checkbox" label="describeLayout"
+                                name="describeLayout" checked={isChecked}></lightning-input>
+                            <lightning-input class="selectedCheckbox" type="checkbox" label="describeSObjects"
+                                name="describeSObjects" checked={isChecked}></lightning-input>
                         </td>
-                        <!-- -->
-                        <th scope="row">
-                            <span title="Remove">현재 삭제된 API</span>
-                        </th>
                         <td>
-                            <lightning-input type="checkbox" name="Remove"></lightning-input>
-                        </td>
-                        <th scope="row">
-                            <span title="Api Version">Api Version</span>
-                        </th>
-                        <td>
-                            <lightning-input type="text" placeholder="Enter Value" name="검색"></lightning-input>
+                            <table>
+                                <tr>
+                                    <th scope="row">
+                                        <span title="Remove">현재 삭제된 API</span>
+                                    </th>
+                                    <td>
+                                        <lightning-input class="selectedCheckbox" type="checkbox" name=""
+                                            checked={isChecked}></lightning-input>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">
+                                        <span title="Api Version">Api Version</span>
+                                    </th>
+                                    <td>
+                                        <lightning-input class="inputValue" type="text" placeholder="검색"
+                                            name=""></lightning-input>
+                                    </td>
+                                </tr>
+                            </table>
                         </td>
                     </tr>
-                </thead>
+                </tbody>
             </table>
         </div>
+
+        <!-- 필터 추가 -->
+        <div slot="actions">
+            <lightning-button label="펼치기" icon-name="utility:chevrondown"
+                onclick={handleToggleMoreFilter}></lightning-button>
+        </div>
+
     </lightning-card>
 
-    <!-- 필터 추가 -->
-    <div slot="actions">
-        <lightning-button label="펼치기" icon-name="utility:chevrondown" onclick={handleToggleMoreFilter}></lightning-button>
-    </div>
 
     <!-- 3 Card -->
     <template if:true={moreFilter}>
         <lightning-card>
             <div>
                 <table>
-                    <thead>
-                        <!-- 1 행 -->
+                    <thead><!-- 1 행 -->
                         <tr>
                             <th scope="row">
                                 <span title="SpecialAccessRules">Special Access Rules</span>
                             </th>
                             <td>
-                                <lightning-input type="text" placeholder="검색" name="검색"></lightning-input>
+                                <lightning-input class="inputValue" type="text" placeholder="검색"
+                                    name="검색"></lightning-input>
                             </td>
                             <th scope="row">
                                 <span title="Usage">Usage</span>
                             </th>
                             <td>
-                                <lightning-input type="text" placeholder="검색" name=" "></lightning-input>
+                                <lightning-input class="inputValue" type="text" placeholder="검색"
+                                    name=" "></lightning-input>
                             </td>
                         </tr>
                         <!-- 2 행 -->
@@ -112,13 +143,14 @@
                                 <span title="Memo">Memo</span>
                             </th>
                             <td>
-                                <lightning-input type="text" placeholder="검색" name=" "></lightning-input>
+                                <lightning-input class="inputValue" type="text" placeholder="검색"
+                                    name=" "></lightning-input>
                             </td>
                             <th scope="row">
                                 <span title="Link">Docs Link</span>
                             </th>
-                            <td>
-                                <lightning-input type="text" placeholder="Enter Value" name="검색"></lightning-input>
+                            <td><lightning-input class="inputValue" type="text" placeholder="Enter Value"
+                                    name="검색"></lightning-input>
                             </td>
                         </tr>
                     </thead>
@@ -133,5 +165,25 @@
     <div class="slds-var-m-top_medium"></div>
 
     <lightning-card title="검색 결과" icon-name="utility:expand_alt">
+        <table>
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Eng Label</th>
+                    <th>Kor Label</th>
+                    <th>Api Version</th>
+                </tr>
+            </thead>
+            <tbody>
+                <template for:each={dataList} for:item="item">
+                    <tr key={item.id}>
+                        <td>{item.name}</td>
+                        <td>{item.engLabel}</td>
+                        <td>{item.korLabel}</td>
+                        <td>{item.apiVersion}</td>
+                    </tr>
+                </template>
+            </tbody>
+        </table>
     </lightning-card>
 </template>
