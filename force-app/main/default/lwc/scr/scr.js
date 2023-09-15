@@ -15,6 +15,9 @@ export default class Scr extends LightningElement {
         resetValue.call(this);
     }
 
+
+    
+/*
     addFilter(){
         const self = this;
         const addFilterEl = this.template.querySelector(addFilter);
@@ -35,4 +38,5 @@ export default class Scr extends LightningElement {
     closeFilter(){
         
     }
+    */
 }
