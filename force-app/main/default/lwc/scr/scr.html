@@ -58,7 +58,7 @@
                                 <article title="Api Version">Api Version</article>
                             </div>
                         </lightning-layout-item>
-                        <lightning-layout-item size="1" padding="around-small">
+                        <lightning-layout-item flexibility="auto" padding="around-small">
                             <div class="custom-box"> <lightning-input class="inputValue" type="text" placeholder="검색"
                                     name="ApiVersion"></lightning-input>
                             </div>
@@ -237,12 +237,12 @@
                     <th>Kor Label</th>
                     <th>Api Version</th>
                     <th>Supported_Calls__c</th>
-                    <th>Description__c</th>
+                    <!-- <th>Description__c</th> -->
                     <th>Remove__c</th>
-                    <th>Supported_Calls_Description__c</th>
-                    <th>Special_Access_Rules__c</th>
-                    <th>Usage__c</th>
-                    <th>Memo__c</th>
+                    <!-- <th>Supported_Calls_Description__c</th> -->
+                    <!-- <th>Special_Access_Rules__c</th> -->
+                    <!-- <th>Usage__c</th> -->
+                    <!-- <th>Memo__c</th> -->
                 </tr>
             </thead>
             <tbody>
@@ -253,11 +253,12 @@
                         <td>{item.Kor_Label__c}</td>
                         <td>{item.Api_Version__c}</td>
                         <td>{item.Supported_Calls__c}</td>
-                        <td>{item.Description__c}</td>
-                        <td>{item.Supported_Calls_Description__c}</td>
-                        <td>{item.Special_Access_Rules__c}</td>
-                        <td>{item.Usage__c}</td>
-                        <td>{item.Memo__c}</td>
+                        <!-- <td>{item.Description__c}</td> -->
+                        <td>{item.Remove__c}</td>
+                        <!-- <td>{item.Supported_Calls_Description__c}</td> -->
+                        <!-- <td>{item.Special_Access_Rules__c}</td> -->
+                        <!-- <td>{item.Usage__c}</td> -->
+                        <!-- <td>{item.Memo__c}</td> -->
                     </tr>
                 </template>
             </tbody>
