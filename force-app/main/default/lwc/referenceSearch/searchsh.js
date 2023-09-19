@@ -1,12 +1,3 @@
-import getInit from '@salesforce/apex/ReferenceSearch.getInit';
-
-
-export function toggleMoreFilter() {
-    this.moreFilter = !this.moreFilter; 
-    console.log("toggleMoreFilter : ", this.moreFilter);
-
-}
-
 export function resetValue(){
     //필터 더보기
     this.moreFilter = false;
@@ -26,20 +17,4 @@ export function resetValue(){
 
     });
 
-}
-
-export function fetchInitData() {
-    getInit()
-    .then(resultMap  => {
-        if(resultMap.success) {
-            this.refAllData = resultMap.result.refAllData;
-            this.fieldList = resultMap.result.fieldList;
-            this.callList = resultMap.result.callList;
-        } else {
-            console.error("Fail");
-        }
-    })
-    .catch(error => {
-        console.error("error : ", error);
-    });
 }

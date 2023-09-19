@@ -1,42 +1,53 @@
-import { LightningElement, api } from 'lwc';
+import { LightningElement, api, track, wire } from 'lwc';
+// import getInit from '@salesforce/apex/ReferenceSearchController.getInit';
 import { toggleMoreFilter } from './searchsh.js'; 
-import { resetValue } from './searchsh.js'; 
+import { resetValue } from './searchsh.js';
 
-export default class Scr extends LightningElement {
-    moreFilter = false;
 
-    handleToggleMoreFilter() {
-        console.log("필터 토글 : handleToggleMoreFilter");  
-        toggleMoreFilter.call(this); 
-    }
-
-    btnReset(){
-        console.log("초기화 토글 : btnReset"); 
-        resetValue.call(this);
-    }
-
+export default class ReferenceSearch extends LightningElement {
+    @api title = '기본제목';
+    @track isKorean = false;
+    @track isEnglish = false;
 
     
-/*
-    addFilter(){
-        const self = this;
-        const addFilterEl = this.template.querySelector(addFilter);
-        addFilterEl.addEventListener('click', function(e){
-            let html = '';
-            html += '<tr>';
-            html += '<th>';
-            html += '<td>';
-            html += '</td>';
-            html += '</th>';
-            html += '</tr>';
 
-            const basicEl = self.template.querySelector('.basicFilterScope');
-            basicEl.appendChild(html);
-        });
+
+
+
+
+
+
+    supCallsList = [];
+    isChecked = false;
+
+    inputList = [];
+    setFilterCalls(){
+        console.log('setFilterCalls >>>>>>>>>>>>>>>> 진입');
+        const supCallsListLen = this.supCallsList.length;
+        const loofCnt = supCallsListLen%3 == 0 ? supCallsListLen/3 : parseInt(supCallsListLen/3)+1;
+        let cnt = 0;
+        const supLen = this.supCallsList.length;
+
+        for(const supCall of this.supCallsList) {
+            if(cnt%3 == 0){
+                this.inputList.push({
+                    type: 'checkbox',
+                    label: 'Label ' + (i + 1),
+                    name: 'create',
+                    checked: true
+                });
+            }
+
+        }
+
+
+        console.log('supEl.innerHTML >>>>>>>>>>>>>>>>>>>>>>> : ', supEl.innerHTML);
     }
 
-    closeFilter(){
-        
-    }
-    */
+
+
+
+
+
+
 }

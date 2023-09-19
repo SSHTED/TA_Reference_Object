@@ -5,6 +5,8 @@
             <lightning-button-Group>
                 <lightning-button label="검색" title="search action" icon-name="utility:search"
                     onclick={btnSearch}></lightning-button>
+                <lightning-button label="" icon-name="utility:question_mark"
+                    onclick={handleToggleMoreFilter}></lightning-button>
                 <lightning-button label="초기화" title="reset action" icon-name="utility:close"
                     onclick={btnReset}></lightning-button>
             </lightning-button-Group>
@@ -13,152 +15,178 @@
 
     <!-- Spacing -->
     <div class="slds-var-m-top_medium"></div>
-
-    <!-- 2 Card -->
     <lightning-card>
-        <div>
-            <table class="table">
-                <tbody>
-                    <tr>
-                        <th scope="row">
-                            <span title="Name">이름</span>
-                        </th>
-                        <td>
-                            <lightning-input class="inputValue" type="text" placeholder="검색" name="name"></lightning-input>
-                        </td>
-                        <th scope="row">
-                            <span title="Description">Description</span>
-                        </th>
-                        <td>
-                            <lightning-input class="inputValue" type="text" placeholder="검색" name=""></lightning-input>
-                        </td>
-                    </tr>
-                    <tr>
-                        <th scope="row">
-                            <span title="Supported Calls">Supported Calls</span>
-                        </th>
-                        <td>
-                            <lightning-input class="selectedCheckbox" type="checkbox" label="create" name="create"
-                                checked={isChecked}></lightning-input>
-                            <lightning-input class="selectedCheckbox" type="checkbox" label="delete" name="delete"
-                                checked={isChecked}></lightning-input>
-                            <lightning-input class="selectedCheckbox" type="checkbox" label="update" name="update"
-                                checked={isChecked}></lightning-input>
-                            <lightning-input class="selectedCheckbox" type="checkbox" label="upsert" name="upsert"
-                                checked={isChecked}></lightning-input>
-                            <lightning-input class="selectedCheckbox" type="checkbox" label="search" name="search"
-                                checked={isChecked}></lightning-input>
-                            <lightning-input class="selectedCheckbox" type="checkbox" label="undelete" name="undelete"
-                                checked={isChecked}></lightning-input>
-                        </td>
-                        <td>
-                            <lightning-input class="selectedCheckbox" type="checkbox" label="getDeleted"
-                                name="getDeleted" checked={isChecked}></lightning-input>
-                            <lightning-input class="selectedCheckbox" type="checkbox" label="getUpdated"
-                                name="getUpdated" checked={isChecked}></lightning-input>
-                            <lightning-input class="selectedCheckbox" type="checkbox" label="idEnabled" name="idEnabled"
-                                checked={isChecked}></lightning-input>
-                            <lightning-input class="selectedCheckbox" type="checkbox" label="merge" name="merge"
-                                checked={isChecked}></lightning-input>
-                            <lightning-input class="selectedCheckbox" type="checkbox" label="retrieve" name="retrieve"
-                                checked={isChecked}></lightning-input>
-                            <lightning-input class="selectedCheckbox" type="checkbox" label="count" name="count"
-                                checked={isChecked}></lightning-input>
-                        </td>
-                        <td>
-                            <lightning-input class="selectedCheckbox" type="checkbox" label="query" name="query"
-                                checked={isChecked}></lightning-input>
-                            <lightning-input class="selectedCheckbox" type="checkbox" label="queryAll" name="queryAll"
-                                checked={isChecked}></lightning-input>
-                            <lightning-input class="selectedCheckbox" type="checkbox" label="describeObject"
-                                name="describeObject" checked={isChecked}></lightning-input>
-                            <lightning-input class="selectedCheckbox" type="checkbox" label="describeSObject"
-                                name="describeSObject" checked={isChecked}></lightning-input>
-                            <lightning-input class="selectedCheckbox" type="checkbox" label="describeLayout"
-                                name="describeLayout" checked={isChecked}></lightning-input>
-                            <lightning-input class="selectedCheckbox" type="checkbox" label="describeSObjects"
-                                name="describeSObjects" checked={isChecked}></lightning-input>
-                        </td>
-                        <td>
-                            <table>
-                                <tr>
-                                    <th scope="row">
-                                        <span title="Remove">현재 삭제된 API</span>
-                                    </th>
-                                    <td>
-                                        <lightning-input class="selectedCheckbox" type="checkbox" name=""
-                                            checked={isChecked}></lightning-input>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <th scope="row">
-                                        <span title="Api Version">Api Version</span>
-                                    </th>
-                                    <td>
-                                        <lightning-input class="inputValue" type="text" placeholder="검색"
-                                            name="ApiVersion"></lightning-input>
-                                    </td>
-                                </tr>
-                            </table>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
+        <!-- 1 line -->
+        <div class="c-container">
+            <lightning-layout vertical-align="center" class="x-large">
+                <!-- 왼쪽 요소 -->
+                <div class="left-section">
+                    <lightning-layout vertical-align="center">
+                        <!-- 이름 -->
+                        <lightning-layout-item flexibility="auto" padding="around-small">
+                            <div class="custom-box">
+                                <article title="Name">이름</article>
+                            </div>
+                        </lightning-layout-item>
+                        <lightning-layout-item flexibility="auto" padding="around-small">
+                            <div class="custom-box">
+                                <lightning-input class="inputValue" type="text" placeholder="검색" data-id="name"
+                                    name=""></lightning-input>
+                            </div>
+                        </lightning-layout-item>
+                        <!-- Description -->
+                        <lightning-layout-item flexibility="auto" padding="around-small">
+                            <div class="custom-box">
+                                <article title="Description">Description</article>
+                            </div>
+                        </lightning-layout-item>
+                        <lightning-layout-item flexibility="auto" padding="around-small">
+                            <div class="custom-box">
+                                <lightning-input class="inputValue" type="text" placeholder="검색" data-id="description"
+                                    name=""></lightning-input>
+                            </div>
+                        </lightning-layout-item>
+                    </lightning-layout>
+                </div>
+
+                <!-- 오른쪽 요소 -->
+                <div class="right-section">
+                    <lightning-layout vertical-align="center">
+                        <!-- Api Version -->
+                        <lightning-layout-item flexibility="auto" padding="around-small">
+                            <div class="custom-box">
+                                <article title="Api Version">Api Version</article>
+                            </div>
+                        </lightning-layout-item>
+                        <lightning-layout-item flexibility="auto" padding="around-small">
+                            <div class="custom-box"> <lightning-input class="inputValue" type="text" placeholder="검색" data-id="apiversion"
+                                    name="apiVersion"></lightning-input>
+                            </div>
+                        </lightning-layout-item>
+                        <!-- 삭제된 API -->
+                        <lightning-layout-item flexibility="auto" padding="around-small">
+                            <div class="custom-box">
+                                <article title="Remove">삭제된 API</article>
+                            </div>
+                        </lightning-layout-item>
+                        <lightning-layout-item flexibility="auto" padding="around-small">
+                            <div class="custom-box"> <lightning-input class="selectedCheckbox" type="checkbox" name="" data-id="remove"
+                                    checked={isChecked}></lightning-input>
+                            </div>
+                        </lightning-layout-item>
+                    </lightning-layout>
+                </div>
+            </lightning-layout>
         </div>
 
-        <!-- 필터 추가 -->
-        <div slot="actions">
-            <lightning-button label="펼치기" icon-name="utility:chevrondown"
-                onclick={handleToggleMoreFilter}></lightning-button>
+        <!-- 2 line -->
+
+        <div class="c-container">
+            <lightning-layout vertical-align="center" class="x-large">
+                <!-- 왼쪽 요소 -->
+                <div class="left-section">
+                    <lightning-layout vertical-align="center">
+
+                        <lightning-layout-item flexibility="auto" padding="around-small">
+                            <div class="custom-box">
+                                <span title="SpecialAccessRules">Special Access Rules</span>
+                            </div>
+                        </lightning-layout-item>
+                        <lightning-layout-item flexibility="auto" padding="around-small">
+                            <div class="custom-box">
+                                <lightning-input class="inputValue" type="text" placeholder="검색" data-id="specialAccessRules"
+                                    name="검색"></lightning-input>
+                            </div>
+                        </lightning-layout-item>
+                        <lightning-layout-item flexibility="auto" padding="around-small">
+                            <div class="custom-box">
+                                <span title="Usage">Usage</span>
+                            </div>
+                        </lightning-layout-item>
+                        <lightning-layout-item flexibility="auto" padding="around-small">
+                            <div class="custom-box"> <lightning-input class="inputValue" type="text" data-id="usage"
+                                    placeholder="검색" name=" "></lightning-input>
+                            </div>
+                        </lightning-layout-item>
+                    </lightning-layout>
+                </div>
+                <!-- 오른쪽 요소 -->
+                <div class="right-section">
+                    <lightning-layout vertical-align="center">
+
+                        <lightning-layout-item flexibility="auto" padding="around-small">
+                            <div class="custom-box">
+                                <span title="Memo">Memo</span>
+                            </div>
+                        </lightning-layout-item>
+                        <lightning-layout-item flexibility="auto" padding="around-small">
+                            <div class="custom-box"> <lightning-input class="inputValue" type="text" data-id="memo"
+                                    placeholder="검색" name=" "></lightning-input>
+                            </div>
+                        </lightning-layout-item>
+                        <lightning-layout-item flexibility="auto" padding="around-small">
+                            <div class="custom-box">
+                                <span title="Link">Docs Link</span>
+                            </div>
+                        </lightning-layout-item>
+                        <lightning-layout-item flexibility="auto" padding="around-small">
+                            <div class="custom-box"> <lightning-input class="inputValue" type="text" data-id="docsLink"
+                                    placeholder="Enter Value" name="검색"></lightning-input>
+                            </div>
+                        </lightning-layout-item>
+                    </lightning-layout>
+
+                </div>
+            </lightning-layout>
         </div>
+
+        <!-- 3 line -->
+        <div class="c-container">
+            <lightning-layout vertical-align="center" class="x-large">
+                <!-- 왼쪽 요소 -->
+                <div>
+                    <lightning-layout vertical-align="center">
+                        <!-- Supported Calls -->
+                        <lightning-layout-item padding="around-small">
+                            <div class="custom-box">
+                                <article title="Supported Calls">Supported Calls</article>
+                            </div>
+                        </lightning-layout-item>
+                        <lightning-layout-item flexibility="auto" padding="around-small">
+                            <div class="supported-calls-item slds-grid slds-wrap">
+                                <template for:each={supCallsItems} for:item="item" for:index="index">
+                                    <div key={item.name} class="slds-col slds-size_1-of-6">
+                                        <lightning-input 
+                                            class="selectedCheckbox" 
+                                            type="checkbox" 
+                                            label={item.label}
+                                            name={item.name} 
+                                            checked={item.checked}>
+                                        </lightning-input>
+                                    </div>
+                                </template>
+                            </div>
+                        </lightning-layout-item>
+                    </lightning-layout>
+                </div>
+
+                <!-- 오른쪽 요소 -->
+                <div class="right-section">
+                    <lightning-layout vertical-align="center">
+                        <!-- 차후 추가 -->
+                    </lightning-layout>
+                </div>
+            </lightning-layout>
+        </div>
+        <!-- <template if:true={moreFilter}> -->
+        <!-- </template> -->
 
     </lightning-card>
+    
+    <!-- 공백 -->
+    <div class="slds-col slds-size_1-of-12">
 
-
-    <!-- 3 Card -->
-    <template if:true={moreFilter}>
-        <lightning-card>
-            <div>
-                <table>
-                    <thead><!-- 1 행 -->
-                        <tr>
-                            <th scope="row">
-                                <span title="SpecialAccessRules">Special Access Rules</span>
-                            </th>
-                            <td>
-                                <lightning-input class="inputValue" type="text" placeholder="검색"
-                                    name="검색"></lightning-input>
-                            </td>
-                            <th scope="row">
-                                <span title="Usage">Usage</span>
-                            </th>
-                            <td>
-                                <lightning-input class="inputValue" type="text" placeholder="검색"
-                                    name=" "></lightning-input>
-                            </td>
-                        </tr>
-                        <!-- 2 행 -->
-                        <tr>
-                            <th scope="row">
-                                <span title="Memo">Memo</span>
-                            </th>
-                            <td>
-                                <lightning-input class="inputValue" type="text" placeholder="검색"
-                                    name=" "></lightning-input>
-                            </td>
-                            <th scope="row">
-                                <span title="Link">Docs Link</span>
-                            </th>
-                            <td><lightning-input class="inputValue" type="text" placeholder="Enter Value"
-                                    name="검색"></lightning-input>
-                            </td>
-                        </tr>
-                    </thead>
-                </table>
-            </div>
-        </lightning-card>
-    </template>
-
+    </div>
 
 
     <!-- Spacing -->
@@ -172,17 +200,17 @@
                     <th>Eng Label</th>
                     <th>Kor Label</th>
                     <th>Api Version</th>
+                    <th>Supported_Calls__c</th>
+                    <!-- <th>Description__c</th> -->
+                    <th>Remove__c</th>
+                    <!-- <th>Supported_Calls_Description__c</th> -->
+                    <!-- <th>Special_Access_Rules__c</th> -->
+                    <!-- <th>Usage__c</th> -->
+                    <!-- <th>Memo__c</th> -->
                 </tr>
             </thead>
-            <tbody>
-                <template for:each={refAllData} for:item="item">
-                    <tr key={item.id}>
-                        <td>{item.Name}</td>
-                        <td>{item.Eng_Label__c}</td>
-                        <td>{item.Kor_Label__c}</td>
-                        <td>{item.Api_Version__c}</td>
-                    </tr>
-                </template>
+            <tbody class="refDataTbody">
+                <!-- set refData -->
             </tbody>
         </table>
     </lightning-card>
