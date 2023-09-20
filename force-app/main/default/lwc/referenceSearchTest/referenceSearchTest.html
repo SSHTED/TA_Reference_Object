@@ -8,6 +8,7 @@
                 <lightning-button label="초기화" title="reset action" icon-name="utility:close"
                     onclick={btnReset}></lightning-button>
             </lightning-button-Group>
+            
         </div>
     </lightning-card>
 
@@ -15,7 +16,7 @@
     <div class="slds-var-m-top_medium"></div>
     <lightning-card>
         <!-- 1 line -->
-        <div class="c-container">
+        <div class="c-container" onkeydown={checkKey}>
             <lightning-layout vertical-align="center" class="x-large">
                 <!-- 왼쪽 요소 -->
                 <div class="left-section">
@@ -79,7 +80,7 @@
 
         <!-- 2 line -->
 
-        <div class="c-container">
+        <div class="c-container" onkeydown={checkKey}>
             <lightning-layout vertical-align="center" class="x-large">
                 <!-- 왼쪽 요소 -->
                 <div class="left-section">
@@ -139,7 +140,7 @@
         </div>
 
         <!-- 3 line -->
-        <div class="c-container">
+        <div class="c-container" onkeydown={checkKey}>
             <lightning-layout vertical-align="center" class="x-large">
                 <!-- 왼쪽 요소 -->
                 <div>

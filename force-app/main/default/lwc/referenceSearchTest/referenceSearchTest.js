@@ -9,11 +9,11 @@ export default class ReferenceSearch extends LightningElement {
     @track isKorean = false;
     @track isEnglish = false;
     @track result = [];
+    @track loaded = false;
 
     refAllData = []; 
     supCallsList = [];
     supCallsItems = []; // supported calls 항목들
-    loaded = false;
 
     // 초기화면 세팅
     @wire(getInit)
@@ -49,25 +49,21 @@ export default class ReferenceSearch extends LightningElement {
             console.log("setTable end >>>>>>>>>>>>>>>>>>>> loaded:state : " + this.loaded )
 
         } else {
-            console.error('Data is not an array:', refData);
+            console.error('refData : ', refData);
         }
     }
     
     // this.name을 파라미터로 apex 클래스에 전달후, 응답을 받고 data를 테이블 형식으로 페이지에 렌더링
     btnSearch() {
         console.log("btnSearch 시작")
-        
         const name = this.template.querySelector('[data-id="name"]').value;
         const description = this.template.querySelector('[data-id="description"]').value;
         const apiversion = this.template.querySelector('[data-id="apiversion"]').value;
-        
         const specialAccessRules = this.template.querySelector('[data-id="specialAccessRules"]').value;
         const usage = this.template.querySelector('[data-id="usage"]').value;
         const memo = this.template.querySelector('[data-id="memo"]').value;
-
         const isKorean = this.isKoreanText(name);
         const isEnglish = this.isEnglishText(name);
-
         let supportedCalls = '';
         // 체크박스 체크 여부 확인 후 supportedCalls 문자열에 추가
         const checkboxes = this.template.querySelectorAll('.selectedCheckbox');
@@ -81,18 +77,17 @@ export default class ReferenceSearch extends LightningElement {
                 }
             }
         });
-
         console.log('supportedCalls >>>>>>>>>>>>> ', supportedCalls);
 
         // 현재 삭제된 API 여부 확인 
         const removeChecked = this.template.querySelector('[data-id="remove"]');
         const remove = removeChecked.checked;
+        console.log("remove >>>>>>>> " +remove)
         
-        // Description 필드의 입력값이 2글자 이상인지 확인
         if (description && description.length < 2) {
-            // 입력값이 2글자 미만인 경우 경고 창 표시
+//Alert lightning-toast 로 추후 변경 ********************************************************************
             alert('Description은 2글자 이상이어야 합니다.');
-            return; // 검색 중단
+            return; 
         }
 
         // filterGroup에 값을 저장하여 백엔드로 전달
@@ -122,23 +117,21 @@ export default class ReferenceSearch extends LightningElement {
         getDataByFilter({ filterGroup: JSON.stringify(filterGroup) })
             .then(result => {
                 if(result.success == true){
+                    console.log("rsult data : " , result.result);
                     this.setTable(result.result);
-                    console.log("loaded state >>>>>>>>>>>>" + this.loaded)
                 } else {
-                    console.error('result를 확인해주세요: ', error);
+                    console.error('result error : ', error);
                 }
             })
             .catch(error => {
-                console.error('에러: ', error);
+                console.error(' getDataByFilter 에러 : ', error);
             });
     }
     
-        
     isKoreanText(text) {
         const koreanRegex = /[가-힣]/;
         return koreanRegex.test(text);
     }
-
     isEnglishText(text) {
         const englishRegex = /^[a-zA-Z\s]+$/;
         return englishRegex.test(text);
@@ -149,7 +142,6 @@ export default class ReferenceSearch extends LightningElement {
         let name = this.template.querySelector('[data-id="name"]').value;
         const str = name;
         let result = false;
-        
         // 문자열 중간에 있는 공백 여부 확인
         for (let i = 0; i < str.length; i++) {
             if (str[i] === ' ') {
@@ -159,30 +151,31 @@ export default class ReferenceSearch extends LightningElement {
         return result;
     }
 
+    // 특정 클래스 이름 할 떄 + enter 시 검색
     checkKey(event){
-        const keyCode = event.keyCode;
-        if(keyCode == 13){
+        if((event.target.classList.contains('inputValue') || event.target.classList.contains('selectedCheckbox')) && event.key === "Enter"){
             this.btnSearch();
+            console.log("enter")
         }
     }
 
     btnReset(){
-        console.log("초기화 토글 : btnReset"); 
+        console.log("초기화 시작 >>>>>>>>>>>>>>>>>>>>> btnReset"); 
+        //셀렉박스 초기화
         const checkboxes = this.template.querySelectorAll('.selectedCheckbox');
         checkboxes.forEach(checkbox => {
             checkbox.checked = false;
             console.log("checkbox : ", checkbox.checked);
         });
     
-        //인풋박스
+        //인풋박스 초기화
         const inputboxes = this.template.querySelectorAll('.inputValue');
         inputboxes.forEach(inputbox => {
             inputbox.value = '';
             console.log("inputbox : ", inputbox.value);
         });
 
-        console.log('refAllData before setTable:', this.refAllData);
-
+        //복사한 첫 데이터 가져옴
         this.setTable(this.initialData);
     }
 }

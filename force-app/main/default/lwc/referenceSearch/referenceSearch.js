@@ -1,7 +1,7 @@
 import { LightningElement, api, track, wire } from 'lwc';
 import getInit from '@salesforce/apex/ReferenceSearchController.getInit';
 import getDataByFilter from '@salesforce/apex/ReferenceSearchController.getDataByFilter';
-import { resetValue } from './searchsh.js';
+// import { resetValue } from './searchsh.js';
 
 
 export default class ReferenceSearch extends LightningElement {
@@ -9,11 +9,11 @@ export default class ReferenceSearch extends LightningElement {
     @track isKorean = false;
     @track isEnglish = false;
     @track result = [];
+    @track loaded = false;
 
+    refAllData = []; 
     supCallsList = [];
     supCallsItems = []; // supported calls 항목들
-
-    refAllData = []; // 전체 데이터
 
     // 초기화면 세팅
     @wire(getInit)
@@ -21,68 +21,49 @@ export default class ReferenceSearch extends LightningElement {
         if (data && data.result) {
             console.log('wiredInit >>>>>>>>>>>>>>> 데이터 받아옴');
             this.refAllData = data.result.refAllData;
+            this.initialData = [...this.refAllData];  // 복사본 생성, 리셋에 사용
             this.supCallsList = data.result.callList;
-
-            this.supCallsItems = this.supCallsList.map(function(val){
+            this.supCallsItems = this.supCallsList.map(val => {
                 val = val.replace('()', '');
                 return { label: `${val}`, name: `${val}`, checked: false };
             });
-            
+
             this.setTable();
-            
+
         } else if (error) {
             console.error('Error:', error);
         }
     }
 
     setTable(refData){
-        if(refData == '' || refData == undefined || refData == null){
+        // 로딩 시작
+        this.loaded = false;
+        console.log("setTable start >>>>>>>>>>>>>>>>>>>> loaded:state : " + this.loaded )
+        if(!refData) {
             refData = this.refAllData;
-        } 
-
+        }
         if (Array.isArray(refData)) {
-            const tableBody = this.template.querySelector('.refDataTbody');
+            this.refAllData = refData;
+            //로딩 끝
+            this.loaded = true; 
+            console.log("setTable end >>>>>>>>>>>>>>>>>>>> loaded:state : " + this.loaded )
 
-            // 초기화
-            tableBody.innerHTML = '';
-
-            refData.forEach(item => {
-                const row = document.createElement('tr');
-                row.innerHTML = `
-                <td>${item.Name}</td>
-                <td>${item.Eng_Label__c}</td>
-                <td>${item.Kor_Label__c}</td>
-                <td>${item.Api_Version__c}</td>
-                `;
-                tableBody.appendChild(row);
-            });
         } else {
-            console.error('Data is not an array:', data);
+            console.error('refData : ', refData);
         }
     }
     
     // this.name을 파라미터로 apex 클래스에 전달후, 응답을 받고 data를 테이블 형식으로 페이지에 렌더링
     btnSearch() {
-        
-        const contentEl = this.template.querySelector('[data-id="btnSearch"]');
-        console.log("contentEl" + contentEl)
-
-        // if (contentEl) {
-        //     contentEl.classList.toggle('greyBackground');
-        //     console.log("tototo123123123" + contentEl)
-        // }
-
+        console.log("btnSearch 시작")
         const name = this.template.querySelector('[data-id="name"]').value;
         const description = this.template.querySelector('[data-id="description"]').value;
         const apiversion = this.template.querySelector('[data-id="apiversion"]').value;
-        
         const specialAccessRules = this.template.querySelector('[data-id="specialAccessRules"]').value;
         const usage = this.template.querySelector('[data-id="usage"]').value;
         const memo = this.template.querySelector('[data-id="memo"]').value;
-
         const isKorean = this.isKoreanText(name);
         const isEnglish = this.isEnglishText(name);
-
         let supportedCalls = '';
         // 체크박스 체크 여부 확인 후 supportedCalls 문자열에 추가
         const checkboxes = this.template.querySelectorAll('.selectedCheckbox');
@@ -96,18 +77,17 @@ export default class ReferenceSearch extends LightningElement {
                 }
             }
         });
-
         console.log('supportedCalls >>>>>>>>>>>>> ', supportedCalls);
 
         // 현재 삭제된 API 여부 확인 
         const removeChecked = this.template.querySelector('[data-id="remove"]');
         const remove = removeChecked.checked;
+        console.log("remove >>>>>>>> " +remove)
         
-        // Description 필드의 입력값이 2글자 이상인지 확인
         if (description && description.length < 2) {
-            // 입력값이 2글자 미만인 경우 경고 창 표시
+//Alert lightning-toast 로 추후 변경 ********************************************************************
             alert('Description은 2글자 이상이어야 합니다.');
-            return; // 검색 중단
+            return; 
         }
 
         // filterGroup에 값을 저장하여 백엔드로 전달
@@ -137,22 +117,21 @@ export default class ReferenceSearch extends LightningElement {
         getDataByFilter({ filterGroup: JSON.stringify(filterGroup) })
             .then(result => {
                 if(result.success == true){
-                    const filteredDataList = result.result;
-                    this.setTable(filteredDataList);
+                    console.log("rsult data : " , result.result);
+                    this.setTable(result.result);
                 } else {
-                    console.error('result를 확인해주세요: ', error);
+                    console.error('result error : ', error);
                 }
             })
             .catch(error => {
-                console.error('에러: ', error);
+                console.error(' getDataByFilter 에러 : ', error);
             });
     }
-        
+    
     isKoreanText(text) {
         const koreanRegex = /[가-힣]/;
         return koreanRegex.test(text);
     }
-
     isEnglishText(text) {
         const englishRegex = /^[a-zA-Z\s]+$/;
         return englishRegex.test(text);
@@ -163,7 +142,6 @@ export default class ReferenceSearch extends LightningElement {
         let name = this.template.querySelector('[data-id="name"]').value;
         const str = name;
         let result = false;
-        
         // 문자열 중간에 있는 공백 여부 확인
         for (let i = 0; i < str.length; i++) {
             if (str[i] === ' ') {
@@ -173,16 +151,31 @@ export default class ReferenceSearch extends LightningElement {
         return result;
     }
 
+    // 특정 클래스 이름 할 떄 + enter 시 검색
     checkKey(event){
-        const keyCode = event.keyCode;
-        if(keyCode == 13){
+        if((event.target.classList.contains('inputValue') || event.target.classList.contains('selectedCheckbox')) && event.key === "Enter"){
             this.btnSearch();
+            console.log("enter")
         }
     }
 
     btnReset(){
-        console.log("초기화 토글 : btnReset"); 
-        resetValue.call(this);
-        this.setTable();
+        console.log("초기화 시작 >>>>>>>>>>>>>>>>>>>>> btnReset"); 
+        //셀렉박스 초기화
+        const checkboxes = this.template.querySelectorAll('.selectedCheckbox');
+        checkboxes.forEach(checkbox => {
+            checkbox.checked = false;
+            console.log("checkbox : ", checkbox.checked);
+        });
+    
+        //인풋박스 초기화
+        const inputboxes = this.template.querySelectorAll('.inputValue');
+        inputboxes.forEach(inputbox => {
+            inputbox.value = '';
+            console.log("inputbox : ", inputbox.value);
+        });
+
+        //복사한 첫 데이터 가져옴
+        this.setTable(this.initialData);
     }
 }

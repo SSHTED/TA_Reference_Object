@@ -71,22 +71,21 @@
                 </div>
             </div>
             <div class="inner_searchArea">
-                <div class="title">supportedCalls</div>
-
+                <div class="sc_title">supportedCalls</div>
                 <div class="supported-calls-item slds-grid slds-wrap">
                     <template for:each={supCallsItems} for:item="item" for:index="index">
                         <div key={item.name} class="slds-col slds-size_1-of-6">
-                            <lightning-input 
+                            <lightning-input
                                 class="selectedCheckbox" 
                                 type="checkbox" 
                                 label={item.label}
                                 name={item.name} 
-                                checked={item.checked}>
+                                checked={item.checked}
+                                style="margin-left: 30px; margin-top: 5px;">
                             </lightning-input>
                         </div>
                     </template>
                 </div>
-
             </div>
         </div>
     </lightning-card>
@@ -119,7 +118,7 @@
     <div class="slds-var-m-top_medium"></div>
     <lightning-card>
         <!-- 1 line -->
-        <div class="c-container">
+        <div class="c-container"  onkeydown={checkKey}>
             <lightning-layout vertical-align="center" class="x-large">
                 <!-- 왼쪽 요소 -->
                 <div class="left-section">
@@ -183,7 +182,7 @@
 
         <!-- 2 line -->
 
-        <div class="c-container">
+        <div class="c-container"  onkeydown={checkKey}>
             <lightning-layout vertical-align="center" class="x-large">
                 <!-- 왼쪽 요소 -->
                 <div class="left-section">
@@ -233,7 +232,7 @@
         </div>
 
         <!-- 3 line -->
-        <div class="c-container">
+        <div class="c-container"  onkeydown={checkKey}>
             <lightning-layout vertical-align="center" class="x-large">
                 <!-- 왼쪽 요소 -->
                 <div>
