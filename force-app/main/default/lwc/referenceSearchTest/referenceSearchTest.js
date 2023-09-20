@@ -1,7 +1,7 @@
 import { LightningElement, api, track, wire } from 'lwc';
 import getInit from '@salesforce/apex/ReferenceSearchController.getInit';
 import getDataByFilter from '@salesforce/apex/ReferenceSearchController.getDataByFilter';
-import { resetValue } from './searchsh.js';
+// import { resetValue } from './searchsh.js';
 
 
 export default class ReferenceSearch extends LightningElement {
@@ -21,6 +21,7 @@ export default class ReferenceSearch extends LightningElement {
         if (data && data.result) {
             console.log('wiredInit >>>>>>>>>>>>>>> 데이터 받아옴');
             this.refAllData = data.result.refAllData;
+            this.initialData = [...this.refAllData];  // 복사본 생성, 리셋에 사용
             this.supCallsList = data.result.callList;
             this.supCallsItems = this.supCallsList.map(val => {
                 val = val.replace('()', '');
@@ -28,7 +29,6 @@ export default class ReferenceSearch extends LightningElement {
             });
 
             this.setTable();
-            this.loaded = true;
 
         } else if (error) {
             console.error('Error:', error);
@@ -36,18 +36,27 @@ export default class ReferenceSearch extends LightningElement {
     }
 
     setTable(refData){
+        // 로딩 시작
+        this.loaded = false;
+        console.log("setTable start >>>>>>>>>>>>>>>>>>>> loaded:state : " + this.loaded )
         if(!refData) {
             refData = this.refAllData;
         }
         if (Array.isArray(refData)) {
+            this.refAllData = refData;
+            //로딩 끝
             this.loaded = true; 
+            console.log("setTable end >>>>>>>>>>>>>>>>>>>> loaded:state : " + this.loaded )
+
         } else {
-            console.error('Data is not an array:', data);
+            console.error('Data is not an array:', refData);
         }
     }
     
     // this.name을 파라미터로 apex 클래스에 전달후, 응답을 받고 data를 테이블 형식으로 페이지에 렌더링
     btnSearch() {
+        console.log("btnSearch 시작")
+        
         const name = this.template.querySelector('[data-id="name"]').value;
         const description = this.template.querySelector('[data-id="description"]').value;
         const apiversion = this.template.querySelector('[data-id="apiversion"]').value;
@@ -114,6 +123,7 @@ export default class ReferenceSearch extends LightningElement {
             .then(result => {
                 if(result.success == true){
                     this.setTable(result.result);
+                    console.log("loaded state >>>>>>>>>>>>" + this.loaded)
                 } else {
                     console.error('result를 확인해주세요: ', error);
                 }
@@ -158,7 +168,21 @@ export default class ReferenceSearch extends LightningElement {
 
     btnReset(){
         console.log("초기화 토글 : btnReset"); 
-        resetValue.call(this);
-        this.setTable();
+        const checkboxes = this.template.querySelectorAll('.selectedCheckbox');
+        checkboxes.forEach(checkbox => {
+            checkbox.checked = false;
+            console.log("checkbox : ", checkbox.checked);
+        });
+    
+        //인풋박스
+        const inputboxes = this.template.querySelectorAll('.inputValue');
+        inputboxes.forEach(inputbox => {
+            inputbox.value = '';
+            console.log("inputbox : ", inputbox.value);
+        });
+
+        console.log('refAllData before setTable:', this.refAllData);
+
+        this.setTable(this.initialData);
     }
 }
