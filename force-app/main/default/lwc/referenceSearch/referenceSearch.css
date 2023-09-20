@@ -12,3 +12,54 @@
 .slds-page-header.flexipageHeader { 
     display: none;
 }
+
+/* 버튼 색 테스트*/
+.greyBackground {
+    background-color: grey;
+}
+
+.searchArea {
+    width: 100%;
+    height: 300px;
+}
+
+.inner_searchArea {
+    height: 100px;
+    padding: 5px;
+    background-color: beige;
+}
+
+.section {
+    margin-right: 10px;
+    width: 24%;
+    float: left;
+}
+
+.section .title {
+    margin-right: 5px;
+    width: 27%;
+    float: left;
+    text-align: center;
+    padding-top: 22px;
+    font-size: 15px;
+    font-weight: 500;
+}
+
+.section .searchBox {
+    width: 70%;
+    float: left;
+}
+
+.section .selectedCheckbox {
+    padding-top: 24px;
+    padding-left: 30px;
+}
+
+.inner_searchArea .title {
+    margin-right: 5px;
+    width: 27%;
+    float: left;
+    text-align: center;
+    font-size: 15px;
+    font-weight: 500;
+}

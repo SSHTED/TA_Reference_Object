@@ -74,7 +74,7 @@ public class ReferenceSearchController {
     // reference 전체데이터 가져오기
     private static List<ObjectReference__c> getRefAllData() {
         String soql = ' select '
-                     + '   Id, Name, Eng_Label__c, Kor_Label__c, Api_Version__c, Description__c, Supported_Calls__c, Special_Access_Rules__c, Usage__c, Docs_Link__c, Memo__c, Remove__c, Supported_Calls_Description__c '
+                     + '   Id, Name, Eng_Label__c, Kor_Label__c, Api_Version__c, Description__c, Supported_Calls__c, Special_Access_Rules__c, Usage__c, Docs_Link__c, Memo__c, Remove__c, Supported_Calls_Description__c, (Select id, name from ObjectReference__r) '
                      + ' from '
                      + '   ObjectReference__c '
                      + ' order by '

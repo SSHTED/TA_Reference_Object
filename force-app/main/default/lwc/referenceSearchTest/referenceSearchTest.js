@@ -10,10 +10,10 @@ export default class ReferenceSearch extends LightningElement {
     @track isEnglish = false;
     @track result = [];
 
+    refAllData = []; 
     supCallsList = [];
     supCallsItems = []; // supported calls 항목들
-
-    refAllData = []; // 전체 데이터
+    loaded = false;
 
     // 초기화면 세팅
     @wire(getInit)
@@ -22,40 +22,25 @@ export default class ReferenceSearch extends LightningElement {
             console.log('wiredInit >>>>>>>>>>>>>>> 데이터 받아옴');
             this.refAllData = data.result.refAllData;
             this.supCallsList = data.result.callList;
-
-            this.supCallsItems = this.supCallsList.map(function(val){
+            this.supCallsItems = this.supCallsList.map(val => {
                 val = val.replace('()', '');
                 return { label: `${val}`, name: `${val}`, checked: false };
             });
-            
+
             this.setTable();
-            
+            this.loaded = true;
+
         } else if (error) {
             console.error('Error:', error);
         }
     }
 
     setTable(refData){
-        if(refData == '' || refData == undefined || refData == null){
+        if(!refData) {
             refData = this.refAllData;
-        } 
-
+        }
         if (Array.isArray(refData)) {
-            const tableBody = this.template.querySelector('.refDataTbody');
-
-            // 초기화
-            tableBody.innerHTML = '';
-
-            refData.forEach(item => {
-                const row = document.createElement('tr');
-                row.innerHTML = `
-                <td>${item.Name}</td>
-                <td>${item.Eng_Label__c}</td>
-                <td>${item.Kor_Label__c}</td>
-                <td>${item.Api_Version__c}</td>
-                `;
-                tableBody.appendChild(row);
-            });
+            this.loaded = true; 
         } else {
             console.error('Data is not an array:', data);
         }
@@ -63,15 +48,6 @@ export default class ReferenceSearch extends LightningElement {
     
     // this.name을 파라미터로 apex 클래스에 전달후, 응답을 받고 data를 테이블 형식으로 페이지에 렌더링
     btnSearch() {
-        
-        const contentEl = this.template.querySelector('[data-id="btnSearch"]');
-        console.log("contentEl" + contentEl)
-
-        // if (contentEl) {
-        //     contentEl.classList.toggle('greyBackground');
-        //     console.log("tototo123123123" + contentEl)
-        // }
-
         const name = this.template.querySelector('[data-id="name"]').value;
         const description = this.template.querySelector('[data-id="description"]').value;
         const apiversion = this.template.querySelector('[data-id="apiversion"]').value;
@@ -137,8 +113,7 @@ export default class ReferenceSearch extends LightningElement {
         getDataByFilter({ filterGroup: JSON.stringify(filterGroup) })
             .then(result => {
                 if(result.success == true){
-                    const filteredDataList = result.result;
-                    this.setTable(filteredDataList);
+                    this.setTable(result.result);
                 } else {
                     console.error('result를 확인해주세요: ', error);
                 }
@@ -147,6 +122,7 @@ export default class ReferenceSearch extends LightningElement {
                 console.error('에러: ', error);
             });
     }
+    
         
     isKoreanText(text) {
         const koreanRegex = /[가-힣]/;
