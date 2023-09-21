@@ -45,7 +45,13 @@ export default class ReferenceSearch extends LightningElement {
             refData = this.refAllData;
         }
         if (Array.isArray(refData)) {
-            this.refAllData = refData;
+            // this.refAllData = refData;
+            this.refAllData = refData.map(item => {
+                return {
+                    ...item,
+                    objectReferenceDetailUrl: `https://dkbmc--pms.sandbox.lightning.force.com/lightning/r/ObjectReference__c/${item.Id}/view`
+                };
+            });
             console.log("asfafaf" , this.refAllData)
             //로딩 끝
             this.loaded = true; 
@@ -213,6 +219,5 @@ export default class ReferenceSearch extends LightningElement {
         this.searchCriteria += `Memo: ${memo} | `;
         this.searchCriteria += `Supported Calls: ${supportedCalls} `;
     }
-    
     
 }

@@ -109,7 +109,9 @@
                             <tr key={item.Id}>
                                 <td>
                                     <span>
-                                        {item.Name}
+                                        <a href={item.objectReferenceDetailUrl} target="_blank" rel="noopener noreferrer" style="color: black;">
+                                            {item.Name}
+                                        </a>
                                         <a href={item.Docs_Link__c} target="_blank" rel="noopener noreferrer">
                                             <lightning-icon icon-name="doctype:link" size="x-small"
                                                 alternative-text="Open"></lightning-icon>
