@@ -32,7 +32,6 @@ export default class ReferenceSearch extends LightningElement {
 
             this.setTable();
             this.updateSearchCriteria();
-
         } else if (error) {
             console.error('wiredInit 에러 :', error);
         }
@@ -72,12 +71,15 @@ export default class ReferenceSearch extends LightningElement {
         const isKorean = this.isKoreanText(name);
         const isEnglish = this.isEnglishText(name);
         let supportedCalls = '';
+
         // 체크박스 체크 여부 확인 후 supportedCalls 문자열에 추가
-        const checkboxes = this.template.querySelectorAll('.selectedCheckbox');
-        
-        checkboxes.forEach((checkbox, idx) => {
+        // const checkboxes = this.template.querySelectorAll('.selectedCheckbox');
+        const callsCheckedboxes = this.template.querySelectorAll('[data-id="callsChecked"]');
+
+        callsCheckedboxes.forEach((checkbox, idx) => {
             if(checkbox.checked) {
-                if(idx == checkboxes.length-1){
+                console.log(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>", checkbox, idx);
+                if(idx == callsCheckedboxes.length-1){
                     supportedCalls += checkbox.name + '()';
                 } else {
                     supportedCalls += checkbox.name + '();';
@@ -89,10 +91,12 @@ export default class ReferenceSearch extends LightningElement {
         // 현재 삭제된 API 여부 확인 
         const removeChecked = this.template.querySelector('[data-id="remove"]');
         const remove = removeChecked.checked;
-        console.log("remove : " +remove)
+        console.log("remove : " + remove)
         
         if (description && description.length < 2) {
-//Alert lightning-toast 로 추후 변경 ********************************************************************
+
+                                            //Alert lightning-toast 로 추후 변경 ********************************************************************
+
             alert('Description은 2글자 이상이어야 합니다. 추후 변경 필요 ');
             return; 
         }
@@ -135,8 +139,9 @@ export default class ReferenceSearch extends LightningElement {
                 // 검색버튼 다시 ON
                 this.isButtonDisabled = false;
             });
-
-            this.updateSearchCriteria(name, description, apiversion, remove, specialAccessRules, memo, supportedCalls);
+        
+        //헤더 검색조건
+        this.updateSearchCriteria(name, description, apiversion, remove, specialAccessRules, memo, supportedCalls);
 
     }
     
@@ -163,7 +168,7 @@ export default class ReferenceSearch extends LightningElement {
         return result;
     }
 
-    // 특정 클래스 이름 할 떄 + enter 시 검색
+    // Enter
     checkKey(event){
         if((event.target.classList.contains('inputValue') || event.target.classList.contains('selectedCheckbox')) && event.key === "Enter"){
             this.btnSearch();
@@ -177,17 +182,15 @@ export default class ReferenceSearch extends LightningElement {
         const checkboxes = this.template.querySelectorAll('.selectedCheckbox');
         checkboxes.forEach(checkbox => {
             checkbox.checked = false;
-            console.log("checkbox : ", checkbox.checked);
         });
         //인풋박스 초기화
         const inputboxes = this.template.querySelectorAll('.inputValue');
         inputboxes.forEach(inputbox => {
             inputbox.value = '';
-            console.log("inputbox : ", inputbox.value);
         });
         //복사한 첫 데이터 가져옴
         this.setTable(this.initialData);
-        this.updateSearchCriteria('');
+        this.updateSearchCriteria();
     }
 
     // 헤더 검색조건 

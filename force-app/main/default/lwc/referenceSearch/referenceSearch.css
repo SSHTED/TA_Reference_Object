@@ -18,6 +18,25 @@
     background-color: grey;
 }
 
+
+.header_card {
+    position: fixed;
+    top: 130px;
+    width: 98.5%;
+    z-index: 1000;
+}
+
+.input_card {
+    position: relative;
+    top: 52px;
+}
+
+.result_card {
+    position: relative;
+    top: 55px;
+}
+
+
 .searchArea {
     margin-top: -20px;
     margin-left: 20px;
@@ -58,14 +77,6 @@
     width: 65%;
     float: left;
 }
-
-lightning-input.inputValue_filled > input {
-    width: 65%;
-    float: left;
-    background-color: green !important;
-}   
-
-
 
 .inner_searchArea .sc_title {
     padding-left: 10px;

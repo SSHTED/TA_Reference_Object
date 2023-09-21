@@ -1,11 +1,11 @@
 <template>
     <!-- 1 Card 헤더-->
-    <lightning-card title="Reference Search" icon-name="standard:document">
+    <lightning-card class="header_card" title="Reference Search" icon-name="standard:document">
         <p>{searchCriteria}</p>
         <div slot="actions">
             <lightning-button-Group>
-                <lightning-button variant="brand" label="검색" title="search action" icon-name="utility:search" id="btnSearch"
-                    onclick={btnSearch} disabled={isButtonDisabled}></lightning-button>
+                <lightning-button variant="brand" label="검색" title="search action" icon-name="utility:search"
+                    id="btnSearch" onclick={btnSearch} disabled={isButtonDisabled}></lightning-button>
                 <lightning-button label="초기화" title="reset action" icon-name="utility:close"
                     onclick={btnReset}></lightning-button>
             </lightning-button-Group>
@@ -14,35 +14,35 @@
 
 
     <!-- 새로 만드는 영역 -->
-    <lightning-card>
+    <lightning-card class="input_card">
         <div class="searchArea" onkeydown={checkKey}>
             <div class="inner_searchArea">
                 <div class="section">
                     <div class="title">Object Name</div>
                     <div class="searchBox">
-                        <lightning-input class="inputValue_filled" type="search" placeholder="insert objectName" data-id="name"
-                            ></lightning-input>
+                        <lightning-input class="inputValue" type="search" placeholder="insert objectName"
+                            data-id="name"></lightning-input>
                     </div>
                 </div>
                 <div class="section">
                     <div class="title">Description</div>
                     <div class="searchBox">
-                        <lightning-input class="inputValue" type="search" placeholder="insert description" data-id="description"
-                            ></lightning-input>
+                        <lightning-input class="inputValue" type="search" placeholder="insert description"
+                            data-id="description"></lightning-input>
                     </div>
                 </div>
                 <div class="section">
                     <div class="title">Api Version</div>
                     <div class="searchBox">
-                        <lightning-input class="inputValue" type="search" placeholder="insert apiversion" data-id="apiversion"
-                            ></lightning-input>
+                        <lightning-input class="inputValue" type="search" placeholder="insert apiversion"
+                            data-id="apiversion"></lightning-input>
                     </div>
                 </div>
                 <div class="section">
                     <div class="title">Removed API</div>
                     <div class="searchBox">
                         <lightning-input class="selectedCheckbox" type="checkbox" name="" data-id="remove"
-                                    checked={isChecked}></lightning-input>
+                            checked={isChecked}></lightning-input>
                     </div>
                 </div>
             </div>
@@ -50,22 +50,22 @@
                 <div class="section">
                     <div class="title">SpecialAccessRules</div>
                     <div class="searchBox">
-                        <lightning-input class="inputValue" type="search" placeholder="insert specialAccessRules" data-id="specialAccessRules"
-                            ></lightning-input>
+                        <lightning-input class="inputValue" type="search" placeholder="insert specialAccessRules"
+                            data-id="specialAccessRules"></lightning-input>
                     </div>
                 </div>
                 <div class="section">
                     <div class="title">Usage</div>
                     <div class="searchBox">
-                        <lightning-input class="inputValue" type="search" placeholder="insert usage" data-id="usage"
-                            ></lightning-input>
+                        <lightning-input class="inputValue" type="search" placeholder="insert usage"
+                            data-id="usage"></lightning-input>
                     </div>
                 </div>
                 <div class="section">
                     <div class="title">Memo</div>
                     <div class="searchBox">
-                        <lightning-input class="inputValue" type="search" placeholder="insert memo" data-id="memo"
-                            ></lightning-input>
+                        <lightning-input class="inputValue" type="search" placeholder="insert memo"
+                            data-id="memo"></lightning-input>
                     </div>
                 </div>
             </div>
@@ -74,13 +74,8 @@
                 <div class="supported-calls-item slds-grid slds-wrap">
                     <template for:each={supCallsItems} for:item="item" for:index="index">
                         <div key={item.name} class="slds-col slds-size_1-of-6">
-                            <lightning-input
-                                class="selectedCheckbox" 
-                                type="checkbox" 
-                                label={item.label}
-                                name={item.name} 
-                                checked={item.checked}
-                                data-id="callsChecked"
+                            <lightning-input class="selectedCheckbox" type="checkbox" label={item.label}
+                                name={item.name} checked={item.checked} data-id="callsChecked"
                                 style="margin-left: 30px; margin-top: 5px;">
                             </lightning-input>
                         </div>
@@ -91,22 +86,22 @@
     </lightning-card>
 
 
-    <!-- 공백 -->
-    <div class="slds-col slds-size_1-of-12">
+    <!-- 
+        공백
+        <div class="slds-col slds-size_1-of-12"></div>
 
-    </div>
+        Spacing
+        <div class="slds-var-m-top_medium"></div>
+    -->
 
 
-    <!-- Spacing -->
-    <div class="slds-var-m-top_medium"></div>
-
-    <lightning-card title="검색 결과" icon-name="utility:expand_alt">
+    <lightning-card class="result_card" title="검색 결과" icon-name="utility:expand_alt">
         <div class="loadedHolder">
             <template if:false={loaded}>
                 <lightning-spinner alternative-text="Loading"></lightning-spinner>
             </template>
             <template if:true={loaded}>
-                <p>총 데이터 개수: {refAllData.length}</p> 
+                <p>총 데이터 개수: {refAllData.length}</p>
                 <table>
                     <thead>
                         <tr>
@@ -120,7 +115,14 @@
                     <tbody class="refDataTbody">
                         <template for:each={refAllData} for:item="item" for:index="index">
                             <tr key={item.Id}>
-                                <td>{item.Name}</td>
+                                <td> <span>
+                                        {item.Name}
+                                        <a href={item.Docs_Link__c} target="_blank" rel="noopener noreferrer">
+                                            <lightning-icon icon-name="doctype:link" size="x-small"
+                                                alternative-text="Open"></lightning-icon>
+                                        </a>
+                                    </span>
+                                </td>
                                 <td>{item.Eng_Label__c}</td>
                                 <td>{item.Kor_Label__c}</td>
                                 <td>{item.Api_Version__c}</td>

@@ -46,9 +46,10 @@ export default class ReferenceSearch extends LightningElement {
         }
         if (Array.isArray(refData)) {
             this.refAllData = refData;
+            console.log("asfafaf" , this.refAllData)
             //로딩 끝
             this.loaded = true; 
-            console.log(" :::::::::::::::: setTable end :::::::::::::::: " )
+            console.log(":::::::::::::::: setTable end :::::::::::::::: " )
         } else {
             console.error(' setTable 에러 : ', error);
             console.error(' setTable 에러 refData  : ', refData);
@@ -178,21 +179,15 @@ export default class ReferenceSearch extends LightningElement {
 
     btnReset(){
         console.log(":::::::::::::::: btnReset 시작 ::::::::::::::::"); 
-
         //셀렉박스 초기화
         const checkboxes = this.template.querySelectorAll('.selectedCheckbox');
         checkboxes.forEach(checkbox => {
             checkbox.checked = false;
-            console.log("checkbox : ", checkbox.checked);
         });
-        // this.isChecked = false;
-
-
         //인풋박스 초기화
         const inputboxes = this.template.querySelectorAll('.inputValue');
         inputboxes.forEach(inputbox => {
             inputbox.value = '';
-            console.log("inputbox : ", inputbox.value);
         });
         //복사한 첫 데이터 가져옴
         this.setTable(this.initialData);
