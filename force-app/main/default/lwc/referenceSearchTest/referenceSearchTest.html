@@ -86,14 +86,6 @@
     </lightning-card>
 
 
-    <!-- 
-        공백
-        <div class="slds-col slds-size_1-of-12"></div>
-
-        Spacing
-        <div class="slds-var-m-top_medium"></div>
-    -->
-
 
     <lightning-card class="result_card" title="검색 결과" icon-name="utility:expand_alt">
         <div class="loadedHolder">
@@ -115,7 +107,8 @@
                     <tbody class="refDataTbody">
                         <template for:each={refAllData} for:item="item" for:index="index">
                             <tr key={item.Id}>
-                                <td> <span>
+                                <td>
+                                    <span>
                                         {item.Name}
                                         <a href={item.Docs_Link__c} target="_blank" rel="noopener noreferrer">
                                             <lightning-icon icon-name="doctype:link" size="x-small"
