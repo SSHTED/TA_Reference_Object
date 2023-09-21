@@ -59,11 +59,11 @@
     float: left;
 }
 
-.inputValue_filled {
+lightning-input.inputValue_filled > input {
     width: 65%;
     float: left;
-    background-color: green;
-}
+    background-color: green !important;
+}   
 
 
 

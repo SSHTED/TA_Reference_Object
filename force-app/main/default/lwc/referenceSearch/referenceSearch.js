@@ -9,7 +9,9 @@ export default class ReferenceSearch extends LightningElement {
     @track isKorean = false;
     @track isEnglish = false;
     @track result = [];
-    @track loaded = false;
+    loaded = false;
+    isButtonDisabled = false;
+    searchCriteria = '';
 
     refAllData = []; 
     supCallsList = [];
@@ -19,7 +21,7 @@ export default class ReferenceSearch extends LightningElement {
     @wire(getInit)
     wiredInit({ error, data }) {
         if (data && data.result) {
-            console.log('wiredInit >>>>>>>>>>>>>>> 데이터 받아옴');
+            console.log(':::::::::::::::: wiredInit :::::::::::::::: ');
             this.refAllData = data.result.refAllData;
             this.initialData = [...this.refAllData];  // 복사본 생성, 리셋에 사용
             this.supCallsList = data.result.callList;
@@ -29,16 +31,17 @@ export default class ReferenceSearch extends LightningElement {
             });
 
             this.setTable();
+            this.updateSearchCriteria();
 
         } else if (error) {
-            console.error('Error:', error);
+            console.error('wiredInit 에러 :', error);
         }
     }
 
     setTable(refData){
         // 로딩 시작
         this.loaded = false;
-        console.log("setTable start >>>>>>>>>>>>>>>>>>>> loaded:state : " + this.loaded )
+        console.log(":::::::::::::::: setTable start ::::::::::::::::");
         if(!refData) {
             refData = this.refAllData;
         }
@@ -46,16 +49,20 @@ export default class ReferenceSearch extends LightningElement {
             this.refAllData = refData;
             //로딩 끝
             this.loaded = true; 
-            console.log("setTable end >>>>>>>>>>>>>>>>>>>> loaded:state : " + this.loaded )
-
+            console.log(" :::::::::::::::: setTable end :::::::::::::::: " )
         } else {
-            console.error('refData : ', refData);
+            console.error(' setTable 에러 : ', error);
+            console.error(' setTable 에러 refData  : ', refData);
         }
+        this.isButtonDisabled = false;
     }
     
     // this.name을 파라미터로 apex 클래스에 전달후, 응답을 받고 data를 테이블 형식으로 페이지에 렌더링
     btnSearch() {
-        console.log("btnSearch 시작")
+        console.log(":::::::::::::::: btnSearch 시작 ::::::::::::::::")
+        //버튼 빌활성화
+        this.isButtonDisabled = true;
+
         const name = this.template.querySelector('[data-id="name"]').value;
         const description = this.template.querySelector('[data-id="description"]').value;
         const apiversion = this.template.querySelector('[data-id="apiversion"]').value;
@@ -77,16 +84,16 @@ export default class ReferenceSearch extends LightningElement {
                 }
             }
         });
-        console.log('supportedCalls >>>>>>>>>>>>> ', supportedCalls);
+        console.log('supportedCalls : ', supportedCalls);
 
         // 현재 삭제된 API 여부 확인 
         const removeChecked = this.template.querySelector('[data-id="remove"]');
         const remove = removeChecked.checked;
-        console.log("remove >>>>>>>> " +remove)
+        console.log("remove : " +remove)
         
         if (description && description.length < 2) {
 //Alert lightning-toast 로 추후 변경 ********************************************************************
-            alert('Description은 2글자 이상이어야 합니다.');
+            alert('Description은 2글자 이상이어야 합니다. 추후 변경 필요 ');
             return; 
         }
 
@@ -102,7 +109,6 @@ export default class ReferenceSearch extends LightningElement {
         };
 
         console.log("filterGroup : " + JSON.stringify(filterGroup));
-
         // Name input 영역에 입력된 값이 한글인지 영어인지를 구분해서 서로 다른 필드로 전달
         if(isKorean) {
             filterGroup.KorLabel = name;  // 한글일 경우 KorLabel 키값에 텍스트 할당
@@ -120,12 +126,18 @@ export default class ReferenceSearch extends LightningElement {
                     console.log("rsult data : " , result.result);
                     this.setTable(result.result);
                 } else {
-                    console.error('result error : ', error);
+                    console.error('result 에러 : ', error);
                 }
             })
             .catch(error => {
-                console.error(' getDataByFilter 에러 : ', error);
+                console.error('getDataByFilter 에러 : ', error);
+            }).finally(() => {
+                // 검색버튼 다시 ON
+                this.isButtonDisabled = false;
             });
+
+            this.updateSearchCriteria(name, description, apiversion, remove, specialAccessRules, memo, supportedCalls);
+
     }
     
     isKoreanText(text) {
@@ -160,22 +172,43 @@ export default class ReferenceSearch extends LightningElement {
     }
 
     btnReset(){
-        console.log("초기화 시작 >>>>>>>>>>>>>>>>>>>>> btnReset"); 
+        console.log(":::::::::::::::: btnReset 시작 ::::::::::::::::"); 
         //셀렉박스 초기화
         const checkboxes = this.template.querySelectorAll('.selectedCheckbox');
         checkboxes.forEach(checkbox => {
             checkbox.checked = false;
             console.log("checkbox : ", checkbox.checked);
         });
-    
         //인풋박스 초기화
         const inputboxes = this.template.querySelectorAll('.inputValue');
         inputboxes.forEach(inputbox => {
             inputbox.value = '';
             console.log("inputbox : ", inputbox.value);
         });
-
         //복사한 첫 데이터 가져옴
         this.setTable(this.initialData);
+        this.updateSearchCriteria('');
     }
+
+    // 헤더 검색조건 
+    updateSearchCriteria(
+        name = '',
+        description = '',
+        apiversion = '',
+        remove = false,
+        specialAccessRules = '',
+        memo = '',
+        supportedCalls = ''
+    ){
+        this.searchCriteria = ''; //검색시마다 초기화
+        this.searchCriteria += `이름: ${name} | `;
+        this.searchCriteria += `Description: ${description} | `;
+        this.searchCriteria += `Api Version: ${apiversion} | `;
+        this.searchCriteria += `삭제된 API : ${remove ? 'Yes' : 'No'} | `;
+        this.searchCriteria += `Special Access Rules: ${specialAccessRules} | `;
+        this.searchCriteria += `Memo: ${memo} | `;
+        this.searchCriteria += `Supported Calls: ${supportedCalls} `;
+    }
+    
+    
 }

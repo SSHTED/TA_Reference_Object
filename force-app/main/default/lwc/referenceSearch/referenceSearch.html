@@ -1,12 +1,11 @@
 <template>
     <!-- 1 Card 헤더-->
     <lightning-card title="Reference Search" icon-name="standard:document">
+        <p>{searchCriteria}</p>
         <div slot="actions">
             <lightning-button-Group>
                 <lightning-button variant="brand" label="검색" title="search action" icon-name="utility:search" id="btnSearch"
-                    onclick={btnSearch}></lightning-button>
-                <!-- <lightning-button label="" icon-name="utility:question_mark"
-                    onclick={handleToggleMoreFilter}></lightning-button> -->
+                    onclick={btnSearch} disabled={isButtonDisabled}></lightning-button>
                 <lightning-button label="초기화" title="reset action" icon-name="utility:close"
                     onclick={btnReset}></lightning-button>
             </lightning-button-Group>
@@ -22,21 +21,21 @@
                     <div class="title">Object Name</div>
                     <div class="searchBox">
                         <lightning-input class="inputValue_filled" type="search" placeholder="insert objectName" data-id="name"
-                            onkeydown={checkKey}></lightning-input>
+                            ></lightning-input>
                     </div>
                 </div>
                 <div class="section">
                     <div class="title">Description</div>
                     <div class="searchBox">
                         <lightning-input class="inputValue" type="search" placeholder="insert description" data-id="description"
-                            onkeydown={checkKey}></lightning-input>
+                            ></lightning-input>
                     </div>
                 </div>
                 <div class="section">
                     <div class="title">Api Version</div>
                     <div class="searchBox">
                         <lightning-input class="inputValue" type="search" placeholder="insert apiversion" data-id="apiversion"
-                            onkeydown={checkKey}></lightning-input>
+                            ></lightning-input>
                     </div>
                 </div>
                 <div class="section">
@@ -52,21 +51,21 @@
                     <div class="title">SpecialAccessRules</div>
                     <div class="searchBox">
                         <lightning-input class="inputValue" type="search" placeholder="insert specialAccessRules" data-id="specialAccessRules"
-                            onkeydown={checkKey}></lightning-input>
+                            ></lightning-input>
                     </div>
                 </div>
                 <div class="section">
                     <div class="title">Usage</div>
                     <div class="searchBox">
                         <lightning-input class="inputValue" type="search" placeholder="insert usage" data-id="usage"
-                            onkeydown={checkKey}></lightning-input>
+                            ></lightning-input>
                     </div>
                 </div>
                 <div class="section">
                     <div class="title">Memo</div>
                     <div class="searchBox">
                         <lightning-input class="inputValue" type="search" placeholder="insert memo" data-id="memo"
-                            onkeydown={checkKey}></lightning-input>
+                            ></lightning-input>
                     </div>
                 </div>
             </div>
@@ -91,189 +90,6 @@
     </lightning-card>
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    <!-- Spacing -->
-    <div class="slds-var-m-top_medium"></div>
-    <lightning-card>
-        <!-- 1 line -->
-        <div class="c-container"  onkeydown={checkKey}>
-            <lightning-layout vertical-align="center" class="x-large">
-                <!-- 왼쪽 요소 -->
-                <div class="left-section">
-                    <lightning-layout vertical-align="center">
-                        <!-- 이름 -->
-                        <lightning-layout-item flexibility="auto" padding="around-small">
-                            <div class="custom-box">
-                                <article title="Name">이름</article>
-                            </div>
-                        </lightning-layout-item>
-                        <lightning-layout-item flexibility="auto" padding="around-small">
-                            <div class="custom-box">
-                                <lightning-input class="inputValue" type="text" placeholder="검색" data-id="name"
-                                    name="" onkeydown={checkKey}></lightning-input>
-                            </div>
-                        </lightning-layout-item>
-                        <!-- Description -->
-                        <lightning-layout-item flexibility="auto" padding="around-small">
-                            <div class="custom-box">
-                                <article title="Description">Description</article>
-                            </div>
-                        </lightning-layout-item>
-                        <lightning-layout-item flexibility="auto" padding="around-small">
-                            <div class="custom-box">
-                                <lightning-input class="inputValue" type="text" placeholder="검색" data-id="description"
-                                    name="" onkeydown={checkKey}></lightning-input>
-                            </div>
-                        </lightning-layout-item>
-                    </lightning-layout>
-                </div>
-
-                <!-- 오른쪽 요소 -->
-                <div class="right-section">
-                    <lightning-layout vertical-align="center">
-                        <!-- Api Version -->
-                        <lightning-layout-item flexibility="auto" padding="around-small">
-                            <div class="custom-box">
-                                <article title="Api Version">Api Version</article>
-                            </div>
-                        </lightning-layout-item>
-                        <lightning-layout-item flexibility="auto" padding="around-small">
-                            <div class="custom-box"> <lightning-input class="inputValue" type="text" placeholder="검색" data-id="apiversion"
-                                    name="apiVersion" onkeydown={checkKey}></lightning-input>
-                            </div>
-                        </lightning-layout-item>
-                        <!-- 삭제된 API -->
-                        <lightning-layout-item flexibility="auto" padding="around-small">
-                            <div class="custom-box">
-                                <article title="Remove">삭제된 API</article>
-                            </div>
-                        </lightning-layout-item>
-                        <lightning-layout-item flexibility="auto" padding="around-small">
-                            <div class="custom-box"> <lightning-input class="selectedCheckbox" type="checkbox" name="" data-id="remove"
-                                    checked={isChecked}></lightning-input>
-                            </div>
-                        </lightning-layout-item>
-                    </lightning-layout>
-                </div>
-            </lightning-layout>
-        </div>
-
-        <!-- 2 line -->
-
-        <div class="c-container"  onkeydown={checkKey}>
-            <lightning-layout vertical-align="center" class="x-large">
-                <!-- 왼쪽 요소 -->
-                <div class="left-section">
-                    <lightning-layout vertical-align="center">
-
-                        <lightning-layout-item flexibility="auto" padding="around-small">
-                            <div class="custom-box">
-                                <span title="SpecialAccessRules">Special Access Rules</span>
-                            </div>
-                        </lightning-layout-item>
-                        <lightning-layout-item flexibility="auto" padding="around-small">
-                            <div class="custom-box">
-                                <lightning-input class="inputValue" type="text" placeholder="검색" data-id="specialAccessRules"
-                                    name="검색" onkeydown={checkKey}></lightning-input>
-                            </div>
-                        </lightning-layout-item>
-                        <lightning-layout-item flexibility="auto" padding="around-small">
-                            <div class="custom-box">
-                                <span title="Usage">Usage</span>
-                            </div>
-                        </lightning-layout-item>
-                        <lightning-layout-item flexibility="auto" padding="around-small">
-                            <div class="custom-box"> <lightning-input class="inputValue" type="text" data-id="usage"
-                                    placeholder="검색" name=" " onkeydown={checkKey}></lightning-input>
-                            </div>
-                        </lightning-layout-item>
-                    </lightning-layout>
-                </div>
-                <!-- 오른쪽 요소 -->
-                <div class="right-section">
-                    <lightning-layout vertical-align="center">
-
-                        <lightning-layout-item flexibility="auto" padding="around-small">
-                            <div class="custom-box">
-                                <span title="Memo">Memo</span>
-                            </div>
-                        </lightning-layout-item>
-                        <lightning-layout-item flexibility="auto" padding="around-small">
-                            <div class="custom-box"> <lightning-input class="inputValue" type="text" data-id="memo"
-                                    placeholder="검색" name=" " onkeydown={checkKey}></lightning-input>
-                            </div>
-                        </lightning-layout-item>
-                    </lightning-layout>
-
-                </div>
-            </lightning-layout>
-        </div>
-
-        <!-- 3 line -->
-        <div class="c-container"  onkeydown={checkKey}>
-            <lightning-layout vertical-align="center" class="x-large">
-                <!-- 왼쪽 요소 -->
-                <div>
-                    <lightning-layout vertical-align="center">
-                        <!-- Supported Calls -->
-                        <lightning-layout-item padding="around-small">
-                            <div class="custom-box">
-                                <article title="Supported Calls">Supported Calls</article>
-                            </div>
-                        </lightning-layout-item>
-                        <lightning-layout-item flexibility="auto" padding="around-small">
-                            <div class="supported-calls-item slds-grid slds-wrap">
-                                <template for:each={supCallsItems} for:item="item" for:index="index">
-                                    <div key={item.name} class="slds-col slds-size_1-of-6">
-                                        <lightning-input 
-                                            class="selectedCheckbox" 
-                                            type="checkbox" 
-                                            label={item.label}
-                                            name={item.name} 
-                                            checked={item.checked}>
-                                        </lightning-input>
-                                    </div>
-                                </template>
-                            </div>
-                        </lightning-layout-item>
-                    </lightning-layout>
-                </div>
-
-                <!-- 오른쪽 요소 -->
-                <div class="right-section">
-                    <lightning-layout vertical-align="center">
-                        <!-- 차후 추가 -->
-                    </lightning-layout>
-                </div>
-            </lightning-layout>
-        </div>
-        <!-- <template if:true={moreFilter}> -->
-        <!-- </template> -->
-
-    </lightning-card>
-    
     <!-- 공백 -->
     <div class="slds-col slds-size_1-of-12">
 
