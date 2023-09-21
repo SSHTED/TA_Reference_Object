@@ -9,8 +9,9 @@ export default class ReferenceSearch extends LightningElement {
     @track isKorean = false;
     @track isEnglish = false;
     @track result = [];
-    loaded = false;
+    @track loaded = false;
     isButtonDisabled = false;
+    toggleInputCard = false;
     searchCriteria = '';
 
     refAllData = [];
@@ -20,6 +21,7 @@ export default class ReferenceSearch extends LightningElement {
     @wire(getInit)
     wiredInit({ error, data }) {
         if (data && data.result) {
+            this.loaded = true;
             console.log(':::::::::::::::: wiredInit :::::::::::::::: ');
             this.refAllData = data.result.refAllData;
             this.initialData = [...this.refAllData];  //복사본
@@ -31,7 +33,7 @@ export default class ReferenceSearch extends LightningElement {
 
             console.log('data >>>>>>>>>>> ', data);
 
-            
+        
             this.setTable();
             this.updateSearchCriteria();
         } else if (error) {
@@ -40,8 +42,10 @@ export default class ReferenceSearch extends LightningElement {
     }
 
     setTable(refData) {
-        this.loaded = false;
         console.log(":::::::::::::::: setTable start ::::::::::::::::");
+        // this.loaded = false;
+        // console.log("loaded state [[setTable]]>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> " + this.loaded)
+
         if (!refData) {
             refData = this.refAllData;
         }
@@ -50,12 +54,13 @@ export default class ReferenceSearch extends LightningElement {
             this.refAllData = refData.map(item => {
                 return {
                     ...item,
-                    objectReferenceDetailUrl: `https://dkbmc--pms.sandbox.lightning.force.com/lightning/r/ObjectReference__c/${item.Id}/view`
+                    objectReferenceDetailUrl: `https://dkbmc--pms.sandbox.lightning.force.com/lightning/r/ObjectReference__c/${item.id}/view`
                 };
             });
 
-            console.log("refAllData : ", this.refAllData)
-            this.loaded = true;
+            console.log("refAllData : ", this.refAllData);
+            console.log("loaded state [[setTable]]>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> " + this.loaded)
+
             console.log(":::::::::::::::: setTable end :::::::::::::::: ")
         } else {
             console.error(' setTable 에러 : ', error);
@@ -126,11 +131,17 @@ export default class ReferenceSearch extends LightningElement {
             }
         }
 
+        this.loaded = false;
         getDataByFilter({ filterGroup: JSON.stringify(filterGroup) })
             .then(result => {
+                this.loaded = true;
+                console.log("loaded state [[getDataByFilter]]>>>>>>>>>>>>>>>>> " + this.loaded)
+
                 if (result.success == true) {
                     console.log("result data : ", result.result);
                     this.setTable(result.result);
+
+
                 } else {
                     console.error('result 에러 : ', error);
                 }
@@ -139,6 +150,8 @@ export default class ReferenceSearch extends LightningElement {
                 console.error('getDataByFilter 에러 : ', error);
             }).finally(() => {
                 this.isButtonDisabled = false;
+
+
             });
 
         //헤더 검색조건
@@ -148,6 +161,10 @@ export default class ReferenceSearch extends LightningElement {
 
     btnReset() {
         console.log(":::::::::::::::: btnReset 시작 ::::::::::::::::");
+        this.loaded = false;
+        console.log("loaded state [[btnReset]]>>>>>>>>>>>>>>>>> " + this.loaded)
+
+
         const checkboxes = this.template.querySelectorAll('.selectedCheckbox');
         checkboxes.forEach(checkbox => {
             checkbox.checked = false;
@@ -158,7 +175,11 @@ export default class ReferenceSearch extends LightningElement {
         });
 
         this.setTable(this.initialData);
+        this.loaded = true;
+        console.log("loaded state [[btnReset]]>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> " + this.loaded)
+
         this.updateSearchCriteria();
+
     }
 
     // 입력받은 텍스트가 영어일 때 공백여부를 확인하기 위한 함수
@@ -202,7 +223,7 @@ export default class ReferenceSearch extends LightningElement {
         supportedCalls = ''
     ) {
         this.searchCriteria = '';
-        this.searchCriteria += `이름: ${name} | `;
+        this.searchCriteria += name != '' ? `이름: ${name} | ` : '';
         this.searchCriteria += `Description: ${description} | `;
         this.searchCriteria += `Api Version: ${apiversion} | `;
         this.searchCriteria += `삭제된 API : ${remove ? 'Yes' : 'No'} | `;
@@ -213,15 +234,10 @@ export default class ReferenceSearch extends LightningElement {
 
     toggleResultCard(event) {
         const clickedElement = event.target;
-
         if (clickedElement.classList.contains('result_card')) {
+            this.toggleInputCard = !this.toggleInputCard;
             console.log("되냐?")
         }
     }
     
-
-    toggleInputCard = false;
-    toggleResultCard(){
-        this.toggleInputCard = !this.toggleInputCard;
-    }
 }

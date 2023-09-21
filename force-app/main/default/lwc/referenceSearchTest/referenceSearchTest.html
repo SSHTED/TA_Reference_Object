@@ -2,7 +2,6 @@
     <!-- 1 Card 헤더-->
     <lightning-card class="header_card" title="Reference Search" icon-name="standard:document">
         <p>{searchCriteria}</p>
-        <p>Loaded state:{loaded}</p>
         <div slot="actions">
             <lightning-button-Group>
                 <lightning-button variant="brand" label="검색" title="search action" icon-name="utility:search"
@@ -13,9 +12,6 @@
         </div>
     </lightning-card>
 
- 
-    
-    <!-- 새로 만드는 영역 -->
     <template if:false={toggleInputCard}>
     <lightning-card class="input_card">
         <div class="searchArea" onkeydown={checkKey}>
@@ -89,7 +85,6 @@
     </lightning-card>
     </template>
 
-    
     <lightning-card class="result_card" title="검색 결과" icon-name="utility:expand_alt" onclick={toggleResultCard}>
         <div class="loadedHolder">
             <template if:false={loaded}>
@@ -123,7 +118,7 @@
                                 <td>{index}</td>
                                 <td> <span>
                                         <a href={item.objectReferenceDetailUrl} target="_blank" rel="noopener noreferrer" style="color: black;">
-                                        {item.Name}
+                                        {item.name}
                                         </a>
                                         <a href={item.Docs_Link__c} target="_blank" rel="noopener noreferrer">
                                             <lightning-icon icon-name="doctype:link" size="x-small"
@@ -131,9 +126,9 @@
                                         </a>
                                     </span>
                                 </td>
-                                <td>{item.Eng_Label__c}</td>
-                                <td>{item.Kor_Label__c}</td>
-                                <td>{item.Api_Version__c}</td>
+                                <td>{item.engLabel}</td>
+                                <td>{item.korLabel}</td>
+                                <td>{item.apiVersion}</td>
                             </tr>
                         </template>
                     </tbody>

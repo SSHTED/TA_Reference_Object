@@ -21,6 +21,7 @@ export default class ReferenceSearch extends LightningElement {
     @wire(getInit)
     wiredInit({ error, data }) {
         if (data && data.result) {
+            this.loaded = true;
             console.log(':::::::::::::::: wiredInit :::::::::::::::: ');
             this.refAllData = data.result.refAllData;
             this.initialData = [...this.refAllData];  //복사본
@@ -42,8 +43,8 @@ export default class ReferenceSearch extends LightningElement {
 
     setTable(refData) {
         console.log(":::::::::::::::: setTable start ::::::::::::::::");
-        this.loaded = false;
-        console.log("loaded state [[setTable]]>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> " + this.loaded)
+        // this.loaded = false;
+        // console.log("loaded state [[setTable]]>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> " + this.loaded)
 
         if (!refData) {
             refData = this.refAllData;
@@ -53,12 +54,11 @@ export default class ReferenceSearch extends LightningElement {
             this.refAllData = refData.map(item => {
                 return {
                     ...item,
-                    objectReferenceDetailUrl: `https://dkbmc--pms.sandbox.lightning.force.com/lightning/r/ObjectReference__c/${item.Id}/view`
+                    objectReferenceDetailUrl: `https://dkbmc--pms.sandbox.lightning.force.com/lightning/r/ObjectReference__c/${item.id}/view`
                 };
             });
 
-            console.log("refAllData : ", this.refAllData)
-            this.loaded = true;
+            console.log("refAllData : ", this.refAllData);
             console.log("loaded state [[setTable]]>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> " + this.loaded)
 
             console.log(":::::::::::::::: setTable end :::::::::::::::: ")
@@ -131,11 +131,17 @@ export default class ReferenceSearch extends LightningElement {
             }
         }
 
+        this.loaded = false;
         getDataByFilter({ filterGroup: JSON.stringify(filterGroup) })
             .then(result => {
+                this.loaded = true;
+                console.log("loaded state [[getDataByFilter]]>>>>>>>>>>>>>>>>> " + this.loaded)
+
                 if (result.success == true) {
                     console.log("result data : ", result.result);
                     this.setTable(result.result);
+
+
                 } else {
                     console.error('result 에러 : ', error);
                 }
@@ -144,7 +150,7 @@ export default class ReferenceSearch extends LightningElement {
                 console.error('getDataByFilter 에러 : ', error);
             }).finally(() => {
                 this.isButtonDisabled = false;
-                console.log("loaded state [[search]] >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> " + this.loaded)
+
 
             });
 
@@ -155,6 +161,8 @@ export default class ReferenceSearch extends LightningElement {
 
     btnReset() {
         console.log(":::::::::::::::: btnReset 시작 ::::::::::::::::");
+        console.log("loaded state [[btnReset]]>>>>>>>>>>>>>>>>> " + this.loaded)
+
 
         const checkboxes = this.template.querySelectorAll('.selectedCheckbox');
         checkboxes.forEach(checkbox => {
@@ -166,8 +174,10 @@ export default class ReferenceSearch extends LightningElement {
         });
 
         this.setTable(this.initialData);
+        
+        console.log("loaded state [[btnReset]]>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> " + this.loaded)
+
         this.updateSearchCriteria();
-        console.log("loaded state [[reset]]>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> " + this.loaded)
 
     }
 
@@ -212,7 +222,7 @@ export default class ReferenceSearch extends LightningElement {
         supportedCalls = ''
     ) {
         this.searchCriteria = '';
-        this.searchCriteria += `이름: ${name} | `;
+        this.searchCriteria += name != '' ? `이름: ${name} | ` : '';
         this.searchCriteria += `Description: ${description} | `;
         this.searchCriteria += `Api Version: ${apiversion} | `;
         this.searchCriteria += `삭제된 API : ${remove ? 'Yes' : 'No'} | `;
