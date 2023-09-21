@@ -9,8 +9,9 @@ export default class ReferenceSearch extends LightningElement {
     @track isKorean = false;
     @track isEnglish = false;
     @track result = [];
-    loaded = false;
+    @track loaded = false;
     isButtonDisabled = false;
+    toggleInputCard = false;
     searchCriteria = '';
 
     refAllData = [];
@@ -29,6 +30,9 @@ export default class ReferenceSearch extends LightningElement {
                 return { label: `${val}`, name: `${val}`, checked: false };
             });
 
+            console.log('data >>>>>>>>>>> ', data);
+
+        
             this.setTable();
             this.updateSearchCriteria();
         } else if (error) {
@@ -37,8 +41,10 @@ export default class ReferenceSearch extends LightningElement {
     }
 
     setTable(refData) {
-        this.loaded = false;
         console.log(":::::::::::::::: setTable start ::::::::::::::::");
+        this.loaded = false;
+        console.log("loaded state [[setTable]]>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> " + this.loaded)
+
         if (!refData) {
             refData = this.refAllData;
         }
@@ -53,6 +59,8 @@ export default class ReferenceSearch extends LightningElement {
 
             console.log("refAllData : ", this.refAllData)
             this.loaded = true;
+            console.log("loaded state [[setTable]]>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> " + this.loaded)
+
             console.log(":::::::::::::::: setTable end :::::::::::::::: ")
         } else {
             console.error(' setTable 에러 : ', error);
@@ -136,6 +144,8 @@ export default class ReferenceSearch extends LightningElement {
                 console.error('getDataByFilter 에러 : ', error);
             }).finally(() => {
                 this.isButtonDisabled = false;
+                console.log("loaded state [[search]] >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> " + this.loaded)
+
             });
 
         //헤더 검색조건
@@ -145,6 +155,7 @@ export default class ReferenceSearch extends LightningElement {
 
     btnReset() {
         console.log(":::::::::::::::: btnReset 시작 ::::::::::::::::");
+
         const checkboxes = this.template.querySelectorAll('.selectedCheckbox');
         checkboxes.forEach(checkbox => {
             checkbox.checked = false;
@@ -156,6 +167,8 @@ export default class ReferenceSearch extends LightningElement {
 
         this.setTable(this.initialData);
         this.updateSearchCriteria();
+        console.log("loaded state [[reset]]>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> " + this.loaded)
+
     }
 
     // 입력받은 텍스트가 영어일 때 공백여부를 확인하기 위한 함수
@@ -208,4 +221,12 @@ export default class ReferenceSearch extends LightningElement {
         this.searchCriteria += `Supported Calls: ${supportedCalls} `;
     }
 
+    toggleResultCard(event) {
+        const clickedElement = event.target;
+        if (clickedElement.classList.contains('result_card')) {
+            this.toggleInputCard = !this.toggleInputCard;
+            console.log("되냐?")
+        }
+    }
+    
 }

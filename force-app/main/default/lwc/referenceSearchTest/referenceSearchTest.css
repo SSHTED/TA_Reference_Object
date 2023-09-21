@@ -36,6 +36,24 @@
    top: 55px;
 }
 
+.header_card p {
+   float: left;
+   position: relative;
+   top: -35px;
+   left: 200px;
+}
+
+.result_card p {
+   float: left;
+   position: relative;
+   top: -31px;
+   left: 150px;
+}
+
+.loadedHolder table {
+   position: relative;
+   top: -17px;
+}
 
 .searchArea {
    margin-top: -20px;
@@ -82,4 +100,8 @@
    padding-left: 10px;
    font-size: 15px;
    font-weight: 500;
+}
+
+lightning-input::placeholder {
+   opacity: 0.2;
 }

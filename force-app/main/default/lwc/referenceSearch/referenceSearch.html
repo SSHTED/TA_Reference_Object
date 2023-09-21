@@ -12,8 +12,9 @@
         </div>
     </lightning-card>
 
-
+    
     <!-- 새로 만드는 영역 -->
+    <template if:false={toggleInputCard}>
     <lightning-card class="input_card">
         <div class="searchArea" onkeydown={checkKey}>
             <div class="inner_searchArea">
@@ -42,7 +43,7 @@
                     <div class="title">Removed API</div>
                     <div class="searchBox">
                         <lightning-input class="selectedCheckbox" type="checkbox" name="" data-id="remove"
-                            checked={isChecked}></lightning-input>
+                                    checked={isChecked}></lightning-input>
                     </div>
                 </div>
             </div>
@@ -84,31 +85,44 @@
             </div>
         </div>
     </lightning-card>
+    </template>
 
-
-
-    <lightning-card class="result_card" title="검색 결과" icon-name="utility:expand_alt">
+    
+    <lightning-card class="result_card" title="검색 결과" icon-name="utility:expand_alt" onclick={toggleResultCard}>
         <div class="loadedHolder">
             <template if:false={loaded}>
                 <lightning-spinner alternative-text="Loading"></lightning-spinner>
             </template>
             <template if:true={loaded}>
-                <p>총 데이터 개수: {refAllData.length}</p>
-                <table>
+                <p>총 데이터 개수: {refAllData.length}</p> 
+                <table class="slds-table slds-table_cell-buffer slds-table_bordered" aria-labelledby="element-with-table-label other-element-with-table-label">
                     <thead>
-                        <tr>
-                            <th>No</th>
-                            <th>Name</th>
-                            <th>Eng Label</th>
-                            <th>Kor Label</th>
-                            <th>Api Version</th>
+                        <tr class="slds-line-height_reset">
+                          <th class="" scope="col">
+                            <div class="slds-truncate">No</div>
+                          </th>
+                          <th class="" scope="col">
+                            <div class="slds-truncate">Name</div>
+                          </th>
+                          <th class="" scope="col">
+                            <div class="slds-truncate">Eng Label</div>
+                          </th>
+                          <th class="" scope="col">
+                            <div class="slds-truncate">Kor Label</div>
+                          </th>
+                          <th class="" scope="col">
+                            <div class="slds-truncate">Api Version</div>
+                          </th>
                         </tr>
                     </thead>
                     <tbody class="refDataTbody">
                         <template for:each={refAllData} for:item="item" for:index="index">
                             <tr key={item.Id}>
+                                <td>{index}</td>
                                 <td> <span>
+                                        <a href={item.objectReferenceDetailUrl} target="_blank" rel="noopener noreferrer" style="color: black;">
                                         {item.Name}
+                                        </a>
                                         <a href={item.Docs_Link__c} target="_blank" rel="noopener noreferrer">
                                             <lightning-icon icon-name="doctype:link" size="x-small"
                                                 alternative-text="Open"></lightning-icon>
