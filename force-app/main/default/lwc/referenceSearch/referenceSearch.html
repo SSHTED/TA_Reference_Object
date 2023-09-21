@@ -16,31 +16,31 @@
 
     <!-- 새로 만드는 영역 -->
     <lightning-card>
-        <div class="searchArea">
+        <div class="searchArea" onkeydown={checkKey}>
             <div class="inner_searchArea">
                 <div class="section">
-                    <div class="title">objectName</div>
+                    <div class="title">Object Name</div>
                     <div class="searchBox">
-                        <lightning-input class="inputValue" type="search" placeholder="insert objectName" data-id="name"
+                        <lightning-input class="inputValue_filled" type="search" placeholder="insert objectName" data-id="name"
                             onkeydown={checkKey}></lightning-input>
                     </div>
                 </div>
                 <div class="section">
-                    <div class="title">description</div>
+                    <div class="title">Description</div>
                     <div class="searchBox">
                         <lightning-input class="inputValue" type="search" placeholder="insert description" data-id="description"
                             onkeydown={checkKey}></lightning-input>
                     </div>
                 </div>
                 <div class="section">
-                    <div class="title">apiVersion</div>
+                    <div class="title">Api Version</div>
                     <div class="searchBox">
                         <lightning-input class="inputValue" type="search" placeholder="insert apiversion" data-id="apiversion"
                             onkeydown={checkKey}></lightning-input>
                     </div>
                 </div>
                 <div class="section">
-                    <div class="title">removed API</div>
+                    <div class="title">Removed API</div>
                     <div class="searchBox">
                         <lightning-input class="selectedCheckbox" type="checkbox" name="" data-id="remove"
                                     checked={isChecked}></lightning-input>
@@ -49,21 +49,21 @@
             </div>
             <div class="inner_searchArea">
                 <div class="section">
-                    <div class="title">specialAccessRules</div>
+                    <div class="title">SpecialAccessRules</div>
                     <div class="searchBox">
                         <lightning-input class="inputValue" type="search" placeholder="insert specialAccessRules" data-id="specialAccessRules"
                             onkeydown={checkKey}></lightning-input>
                     </div>
                 </div>
                 <div class="section">
-                    <div class="title">usage</div>
+                    <div class="title">Usage</div>
                     <div class="searchBox">
                         <lightning-input class="inputValue" type="search" placeholder="insert usage" data-id="usage"
                             onkeydown={checkKey}></lightning-input>
                     </div>
                 </div>
                 <div class="section">
-                    <div class="title">memo</div>
+                    <div class="title">Memo</div>
                     <div class="searchBox">
                         <lightning-input class="inputValue" type="search" placeholder="insert memo" data-id="memo"
                             onkeydown={checkKey}></lightning-input>
@@ -71,7 +71,7 @@
                 </div>
             </div>
             <div class="inner_searchArea">
-                <div class="sc_title">supportedCalls</div>
+                <div class="sc_title">SupportedCalls</div>
                 <div class="supported-calls-item slds-grid slds-wrap">
                     <template for:each={supCallsItems} for:item="item" for:index="index">
                         <div key={item.name} class="slds-col slds-size_1-of-6">
@@ -284,21 +284,33 @@
     <div class="slds-var-m-top_medium"></div>
 
     <lightning-card title="검색 결과" icon-name="utility:expand_alt">
-        <table>
-            <thead>
-                <tr>
-                    <th>No</th>
-                    <th>Name</th>
-                    <th>Eng Label</th>
-                    <th>Kor Label</th>
-                    <th>Api Version</th>
-                    <th>Supported_Calls__c</th>
-                    <th>Remove__c</th>
-                </tr>
-            </thead>
-            <tbody class="refDataTbody">
-                <!-- set refData -->
-            </tbody>
-        </table>
+        <div class="loadedHolder">
+            <template if:false={loaded}>
+                <lightning-spinner alternative-text="Loading"></lightning-spinner>
+            </template>
+            <template if:true={loaded}>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>No</th>
+                            <th>Name</th>
+                            <th>Eng Label</th>
+                            <th>Kor Label</th>
+                            <th>Api Version</th>
+                        </tr>
+                    </thead>
+                    <tbody class="refDataTbody">
+                        <template for:each={refAllData} for:item="item" for:index="index">
+                            <tr key={item.Id}>
+                                <td>{item.Name}</td>
+                                <td>{item.Eng_Label__c}</td>
+                                <td>{item.Kor_Label__c}</td>
+                                <td>{item.Api_Version__c}</td>
+                            </tr>
+                        </template>
+                    </tbody>
+                </table>
+            </template>
+        </div>
     </lightning-card>
 </template>

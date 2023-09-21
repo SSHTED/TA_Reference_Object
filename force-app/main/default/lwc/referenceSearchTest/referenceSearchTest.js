@@ -9,7 +9,8 @@ export default class ReferenceSearch extends LightningElement {
     @track isKorean = false;
     @track isEnglish = false;
     @track result = [];
-    @track loaded = false;
+    loaded = false;
+    isButtonDisabled = false;
 
     refAllData = []; 
     supCallsList = [];
@@ -51,11 +52,17 @@ export default class ReferenceSearch extends LightningElement {
         } else {
             console.error('refData : ', refData);
         }
+
+        this.isButtonDisabled = false;
+
     }
     
     // this.name을 파라미터로 apex 클래스에 전달후, 응답을 받고 data를 테이블 형식으로 페이지에 렌더링
     btnSearch() {
         console.log("btnSearch 시작")
+        this.isButtonDisabled = true;
+        console.log("isButtonDisabled >>>" + this.isButtonDisabled)
+
         const name = this.template.querySelector('[data-id="name"]').value;
         const description = this.template.querySelector('[data-id="description"]').value;
         const apiversion = this.template.querySelector('[data-id="apiversion"]').value;
@@ -125,7 +132,11 @@ export default class ReferenceSearch extends LightningElement {
             })
             .catch(error => {
                 console.error(' getDataByFilter 에러 : ', error);
+            }).finally(() => {
+                // Promise가 완료되면 버튼을 다시 활성화
+                this.isButtonDisabled = false;
             });
+            
     }
     
     isKoreanText(text) {

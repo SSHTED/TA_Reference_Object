@@ -4,7 +4,7 @@
 
 
 .left-section, .right-section {
-     float: left;  
+    float: left;  
     width: 50%; /* 각 섹션을 화면의 반씩 차지하도록 설정 */
 }
 
@@ -58,6 +58,14 @@
     width: 65%;
     float: left;
 }
+
+.inputValue_filled {
+    width: 65%;
+    float: left;
+    background-color: green;
+}
+
+
 
 .inner_searchArea .sc_title {
     padding-left: 10px;

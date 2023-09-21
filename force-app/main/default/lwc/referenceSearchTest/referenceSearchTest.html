@@ -3,14 +3,14 @@
     <lightning-card title="Reference Search" icon-name="standard:document">
         <div slot="actions">
             <lightning-button-Group>
-                <lightning-button label="검색" title="search action" icon-name="utility:search"
-                    onclick={btnSearch}></lightning-button>
+                <lightning-button variant="brand" label="검색" title="search action" icon-name="utility:search" id="btnSearch"
+                    onclick={btnSearch} disabled={isButtonDisabled}></lightning-button>
                 <lightning-button label="초기화" title="reset action" icon-name="utility:close"
                     onclick={btnReset}></lightning-button>
             </lightning-button-Group>
-            
         </div>
     </lightning-card>
+
 
     <!-- Spacing -->
     <div class="slds-var-m-top_medium"></div>
@@ -30,7 +30,7 @@
                         <lightning-layout-item flexibility="auto" padding="around-small">
                             <div class="custom-box">
                                 <lightning-input class="inputValue" type="text" placeholder="검색" data-id="name"
-                                    name=""></lightning-input>
+                                    name="" ></lightning-input>
                             </div>
                         </lightning-layout-item>
                         <!-- Description -->
@@ -42,7 +42,7 @@
                         <lightning-layout-item flexibility="auto" padding="around-small">
                             <div class="custom-box">
                                 <lightning-input class="inputValue" type="text" placeholder="검색" data-id="description"
-                                    name=""></lightning-input>
+                                    name="" ></lightning-input>
                             </div>
                         </lightning-layout-item>
                     </lightning-layout>
@@ -58,8 +58,8 @@
                             </div>
                         </lightning-layout-item>
                         <lightning-layout-item flexibility="auto" padding="around-small">
-                            <div class="custom-box"> <lightning-input class="inputValue" type="text" placeholder="검색"
-                                    data-id="apiversion" name="apiVersion"></lightning-input>
+                            <div class="custom-box"> <lightning-input class="inputValue" type="text" placeholder="검색" data-id="apiversion"
+                                    name="apiVersion" ></lightning-input>
                             </div>
                         </lightning-layout-item>
                         <!-- 삭제된 API -->
@@ -69,8 +69,8 @@
                             </div>
                         </lightning-layout-item>
                         <lightning-layout-item flexibility="auto" padding="around-small">
-                            <div class="custom-box"> <lightning-input class="selectedCheckbox" type="checkbox" name=""
-                                    data-id="remove" checked={isChecked}></lightning-input>
+                            <div class="custom-box"> <lightning-input class="selectedCheckbox" type="checkbox" name="" data-id="remove"
+                                    checked={isChecked}></lightning-input>
                             </div>
                         </lightning-layout-item>
                     </lightning-layout>
@@ -80,7 +80,7 @@
 
         <!-- 2 line -->
 
-        <div class="c-container" onkeydown={checkKey}>
+        <div class="c-container" onkeydown={checkKey} >
             <lightning-layout vertical-align="center" class="x-large">
                 <!-- 왼쪽 요소 -->
                 <div class="left-section">
@@ -93,8 +93,8 @@
                         </lightning-layout-item>
                         <lightning-layout-item flexibility="auto" padding="around-small">
                             <div class="custom-box">
-                                <lightning-input class="inputValue" type="text" placeholder="검색"
-                                    data-id="specialAccessRules" name="검색"></lightning-input>
+                                <lightning-input class="inputValue" type="text" placeholder="검색" data-id="specialAccessRules"
+                                    name="검색" ></lightning-input>
                             </div>
                         </lightning-layout-item>
                         <lightning-layout-item flexibility="auto" padding="around-small">
@@ -104,7 +104,7 @@
                         </lightning-layout-item>
                         <lightning-layout-item flexibility="auto" padding="around-small">
                             <div class="custom-box"> <lightning-input class="inputValue" type="text" data-id="usage"
-                                    placeholder="검색" name=" "></lightning-input>
+                                    placeholder="검색" name=" " ></lightning-input>
                             </div>
                         </lightning-layout-item>
                     </lightning-layout>
@@ -120,17 +120,7 @@
                         </lightning-layout-item>
                         <lightning-layout-item flexibility="auto" padding="around-small">
                             <div class="custom-box"> <lightning-input class="inputValue" type="text" data-id="memo"
-                                    placeholder="검색" name=" "></lightning-input>
-                            </div>
-                        </lightning-layout-item>
-                        <lightning-layout-item flexibility="auto" padding="around-small">
-                            <div class="custom-box">
-                                <span title="Link">Docs Link</span>
-                            </div>
-                        </lightning-layout-item>
-                        <lightning-layout-item flexibility="auto" padding="around-small">
-                            <div class="custom-box"> <lightning-input class="inputValue" type="text" data-id="docsLink"
-                                    placeholder="Enter Value" name="검색"></lightning-input>
+                                    placeholder="검색" name=" " ></lightning-input>
                             </div>
                         </lightning-layout-item>
                     </lightning-layout>
@@ -140,7 +130,7 @@
         </div>
 
         <!-- 3 line -->
-        <div class="c-container" onkeydown={checkKey}>
+        <div class="c-container" onkeydown={checkKey} >
             <lightning-layout vertical-align="center" class="x-large">
                 <!-- 왼쪽 요소 -->
                 <div>
@@ -155,8 +145,12 @@
                             <div class="supported-calls-item slds-grid slds-wrap">
                                 <template for:each={supCallsItems} for:item="item" for:index="index">
                                     <div key={item.name} class="slds-col slds-size_1-of-6">
-                                        <lightning-input class="selectedCheckbox" type="checkbox" label={item.label}
-                                            name={item.name} checked={item.checked}>
+                                        <lightning-input 
+                                            class="selectedCheckbox" 
+                                            type="checkbox" 
+                                            label={item.label}
+                                            name={item.name} 
+                                            checked={item.checked}>
                                         </lightning-input>
                                     </div>
                                 </template>
@@ -177,7 +171,7 @@
         <!-- </template> -->
 
     </lightning-card>
-
+    
     <!-- 공백 -->
     <div class="slds-col slds-size_1-of-12">
 
@@ -217,5 +211,4 @@
             </template>
         </div>
     </lightning-card>
-
 </template>

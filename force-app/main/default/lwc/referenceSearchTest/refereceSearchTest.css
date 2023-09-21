@@ -5,25 +5,62 @@
 
 .left-section, .right-section {
    float: left;  
-  width: 50%; /* 각 섹션을 화면의 반씩 차지하도록 설정 */
+   width: 50%; /* 각 섹션을 화면의 반씩 차지하도록 설정 */
 }
 
 /* .slds-page-header.header.flexipageHeader { */
 .slds-page-header.flexipageHeader { 
-  display: none;
+   display: none;
 }
 
 /* 버튼 색 테스트*/
 .greyBackground {
-  background-color: grey;
+   background-color: grey;
 }
 
 .searchArea {
-  width: 100%;
-  height: 300px;
+   margin-top: -20px;
+   margin-left: 20px;
+   width: 100%;
+   height: 350px;
 }
 
 .inner_searchArea {
-  height: 100px;
-  background-color: beige;
+   height: 100px;
+   padding: 5px;
+}
+
+.section {
+   width: 25%;
+   float: left;
+}
+
+.section .title {
+   margin-right: 9px;
+   padding-left: 10px;
+   width: 30%;
+   transform: translateY(50%);
+   font-size: 15px;
+   font-weight: 500;
+}
+
+.section .searchBox {
+   margin-left: 30px;
+   width: 90%;
+}
+
+.section .selectedCheckbox {
+   padding-top: 24px;
+   padding-left: 80px;
+}
+
+.inputValue {
+   width: 65%;
+   float: left;
+}
+
+.inner_searchArea .sc_title {
+   padding-left: 10px;
+   font-size: 15px;
+   font-weight: 500;
 }
