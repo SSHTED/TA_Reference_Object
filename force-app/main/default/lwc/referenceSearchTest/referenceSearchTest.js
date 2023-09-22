@@ -44,12 +44,11 @@ export default class ReferenceSearch extends LightningElement {
             // this.refAllData = refData;
             this.refAllData = refData.map(item => {
                 const aorNameOptions = item.aorName.map(name => ({ label: name, value: name }));
-                const selectedValue = aorNameOptions.length > 0 ? aorNameOptions[0].value : '';
-
+                const selectedAorNameValue = aorNameOptions.length > 0 ? aorNameOptions[0].value : '';
                 return {
                     ...item,
                     aorNameOptions,
-                    selectedValue,
+                    selectedAorNameValue,
                     objectReferenceDetailUrl: `https://dkbmc--pms.sandbox.lightning.force.com/lightning/r/ObjectReference__c/${item.id}/view`
                 };
             });

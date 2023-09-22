@@ -1,6 +1,5 @@
 <template>
-    <div class="initDiv">
-        <!-- 1 Card 헤더-->
+    <!-- 헤더 영역 -->
         <lightning-card class="header_card" title="Reference Search" icon-name="standard:document">
             <p>{searchCriteria}</p>
             <div slot="actions">
@@ -13,6 +12,7 @@
             </div>
         </lightning-card>
 
+    <!-- 검색 조건 영역 -->
         <template if:false={toggleInputCard}>
             <lightning-card class="input_card">
                 <div class="searchArea" onkeydown={checkKeyboard}>
@@ -50,8 +50,7 @@
                         <div class="section">
                             <div class="title">SpecialAccessRules</div>
                             <div class="searchBox">
-                                <lightning-input class="inputValue" type="search"
-                                    placeholder="insert specialAccessRules"
+                        <lightning-input class="inputValue" type="search" placeholder="insert specialAccessRules"
                                     data-id="specialAccessRules"></lightning-input>
                             </div>
                         </div>
@@ -87,6 +86,7 @@
             </lightning-card>
         </template>
 
+    <!-- 검색 결과 영역 -->
         <lightning-card class="result_card" title="검색 결과" icon-name="utility:expand_alt" onclick={toggleResultCard}>
             <div class="loadedHolder">
                 <template if:false={loading}>
@@ -94,8 +94,7 @@
                 </template>
                 <template if:true={loading}>
                     <p>총 데이터 개수: {refAllData.length}</p>
-                    <table class="slds-table slds-table_cell-buffer slds-table_bordered"
-                        aria-labelledby="element-with-table-label other-element-with-table-label">
+                <table class="slds-table slds-table_cell-buffer slds-table_bordered" aria-labelledby="element-with-table-label other-element-with-table-label">
                         <thead>
                             <tr class="slds-line-height_reset">
                                 <th class="" scope="col">
@@ -123,8 +122,7 @@
                                 <tr key={item.Id}>
                                     <td>{index}</td>
                                     <td> <span>
-                                            <a href={item.objectReferenceDetailUrl} target="_blank"
-                                                rel="noopener noreferrer" style="color: black;">
+                                        <a href={item.objectReferenceDetailUrl} target="_blank" rel="noopener noreferrer" style="color: black;">
                                                 {item.name}
                                             </a>
                                             <a href={item.Docs_Link__c} target="_blank" rel="noopener noreferrer">
@@ -137,7 +135,7 @@
                                     <td>{item.korLabel}</td>
                                     <td>{item.apiVersion}</td>
                                     <td>
-                                        <lightning-combobox name="" value={item.selectedValue} options={item.aorNameOptions}
+                                        <lightning-combobox name="" value={item.selectedAorNameValue} options={item.aorNameOptions}
                                             placeholder="" onchange={handleAorNameValue}>
                                         </lightning-combobox>
                                     </td>

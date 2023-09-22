@@ -1,8 +1,6 @@
 import { LightningElement, api, track, wire } from 'lwc';
 import getInit from '@salesforce/apex/ReferenceSearchController.getInit';
 import getDataByFilter from '@salesforce/apex/ReferenceSearchController.getDataByFilter';
-// import { resetValue } from './searchsh.js';
-
 
 export default class ReferenceSearch extends LightningElement {
     @api title = '기본제목';
@@ -28,10 +26,8 @@ export default class ReferenceSearch extends LightningElement {
                 val = val.replace('()', '');
                 return { label: `${val}`, name: `${val}`, checked: false };
             });
-
             console.log('data >>>>>>>>>>> ', data);
 
-        
             this.setTable();
             this.updateSearchCriteria();
         } else if (error) {
@@ -41,30 +37,33 @@ export default class ReferenceSearch extends LightningElement {
 
     setTable(refData) {
         console.log(":::::::::::::::: setTable start ::::::::::::::::");
-        // this.loading = false;
-        // console.log("loading state [[setTable]]>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> " + this.loading)
-
         if (!refData) {
             refData = this.refAllData;
         }
         if (Array.isArray(refData)) {
             // this.refAllData = refData;
             this.refAllData = refData.map(item => {
+                const aorNameOptions = item.aorName.map(name => ({ label: name, value: name }));
+                const selectedAorNameValue = aorNameOptions.length > 0 ? aorNameOptions[0].value : '';
+                console.log(" selectedAorNameValue selectedAorNameValue " + selectedAorNameValue)
                 return {
                     ...item,
+                    aorNameOptions,
+                    selectedAorNameValue,
                     objectReferenceDetailUrl: `https://dkbmc--pms.sandbox.lightning.force.com/lightning/r/ObjectReference__c/${item.id}/view`
                 };
             });
-
             console.log("refAllData : ", this.refAllData);
-            console.log("loading state [[setTable]]>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> " + this.loading)
-
             console.log(":::::::::::::::: setTable end :::::::::::::::: ")
         } else {
             console.error(' setTable 에러 : ', error);
             console.error(' setTable 에러 refData  : ', refData);
         }
         this.changeBooleanByKey('isButtonDisabled', false);
+    }
+
+    handleAorNameValue(event) {
+        this.value = event.detail.value;
     }
 
     btnSearch() {
@@ -97,7 +96,6 @@ export default class ReferenceSearch extends LightningElement {
         // 현재 삭제된 API 여부 확인 
         const removeChecked = this.template.querySelector('[data-id="remove"]');
         const remove = removeChecked.checked;
-        console.log("remove : " + remove)
 
         if (description && description.length < 2) {
 
@@ -133,13 +131,10 @@ export default class ReferenceSearch extends LightningElement {
         getDataByFilter({ filterGroup: JSON.stringify(filterGroup) })
             .then(result => {
                 this.changeBooleanByKey('loading', true);
-                console.log("loading state [[getDataByFilter]]>>>>>>>>>>>>>>>>> " + this.loading)
-
+                // console.log("loading state [[getDataByFilter]]>>>>>>>>>>>>>>>>> " + this.loading)
                 if (result.success == true) {
                     console.log("result data : ", result.result);
                     this.setTable(result.result);
-
-
                 } else {
                     console.error('result 에러 : ', error);
                 }
@@ -157,9 +152,6 @@ export default class ReferenceSearch extends LightningElement {
 
     btnReset() {
         console.log(":::::::::::::::: btnReset 시작 ::::::::::::::::");
-        this.changeBooleanByKey('loading', false);
-        console.log("loading state [[btnReset]]>>>>>>>>>>>>>>>>> " + this.loading)
-
 
         const checkboxes = this.template.querySelectorAll('.selectedCheckbox');
         checkboxes.forEach(checkbox => {
@@ -169,13 +161,8 @@ export default class ReferenceSearch extends LightningElement {
         inputboxes.forEach(inputbox => {
             inputbox.value = '';
         });
-
         this.setTable(this.initialData);
-        this.changeBooleanByKey('loading', true);
-        console.log("loading state [[btnReset]]>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> " + this.loading)
-
         this.updateSearchCriteria();
-
     }
 
     // 입력받은 텍스트가 영어일 때 공백여부를 확인하기 위한 함수
@@ -232,7 +219,6 @@ export default class ReferenceSearch extends LightningElement {
         const clickedElement = event.target;
         if (clickedElement.classList.contains('result_card')) {
             this.changeBooleanByKey('toggleInputCard', !this.toggleInputCard);
-            console.log("되냐?")
         }
     }
     
