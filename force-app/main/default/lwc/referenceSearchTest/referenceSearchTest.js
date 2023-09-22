@@ -55,10 +55,9 @@ export default class ReferenceSearch extends LightningElement {
             refData = this.refAllData;
         }
         if (Array.isArray(refData)) {
-            // this.refAllData = refData;
             this.refAllData = refData.map(item => {
                 const aorNameOptions = item.aorName.map(name => ({ label: name, value: name }));
-                const selectedAorNameValue = aorNameOptions.length > 0 ? aorNameOptions[0].value : '';
+                const selectedAorNameValue = aorNameOptions.length > 0 ? aorNameOptions[0].value : ''; //AOR 존재 시 [0] 보이게
                 return {
                     ...item,
                     aorNameOptions,
@@ -213,7 +212,7 @@ export default class ReferenceSearch extends LightningElement {
         return englishRegex.test(text);
     }
 
-    // 헤더 검색조건 
+    // 헤더 검색조건 추가
     updateSearchCriteria(
         name = '',
         description = '',
@@ -233,6 +232,27 @@ export default class ReferenceSearch extends LightningElement {
         this.searchCriteria += supportedCalls != '' ? `Supported Calls: ${supportedCalls} ` : '';
     }
 
+    // 동적으로 헤더,바디 추가
+    updateDisplayFields(description, specialAccessRules, usage, memo, remove) {
+        this.displayFields.description = description ? true : false;
+        this.displayFields.specialAccessRules = specialAccessRules ? true : false;
+        this.displayFields.usage = usage ? true : false;
+        this.displayFields.memo = memo ? true : false;
+        this.displayFields.remove = remove ? true : false;
+
+        this.displayHeaders = [
+            { key: 'description', isActive: this.displayFields.description },
+            { key: 'specialAccessRules', isActive: this.displayFields.specialAccessRules },
+            { key: 'usage', isActive: this.displayFields.usage },
+            { key: 'memo', isActive: this.displayFields.memo },
+            { key: 'remove', isActive: this.displayFields.remove },
+        ].filter(header => header.isActive);
+    
+        console.log("update display Fields : ", this.displayFields);
+        console.log("update display Headers : ", this.displayHeaders);
+    }
+
+    //검색결과 토글
     toggleResultCard(event) {
         const clickedElement = event.target;
         if (clickedElement.classList.contains('result_card')) {
@@ -256,27 +276,5 @@ export default class ReferenceSearch extends LightningElement {
                 break;
         }
     }
-
-    // 동적으로 추가되는 필드 함수
-    updateDisplayFields(description, specialAccessRules, usage, memo, remove) {
-        this.displayFields.description = description ? true : false;
-        this.displayFields.specialAccessRules = specialAccessRules ? true : false;
-        this.displayFields.usage = usage ? true : false;
-        this.displayFields.memo = memo ? true : false;
-        this.displayFields.remove = remove ? true : false;
-
-        this.displayHeaders = [
-            { key: 'description', isActive: this.displayFields.description },
-            { key: 'specialAccessRules', isActive: this.displayFields.specialAccessRules },
-            { key: 'usage', isActive: this.displayFields.usage },
-            { key: 'memo', isActive: this.displayFields.memo },
-            { key: 'remove', isActive: this.displayFields.remove },
-        ].filter(header => header.isActive);
-    
-        console.log("Updated displayFields: ", this.displayFields);
-        console.log("Updated displayHeaders: ", this.displayHeaders);
-    }
-
-
 
 }

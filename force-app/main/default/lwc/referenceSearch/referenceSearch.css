@@ -5,9 +5,11 @@
 
 /* 헤더 영역*/
 .header_card {
+    display: block;
     position: fixed;
-    top: 130px;
+    top: 128px;
     width: 98.5%;
+    height: 58px;
     z-index: 1000;
 }
 
@@ -15,7 +17,7 @@
 .header_card p {
     float: left;
     position: relative;
-    top: -35px;
+    top: -33px;
     left: 200px;
     width: calc( 100% - 56vh );
     white-space: nowrap;
@@ -25,16 +27,19 @@
 
 /* 검색 조건 입력 카드 영역*/
 .input_card {
-    position: fixed;
-    top: 187px;
+    display: block;
+    /* position: fixed;
+    top: 185px;
     width: 98.5%;
-    z-index: 1000;
+    z-index: 1000; */
 }
 
 /* 검색 결과 카드 영역*/
 .result_card {
-    position: relative;
-    top: 450px;
+    display: block;
+    padding-top: 60px;
+    /* position: relative;
+    top: 416px; */
 }
 
 /* 데이터 총 건수 표시 영역 */

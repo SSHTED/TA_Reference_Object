@@ -93,37 +93,23 @@
                 <lightning-spinner alternative-text="Loading"></lightning-spinner>
             </template>
             <template if:true={loading}>
-                <p>총 데이터 개수: {refAllData.length}</p>
+                <p>총 데이터 : {refAllData.length}</p>
                 <table class="slds-table slds-table_cell-buffer slds-table_bordered"
                     aria-labelledby="element-with-table-label other-element-with-table-label">
                     <thead>
                         <tr class="slds-line-height_reset">
-                            <th class="" scope="col">
-                                <div class="slds-truncate">No</div>
-                            </th>
-                            <th class="" scope="col">
-                                <div class="slds-truncate">Name</div>
-                            </th>
-                            <th class="" scope="col">
-                                <div class="slds-truncate">Eng Label</div>
-                            </th>
-                            <th class="" scope="col">
-                                <div class="slds-truncate">Kor Label</div>
-                            </th>
-                            <th class="" scope="col">
-                                <div class="slds-truncate">Api Version</div>
-                            </th>
-                            <th class="" scope="col">
-                                <div class="slds-truncate">Associated Object Reference</div>
-                            </th>
-
-                            <!-- 동적으로 추가되는 헤더 -->
+                            <th class="" scope="col"><div class="slds-truncate">No</div></th>
+                            <th class="" scope="col"><div class="slds-truncate">Name</div></th>
+                            <th class="" scope="col"><div class="slds-truncate">Eng Label</div></th>
+                            <th class="" scope="col"><div class="slds-truncate">Kor Label</div></th>
+                            <th class="" scope="col"><div class="slds-truncate">Api Version</div></th>
+                            <th class="" scope="col"><div class="slds-truncate">Associated Object Reference</div></th>
+                            <!-- 동적으로 추가되는 thead -->
                             <template for:each={displayHeaders} for:item="header" for:index="index">
                                 <th key={header.key}>
                                     <div class="slds-truncate">{header.key}</div>
                                 </th>
                             </template>
-
                         </tr>
                     </thead>
                     <tbody class="refDataTbody">
@@ -131,40 +117,24 @@
                             <tr key={item.Id}>
                                 <td>{index}</td>
                                 <td> <span>
-                                        <a href={item.objectReferenceDetailUrl} target="_blank"
-                                            rel="noopener noreferrer" style="color: black;">
+                                        <a href={item.objectReferenceDetailUrl} target="_blank" rel="noopener noreferrer" style="color: black;">
                                             {item.name}
                                         </a>
                                         <a href={item.Docs_Link__c} target="_blank" rel="noopener noreferrer">
-                                            <lightning-icon icon-name="doctype:link" size="x-small"
-                                                alternative-text="Open"></lightning-icon>
+                                            <lightning-icon icon-name="doctype:link" size="x-small" alternative-text="Open"></lightning-icon>
                                         </a>
                                     </span>
                                 </td>
                                 <td>{item.engLabel}</td>
                                 <td>{item.korLabel}</td>
                                 <td>{item.apiVersion}</td>
-                                <td>
-                                    <lightning-combobox name="" value={item.selectedAorNameValue}
-                                        options={item.aorNameOptions} placeholder="" onchange={handleAorNameValue}>
-                                    </lightning-combobox>
-                                </td>
-                                <!-- 동적으로 추가되는 필드 -->
-                                <template if:true={displayFields.description}>
-                                    <td>{item.description}</td>
-                                </template>
-                                <template if:true={displayFields.specialAccessRules}>
-                                    <td>{item.specialAccessRules}</td>
-                                </template>
-                                <template if:true={displayFields.usage}>
-                                    <td>{item.usage}</td>
-                                </template>
-                                <template if:true={displayFields.memo}>
-                                    <td>{item.memo}</td>
-                                </template>
-                                <template if:true={displayFields.remove}>
-                                    <td>{item.remove}</td>
-                                </template>
+                                <td><lightning-combobox name="" value={item.selectedAorNameValue} options={item.aorNameOptions} placeholder="" onchange={handleAorNameValue}></lightning-combobox></td>
+                                <!-- 동적으로 추가되는 tbody -->
+                                <template if:true={displayFields.description}><td>{item.description}</td></template>
+                                <template if:true={displayFields.specialAccessRules}><td>{item.specialAccessRules}</td></template>
+                                <template if:true={displayFields.usage}><td>{item.usage}</td></template>
+                                <template if:true={displayFields.memo}><td>{item.memo}</td></template>
+                                <template if:true={displayFields.remove}><td>{item.remove}</td></template>
                             </tr>
                         </template>
                     </tbody>
