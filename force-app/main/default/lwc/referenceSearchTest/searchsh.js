@@ -1,4 +1,4 @@
-export function resetValue(){
+export function resetValue() {
     //필터 더보기
     // this.moreFilter = false;
     // console.log("moreFilter : ", this.moreFilter);

@@ -1,117 +1,119 @@
 /* .slds-page-header.header.flexipageHeader { */
-   .slds-page-header.flexipageHeader { 
-      display: none;
-  }
-  
-  /* 헤더 영역*/
-  .header_card {
-      position: fixed;
-      top: 130px;
-      width: 98.5%;
-      z-index: 1000;
-  }
-  
-  /* 선택된 검색 조건 표시 영역 */
-  .header_card p {
-      float: left;
-      position: relative;
-      top: -35px;
-      left: 200px;
-      width: calc( 100% - 56vh );
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-  }
-  
-  /* 검색 조건 입력 카드 영역*/
-  .input_card {
-      position: fixed;
-      top: 187px;
-      width: 98.5%;
-      z-index: 1000;
-  }
-  
-  /* 검색 결과 카드 영역*/
-  .result_card {
-      position: relative;
-      top: 450px;
-  }
-  
-  /* 데이터 총 건수 표시 영역 */
-  .result_card p {
-      float: left;
-      position: relative;
-      top: -31px;
-      left: 150px;
-  }
-  
-  /* 검색 영역*/
-  .searchArea {
-      margin-top: -20px;
-      margin-left: 20px;
-      width: 100%;
-      height: 350px;
-  }
-  
-  /* 검색영역 내부 3개영역으로 구분하여 배치 */
-  .inner_searchArea {
-      height: 100px;
-      padding: 5px;
-  }
-  
-  /* 각 검색 조건 영역 구분 */
-  .section {
-      width: 25%;
-      float: left;
-  }
-  
-  /* 검색영역 제목 */
-  .section .title {
-      margin-right: 9px;
-      padding-left: 10px;
-      width: 30%;
-      transform: translateY(50%);
-      font-size: 15px;
-      font-weight: 500;
-  }
-  
-  /* 검색영역 input영역 */
-  .section .searchBox {
-      margin-left: 30px;
-      width: 90%;
-  }
-  
-  /* 검색영역 iuput박스 크기 및 위치 조정*/
-  .inputValue {
-      width: 65%;
-      float: left;
-  }
-  
-  /* removedAPI 체크박스 위치 조정*/
-  .section .selectedCheckbox {
-      padding-top: 24px;
-      padding-left: 80px;
-  }
-  
-  /* SupportedCalls */
-  .inner_searchArea .sc_title {
-      padding-left: 10px;
-      font-size: 15px;
-      font-weight: 500;
-  }
-  
-  
-  
-  
-  
-  
-  
-  lightning-input::placeholder {
-      opacity: 0.2;
-  }
-  
-  
-  .loadedHolder table {
-      position: relative;
-      top: -17px;
-  }
+    .slds-page-header.flexipageHeader { 
+        display: none;
+    }
+    
+    /* 헤더 영역*/
+    .header_card {
+        position: fixed;
+        top: 130px;
+        width: 98.5%;
+        z-index: 1000;
+    }
+    
+    /* 선택된 검색 조건 표시 영역 */
+    .header_card p {
+        float: left;
+        position: relative;
+        top: -35px;
+        left: 200px;
+        width: calc( 100% - 56vh );
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+    
+    /* 검색 조건 입력 카드 영역*/
+    .input_card {
+        position: fixed;
+        top: 187px;
+        width: 98.5%;
+        z-index: 1000;
+    }
+    
+    /* 검색 결과 카드 영역*/
+    .result_card {
+        position: relative;
+        top: 450px;
+    }
+    
+    /* 데이터 총 건수 표시 영역 */
+    .result_card p {
+        float: left;
+        position: relative;
+        top: -31px;
+        left: 150px;
+    }
+    
+    /* 검색 영역*/
+    .searchArea {
+        margin-top: -20px;
+        margin-left: 20px;
+        width: 100%;
+        height: 350px;
+    }
+    
+    /* 검색영역 내부 3개영역으로 구분하여 배치 */
+    .inner_searchArea {
+        height: 100px;
+        padding: 5px;
+    }
+    
+    /* 각 검색 조건 영역 구분 */
+    .section {
+        width: 25%;
+        float: left;
+    }
+    
+    /* 검색영역 제목 */
+    .section .title {
+        margin-right: 9px;
+        padding-left: 10px;
+        width: 30%;
+        transform: translateY(50%);
+        font-size: 15px;
+        font-weight: 500;
+    }
+    
+    /* 검색영역 input영역 */
+    .section .searchBox {
+        margin-left: 30px;
+        width: 90%;
+    }
+    
+    /* 검색영역 iuput박스 크기 및 위치 조정*/
+    .inputValue {
+        width: 65%;
+        float: left;
+    }
+    
+    /* removedAPI 체크박스 위치 조정*/
+    .section .selectedCheckbox {
+        padding-top: 24px;
+        padding-left: 80px;
+    }
+    
+    /* SupportedCalls */
+    .inner_searchArea .sc_title {
+        padding-left: 10px;
+        font-size: 15px;
+        font-weight: 500;
+    }
+    
+    
+    .associated {
+        margin-top: -20px;
+    }
+    
+    
+    
+    
+    lightning-input::placeholder {
+        opacity: 0.2;
+    }
+    
+    
+    .loadedHolder table {
+        position: relative;
+        top: -17px;
+    }

@@ -1,4 +1,24 @@
 public class ReferenceSearchController {
+    private class Dataset {
+        @AuraEnabled public List<OrDataset> orData { get; set; }
+    }
+    private class OrDataset {
+        @AuraEnabled public String id {get; set;}
+        @AuraEnabled public String name {get; set;}
+        @AuraEnabled public String engLabel {get; set;}
+        @AuraEnabled public String korLabel {get; set;}
+        @AuraEnabled public Decimal apiVersion {get; set;}
+        @AuraEnabled public String description {get; set;}
+        @AuraEnabled public String supportedCalls {get; set;}
+        @AuraEnabled public String specialAccessRules {get; set;}
+        @AuraEnabled public String usage {get; set;}
+        @AuraEnabled public String docsLink {get; set;}
+        @AuraEnabled public String memo {get; set;}
+        @AuraEnabled public Boolean remove {get; set;}
+        @AuraEnabled public String supportedCallsDescription {get; set;}
+        @AuraEnabled public List<String> aorName {get; set;}
+    }
+
     /**
      * init
      */
@@ -26,14 +46,15 @@ public class ReferenceSearchController {
             Set<String> callList = getSupportedCallsList();
             
             // reference 전체데이터 가져오기
-            List<ObjectReference__c> refAllData = getRefAllData();
-            
+            List<OrDataset> refAllData = getRefAllData();
+
             valueMap.put('fieldList', fieldList);
             valueMap.put('callList', callList);
             valueMap.put('refAllData', refAllData);
             
             resultMap.put('result', valueMap);
             resultMap.put('success', true);
+            
         } catch (Exception e) {
             resultMap.put('result', e.getMessage());
             resultMap.put('success', false);
@@ -56,9 +77,9 @@ public class ReferenceSearchController {
         Set<String> uniqueCalls = new Set<String>();
         
          String soql = ' select '
-                     + '   Supported_Calls__c '
+                     + '   supported_Calls__c '
                      + ' from '
-                     + '   ObjectReference__c ';
+                     + '   objectReference__c ';
         List<ObjectReference__c> queryResult = Database.query(soql);
         for(ObjectReference__c supportedCalls: queryResult){
             if(supportedCalls.Supported_Calls__c != null){
@@ -72,15 +93,59 @@ public class ReferenceSearchController {
     }
 
     // reference 전체데이터 가져오기
-    private static List<ObjectReference__c> getRefAllData() {
+    private static List<OrDataset> getRefAllData() {
         String soql = ' select '
-                     + '   Id, Name, Eng_Label__c, Kor_Label__c, Api_Version__c, Description__c, Supported_Calls__c, Special_Access_Rules__c, Usage__c, Docs_Link__c, Memo__c, Remove__c, Supported_Calls_Description__c, (Select id, name from ObjectReference__r) '
+                     + '   id, name, eng_Label__c, kor_Label__c, api_Version__c, description__c, supported_Calls__c, special_Access_Rules__c, usage__c, docs_Link__c, memo__c, remove__c, supported_Calls_Description__c, (select id, name from objectReference__r) '
                      + ' from '
-                     + '   ObjectReference__c '
+                     + '   objectReference__c '
                      + ' order by '
                      + '   name ';
         List<ObjectReference__c> queryResult = Database.query(soql);
-        return queryResult;
+        List<OrDataset> orDatasetList = setAorListInQueryResult(queryResult);
+
+        return orDatasetList;
+    }
+
+    // 가져온 쿼리의 결과에 Associated Object Reference 값 세팅
+    /* 
+        서브쿼리로 데이터를 가져오는 경우 class파일에서는 데이터를 가지고 있지만 js에서는 접근할 수 없다.
+        따라서 서브쿼리 데이터는 다른 변수에 넣어 js에 보내거나, 추가 작업을 통해 쿼리 결과에 추가하여 사용해야 한다.
+        서브쿼리로 가져온 데이터는 데이터 타입이 다르기 때문에 쿼리 결과에 추가하려면 datawrapper를 사용해야 한다.( 쿼리 결과에 넣지 않고 다른 변수에 넣어 보내려면 사용하지 않아도 된다. )
+    */
+    private static List<OrDataset> setAorListInQueryResult(List<ObjectReference__c> queryResult){
+        Dataset dataset = new Dataset();
+        dataset.orData = new List<OrDataset>();
+
+        if(queryResult.size() > 0){
+            
+            for(ObjectReference__c orItem : queryResult){
+                OrDataset orDataset = new OrDataset();
+                OrDataset.aorName = new List<String>();
+    
+                OrDataset.id = orItem.Id;
+                OrDataset.name = orItem.Name;
+                OrDataset.engLabel = orItem.Eng_Label__c;
+                OrDataset.korLabel = orItem.Kor_Label__c;
+                OrDataset.apiVersion = orItem.Api_Version__c;
+                OrDataset.description = orItem.Description__c;
+                OrDataset.supportedCalls = orItem.Supported_Calls__c;
+                OrDataset.specialAccessRules = orItem.Special_Access_Rules__c;
+                OrDataset.usage = orItem.Usage__c;
+                OrDataset.docsLink = orItem.Docs_Link__c;
+                OrDataset.memo = orItem.Memo__c;
+                OrDataset.remove = orItem.Remove__c;
+                OrDataset.supportedCallsDescription = orItem.Supported_Calls_Description__c;
+    
+                if(orItem.ObjectReference__r.size() > 0){
+                    List<Associated_Objects_Reference__c> aorList = orItem.ObjectReference__r;
+                    for(Associated_Objects_Reference__c aorItem : aorList){
+                        OrDataset.aorName.add(aorItem.Name);
+                    }
+                }
+                dataset.orData.add(OrDataset);
+            }
+        }
+        return dataset.orData;
     }
 
     // 필터 적용한 데이터 가져오기
@@ -89,14 +154,13 @@ public class ReferenceSearchController {
     public static Map<String, Object> getDataByFilter(String filterGroup) {
         Map<String, Object> resultMap = new Map<String, Object>();
         Map<String, Object> filterMap = (Map<String, Object>)JSON.deserializeUntyped(filterGroup);
-        List<ObjectReference__c> queryResultList = new List<ObjectReference__c>();
+        List<OrDataset> queryResultList = new List<OrDataset>();
         Map<String, String> soslFilterMap = new Map<String, String>(); // sosl로 가져와야하는 목록
 
         String query = '';
         Boolean isSosl = false;
 
         try {
-            System.debug('filterMap >>>>>>>>>>> ' + filterMap);
             // [1] sosl 적용시켜야하는 필드가 있는 경우를 먼저 체크
             query += getSoslQueryStr(filterMap, soslFilterMap);
 
@@ -118,17 +182,18 @@ public class ReferenceSearchController {
                 query += ' order by name ';
             }
 
-            // [5] sosl 일 때 쿼리 마지막에 close
+            // [5] sosl 일 때 쿼리 마지막에 close.( getSoslForm 함수 참고 )
             if(isSosl == true){
                 query += ' ) ';
             }
             
             // [6] soql, sosl 형식에 따라 쿼리 수행
+            System.debug('query >>>>>>>>>>>>> ' + query);
             queryResultList = getQueryResultList(isSosl, query, soslFilterMap);
-            System.debug('queryResultList.size >>>>>>>>>>>>> ' + queryResultList.size());
             
             resultMap.put('result', queryResultList);
             resultMap.put('success', true);
+            System.debug('resultMap >>>>>>>>>>>>> ' + resultMap);
 
         } catch (Exception e) {
             resultMap.put('success', false);
@@ -139,6 +204,9 @@ public class ReferenceSearchController {
     }
 
     // [1] sosl 적용시켜야하는 필드가 있는 경우를 먼저 체크
+    /*
+        필드 타입이 긴 텍스트 영역(131072)로 선언된 경우 soql쿼리를 사용할 수 없다. sosl쿼리를 적용해야 한다.
+    */
     private static String getSoslQueryStr(Map<String, Object> filterMap, Map<String, String> soslFilterMap){
         String query = '';
         Map<String, String> tempMap = new Map<String, String>();
@@ -182,6 +250,7 @@ public class ReferenceSearchController {
         return query;
     }
 
+    // query가 null이 아니면 콤마 추가
     private static String addCommaIfNotNull(String query, String filterName){
         if(query == ''){
             query += filterName;
@@ -198,45 +267,46 @@ public class ReferenceSearchController {
         // Name
         String name = objectToString(filterMap.get('Name'));
         if(String.isNotEmpty(name)) {
-            query += ' and Name like \'%' + name + '%\' ';
+            query += ' and name like \'%' + name + '%\' ';
         }
         // Eng Label
         String engLabel = objectToString(filterMap.get('EngLabel'));
         if(String.isNotEmpty(engLabel)) {
-            query += ' and Eng_Label__c like \'%' + engLabel + '%\' ';
+            query += ' and eng_Label__c like \'%' + engLabel + '%\' ';
         }
         // Kor Label
         String korLabel = objectToString(filterMap.get('KorLabel'));
         if(String.isNotEmpty(korLabel)) {
-            query += ' and Kor_Label__c like \'%' + korLabel + '%\' ';
+            query += ' and kor_Label__c like \'%' + korLabel + '%\' ';
         }
         // Api Version
         String apiVersion = objectToString(filterMap.get('ApiVersion'));
         if(String.isNotEmpty(apiVersion)) {
-            query += ' and (Api_Version__c <= ' + apiVersion + ' or Api_Version__c = null) ';
+            query += ' and (api_Version__c <= ' + apiVersion + ' or api_Version__c = null) ';
         }
         // Supported Calls
         String supportedCalls = objectToString(filterMap.get('SupportedCalls'));
         if(String.isNotEmpty(supportedCalls)) {
-            query += ' and Supported_Calls__c includes (\'' + supportedCalls + '\') ';
+            query += ' and supported_Calls__c includes (\'' + supportedCalls + '\') ';
         }
         // Remove
         String remove = objectToString(filterMap.get('Remove'));
         if(String.isNotEmpty(remove)) {
-            query += ' and Remove__c = ' + remove + ' ';
+            query += ' and remove__c = ' + remove + ' ';
         }
         // Docs Link
         String docsLink = objectToString(filterMap.get('DocsLink'));
         if(String.isNotEmpty(docsLink)) {
-            query += ' and Docs_Link__c like \'%' + docsLink + '%\' ';
+            query += ' and docs_Link__c like \'%' + docsLink + '%\' ';
         }
         
         return query;
     }
 
     // [5] soql, sosl 형식에 따라 쿼리 수행
-    private static List<ObjectReference__c> getQueryResultList(Boolean isSosl, String query, Map<String, String> soslFilterMap){
+    private static List<OrDataset> getQueryResultList(Boolean isSosl, String query, Map<String, String> soslFilterMap){
         List<ObjectReference__c> queryResultList = new List<ObjectReference__c>();
+        List<OrDataset> orDatasetList = new List<OrDataset>();
         
         try {
             if(isSosl == true){
@@ -247,11 +317,14 @@ public class ReferenceSearchController {
             } else {
                 queryResultList = Database.query(query);
             }
+
+            System.debug('queryResultList >>>>>>>>>>>>> \n' + queryResultList);
+            orDatasetList = setAorListInQueryResult(queryResultList);
         } catch (QueryException e) {
             System.debug('getQueryResultList 오류를 확인하세요 >>>>>>>>>>>>> ' + e.getMessage());
         }
         
-        return queryResultList;
+        return orDatasetList;
     }
 
     // sosl로 가져온 데이터 정제하여 가져오기
@@ -281,49 +354,55 @@ public class ReferenceSearchController {
         return queryResultList;
     }
 
+    // soql query form
     private static String getSoqlForm() {
         return ' select '
-            + ' 	Id,'
-            + '     Name,'
-            + '     Eng_Label__c,'
-            + '     Kor_Label__c,'
-            + '     Api_Version__c,'
-            + '     Supported_Calls__c,'
-            + '     Description__c,'
-            + '     Remove__c,'
-            + '     Supported_Calls_Description__c,'
-            + '     Special_Access_Rules__c,'
-            + '     Usage__c,'
-            + '     Memo__c,'
-            + '     Docs_Link__c'
+            + ' 	id,'
+            + '     name,'
+            + '     eng_Label__c,'
+            + '     kor_Label__c,'
+            + '     api_Version__c,'
+            + '     supported_Calls__c,'
+            + '     description__c,'
+            + '     remove__c,'
+            + '     supported_Calls_Description__c,'
+            + '     special_Access_Rules__c,'
+            + '     usage__c,'
+            + '     memo__c,'
+            + '     docs_Link__c,'
+            + '     (select id, name from objectReference__r)'
             + ' from  '
-            + '     ObjectReference__c '
+            + '     objectReference__c '
             + ' where '
-            + '     Id != null '; // sql의 where 1=1 처럼 동적으로 편하게 where절을 추가 하기 위해
+            + '     id != null '; // sql의 where 1=1 처럼 동적으로 편하게 where절을 추가 하기 위해
     }
-    private static String getSoslForm() {
-        return ' IN ALL FIELDS RETURNING '
-        + ' ObjectReference__c '
-        + ' ( '
-        + '     Id, '
-        + '     Name, '
-        + '     Eng_Label__c, '
-        + '     Kor_Label__c, '
-        + '     Api_Version__c, '
-        + '     Supported_Calls__c, '
-        + '     Description__c, '
-        + '     Remove__c, '
-        + '     Supported_Calls_Description__c, '
-        + '     Special_Access_Rules__c, '
-        + '     Usage__c, '
-        + '     Memo__c, '
-        + '     Docs_Link__c '
 
+    // sosl query form
+    private static String getSoslForm() {
+        return ' in all fields returning '
+        + ' objectReference__c '
+        + ' ( '
+        + '     id, '
+        + '     name, '
+        + '     eng_Label__c, '
+        + '     kor_Label__c, '
+        + '     api_Version__c, '
+        + '     supported_Calls__c, '
+        + '     description__c, '
+        + '     remove__c, '
+        + '     supported_Calls_Description__c, '
+        + '     special_Access_Rules__c, '
+        + '     usage__c, '
+        + '     memo__c, '
+        + '     docs_Link__c, '
+        + '     (select id, name from objectReference__r) '
+        
         + '     where '
         + '         id != null '; // sql의 where 1=1 처럼 동적으로 편하게 where절을 추가 하기 위해
         // ' ) '로 닫아주는 것을 잊지 말 것
     }
-    // object를 String으로
+
+    // return object to String
     private static String objectToString(object o) {
         return o == null ? '' : String.valueOf(o);
     }

@@ -35,6 +35,18 @@ export default class ReferenceSearch extends LightningElement {
         }
     }
 
+    handleInput(event) {
+        console.log('스타일 적용하기 개빡세네 진짜');
+        const inputElement = event.target;
+        const inputValue = inputElement.value;
+
+        if (inputValue.trim() !== "") {
+            inputElement.className = "inputValue_filled";
+        } else {
+            inputElement.className = "inputValue";
+        }
+    }
+
     setTable(refData) {
         console.log(":::::::::::::::: setTable start ::::::::::::::::");
         if (!refData) {

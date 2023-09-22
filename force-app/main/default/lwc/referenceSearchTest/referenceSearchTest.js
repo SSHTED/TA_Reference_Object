@@ -12,7 +12,9 @@ export default class ReferenceSearch extends LightningElement {
 
     refAllData = [];
     supCallsList = [];
-    supCallsItems = []; 
+    supCallsItems = [];
+    displayFields = {description: false, specialAccessRules: false,usage: false,memo: false,remove: false};
+    displayHeaders = [];
 
     @wire(getInit)
     wiredInit({ error, data }) {
@@ -32,6 +34,18 @@ export default class ReferenceSearch extends LightningElement {
             this.updateSearchCriteria();
         } else if (error) {
             console.error('wiredInit 에러 :', error);
+        }
+    }
+
+    handleInput(event) {
+        console.log('스타일 적용하기 개빡세네 진짜');
+        const inputElement = event.target;
+        const inputValue = inputElement.value;
+
+        if (inputValue.trim() !== "") {
+            inputElement.className = "inputValue_filled";
+        } else {
+            inputElement.className = "inputValue";
         }
     }
 
@@ -101,6 +115,7 @@ export default class ReferenceSearch extends LightningElement {
             //Alert lightning-toast 로 추후 변경 ********************************************************************
 
             alert('Description은 2글자 이상이어야 합니다. 추후 변경 필요 ');
+            //alert 후 return 시 검색버튼 활성화 안됨 추후 수정
             return;
         }
 
@@ -117,12 +132,12 @@ export default class ReferenceSearch extends LightningElement {
 
         console.log("filterGroup : " + JSON.stringify(filterGroup));
         if (isKorean) {
-            filterGroup.KorLabel = name;  
+            filterGroup.KorLabel = name;
         } else if (isEnglish) {
             if (this.hasWhitespaceInMiddle()) {
-                filterGroup.EngLabel = name;  
+                filterGroup.EngLabel = name;
             } else {
-                filterGroup.Name = name; 
+                filterGroup.Name = name;
             }
         }
 
@@ -146,7 +161,9 @@ export default class ReferenceSearch extends LightningElement {
 
         //헤더 검색조건
         this.updateSearchCriteria(name, description, apiversion, remove, specialAccessRules, memo, supportedCalls);
-
+        //동적 필드
+        this.updateDisplayFields(description, specialAccessRules, usage, memo, remove);
+        
     }
 
     btnReset() {
@@ -162,6 +179,8 @@ export default class ReferenceSearch extends LightningElement {
         });
         this.setTable(this.initialData);
         this.updateSearchCriteria();
+        //동적 필드
+        this.updateDisplayFields(false, false, false, false, false);
     }
 
     // 입력받은 텍스트가 영어일 때 공백여부를 확인하기 위한 함수
@@ -220,8 +239,8 @@ export default class ReferenceSearch extends LightningElement {
             this.changeBooleanByKey('toggleInputCard', !this.toggleInputCard);
         }
     }
-    
-    changeBooleanByKey(key, val){
+
+    changeBooleanByKey(key, val) {
         switch (key) {
             case 'loading':
                 this.loading = val;
@@ -237,4 +256,27 @@ export default class ReferenceSearch extends LightningElement {
                 break;
         }
     }
+
+    // 동적으로 추가되는 필드 함수
+    updateDisplayFields(description, specialAccessRules, usage, memo, remove) {
+        this.displayFields.description = description ? true : false;
+        this.displayFields.specialAccessRules = specialAccessRules ? true : false;
+        this.displayFields.usage = usage ? true : false;
+        this.displayFields.memo = memo ? true : false;
+        this.displayFields.remove = remove ? true : false;
+
+        this.displayHeaders = [
+            { key: 'description', isActive: this.displayFields.description },
+            { key: 'specialAccessRules', isActive: this.displayFields.specialAccessRules },
+            { key: 'usage', isActive: this.displayFields.usage },
+            { key: 'memo', isActive: this.displayFields.memo },
+            { key: 'remove', isActive: this.displayFields.remove },
+        ].filter(header => header.isActive);
+    
+        console.log("Updated displayFields: ", this.displayFields);
+        console.log("Updated displayHeaders: ", this.displayHeaders);
+    }
+
+
+
 }

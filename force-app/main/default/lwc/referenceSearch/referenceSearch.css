@@ -87,6 +87,13 @@
     float: left;
 }
 
+/* 텍스트가 입력된 inputbox 배경색 변경*/
+.inputValue_filled {
+    width: 65%;
+    float: left;
+    --slds-c-input-color-background: rgb(250, 217, 147);
+}
+
 /* removedAPI 체크박스 위치 조정*/
 .section .selectedCheckbox {
     padding-top: 24px;
@@ -100,7 +107,13 @@
     font-weight: 500;
 }
 
+/* 결과 영역 테이블 위치 조정 */
+.loadedHolder table {
+    position: relative;
+    top: -17px;
+}
 
+/* 관련 오브젝트 콤보박스 위치 조정 */
 .associated {
     margin-top: -20px;
 }
@@ -108,12 +121,10 @@
 
 
 
-lightning-input::placeholder {
-    opacity: 0.2;
-}
 
 
-.loadedHolder table {
-    position: relative;
-    top: -17px;
+
+
+inputValue::placeholder {
+    color: rgb(236, 98, 98);
 }
