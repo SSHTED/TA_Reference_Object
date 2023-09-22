@@ -6,10 +6,8 @@ import getDataByFilter from '@salesforce/apex/ReferenceSearchController.getDataB
 
 export default class ReferenceSearch extends LightningElement {
     @api title = '기본제목';
-    @track isKorean = false;
-    @track isEnglish = false;
     @track result = [];
-    @track loaded = false;
+    @track loading = false;
     isButtonDisabled = false;
     toggleInputCard = false;
     searchCriteria = '';
@@ -21,7 +19,7 @@ export default class ReferenceSearch extends LightningElement {
     @wire(getInit)
     wiredInit({ error, data }) {
         if (data && data.result) {
-            this.loaded = true;
+            this.changeBooleanByKey('loading', true);
             console.log(':::::::::::::::: wiredInit :::::::::::::::: ');
             this.refAllData = data.result.refAllData;
             this.initialData = [...this.refAllData];  //복사본
@@ -43,8 +41,8 @@ export default class ReferenceSearch extends LightningElement {
 
     setTable(refData) {
         console.log(":::::::::::::::: setTable start ::::::::::::::::");
-        // this.loaded = false;
-        // console.log("loaded state [[setTable]]>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> " + this.loaded)
+        // this.loading = false;
+        // console.log("loading state [[setTable]]>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> " + this.loading)
 
         if (!refData) {
             refData = this.refAllData;
@@ -59,19 +57,19 @@ export default class ReferenceSearch extends LightningElement {
             });
 
             console.log("refAllData : ", this.refAllData);
-            console.log("loaded state [[setTable]]>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> " + this.loaded)
+            console.log("loading state [[setTable]]>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> " + this.loading)
 
             console.log(":::::::::::::::: setTable end :::::::::::::::: ")
         } else {
             console.error(' setTable 에러 : ', error);
             console.error(' setTable 에러 refData  : ', refData);
         }
-        this.isButtonDisabled = false;
+        this.changeBooleanByKey('isButtonDisabled', false);
     }
 
     btnSearch() {
         console.log(":::::::::::::::: btnSearch 시작 ::::::::::::::::")
-        this.isButtonDisabled = true;
+        this.changeBooleanByKey('isButtonDisabled', true);
 
         const name = this.template.querySelector('[data-id="name"]').value;
         const description = this.template.querySelector('[data-id="description"]').value;
@@ -131,11 +129,11 @@ export default class ReferenceSearch extends LightningElement {
             }
         }
 
-        this.loaded = false;
+        this.changeBooleanByKey('loading', false);
         getDataByFilter({ filterGroup: JSON.stringify(filterGroup) })
             .then(result => {
-                this.loaded = true;
-                console.log("loaded state [[getDataByFilter]]>>>>>>>>>>>>>>>>> " + this.loaded)
+                this.changeBooleanByKey('loading', true);
+                console.log("loading state [[getDataByFilter]]>>>>>>>>>>>>>>>>> " + this.loading)
 
                 if (result.success == true) {
                     console.log("result data : ", result.result);
@@ -149,9 +147,7 @@ export default class ReferenceSearch extends LightningElement {
             .catch(error => {
                 console.error('getDataByFilter 에러 : ', error);
             }).finally(() => {
-                this.isButtonDisabled = false;
-
-
+                this.changeBooleanByKey('isButtonDisabled', false);
             });
 
         //헤더 검색조건
@@ -161,8 +157,8 @@ export default class ReferenceSearch extends LightningElement {
 
     btnReset() {
         console.log(":::::::::::::::: btnReset 시작 ::::::::::::::::");
-        this.loaded = false;
-        console.log("loaded state [[btnReset]]>>>>>>>>>>>>>>>>> " + this.loaded)
+        this.changeBooleanByKey('loading', false);
+        console.log("loading state [[btnReset]]>>>>>>>>>>>>>>>>> " + this.loading)
 
 
         const checkboxes = this.template.querySelectorAll('.selectedCheckbox');
@@ -175,8 +171,8 @@ export default class ReferenceSearch extends LightningElement {
         });
 
         this.setTable(this.initialData);
-        this.loaded = true;
-        console.log("loaded state [[btnReset]]>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> " + this.loaded)
+        this.changeBooleanByKey('loading', true);
+        console.log("loading state [[btnReset]]>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> " + this.loading)
 
         this.updateSearchCriteria();
 
@@ -197,7 +193,7 @@ export default class ReferenceSearch extends LightningElement {
     }
 
     // Enter
-    checkKey(event) {
+    checkKeyboard(event) {
         if ((event.target.classList.contains('inputValue') || event.target.classList.contains('selectedCheckbox')) && event.key === "Enter") {
             this.btnSearch();
             console.log("enter")
@@ -224,20 +220,36 @@ export default class ReferenceSearch extends LightningElement {
     ) {
         this.searchCriteria = '';
         this.searchCriteria += name != '' ? `이름: ${name} | ` : '';
-        this.searchCriteria += `Description: ${description} | `;
-        this.searchCriteria += `Api Version: ${apiversion} | `;
-        this.searchCriteria += `삭제된 API : ${remove ? 'Yes' : 'No'} | `;
-        this.searchCriteria += `Special Access Rules: ${specialAccessRules} | `;
-        this.searchCriteria += `Memo: ${memo} | `;
-        this.searchCriteria += `Supported Calls: ${supportedCalls} `;
+        this.searchCriteria += description != '' ? `Description: ${description} | ` : '';
+        this.searchCriteria += apiversion != '' ? `Api Version: ${apiversion} | ` : '';
+        this.searchCriteria += remove != '' ? `삭제된 API : ${remove ? 'Yes' : 'No'} | ` : '';
+        this.searchCriteria += specialAccessRules != '' ? `Special Access Rules: ${specialAccessRules} | ` : '';
+        this.searchCriteria += memo != '' ? `Memo: ${memo} | ` : '';
+        this.searchCriteria += supportedCalls != '' ? `Supported Calls: ${supportedCalls} ` : '';
     }
 
     toggleResultCard(event) {
         const clickedElement = event.target;
         if (clickedElement.classList.contains('result_card')) {
-            this.toggleInputCard = !this.toggleInputCard;
+            this.changeBooleanByKey('toggleInputCard', !this.toggleInputCard);
             console.log("되냐?")
         }
     }
     
+    changeBooleanByKey(key, val){
+        switch (key) {
+            case 'loading':
+                this.loading = val;
+                break;
+            case 'isButtonDisabled':
+                this.isButtonDisabled = val;
+                break;
+            case 'toggleInputCard':
+                this.toggleInputCard = val;
+                break;
+            default:
+                console.warn('key를 확인해주세요.');
+                break;
+        }
+    }
 }

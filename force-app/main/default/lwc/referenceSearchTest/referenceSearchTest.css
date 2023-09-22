@@ -20,8 +20,8 @@
 
 
 .header_card {
-   position: fixed;
-   top: 130px;
+   /* position: fixed;
+   top: 130px; */
    width: 98.5%;
    z-index: 1000;
 }
@@ -104,4 +104,9 @@
 
 lightning-input::placeholder {
    opacity: 0.2;
+}
+
+.initDiv {
+   position: sticky;
+   top: 100px;
 }
