@@ -37,17 +37,19 @@ export default class ReferenceSearch extends LightningElement {
 
     setTable(refData) {
         console.log(":::::::::::::::: setTable start ::::::::::::::::");
-        // this.loading = false;
-        // console.log("loading state [[setTable]]>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> " + this.loading)
-
         if (!refData) {
             refData = this.refAllData;
         }
         if (Array.isArray(refData)) {
             // this.refAllData = refData;
             this.refAllData = refData.map(item => {
+                const aorNameOptions = item.aorName.map(name => ({ label: name, value: name }));
+                const selectedValue = aorNameOptions.length > 0 ? aorNameOptions[0].value : '';
+
                 return {
                     ...item,
+                    aorNameOptions,
+                    selectedValue,
                     objectReferenceDetailUrl: `https://dkbmc--pms.sandbox.lightning.force.com/lightning/r/ObjectReference__c/${item.id}/view`
                 };
             });
@@ -58,6 +60,10 @@ export default class ReferenceSearch extends LightningElement {
             console.error(' setTable 에러 refData  : ', refData);
         }
         this.changeBooleanByKey('isButtonDisabled', false);
+    }
+
+    handleAorNameValue(event) {
+        this.value = event.detail.value;
     }
 
     btnSearch() {
@@ -90,7 +96,6 @@ export default class ReferenceSearch extends LightningElement {
         // 현재 삭제된 API 여부 확인 
         const removeChecked = this.template.querySelector('[data-id="remove"]');
         const remove = removeChecked.checked;
-        console.log("remove : " + remove)
 
         if (description && description.length < 2) {
 
@@ -126,8 +131,7 @@ export default class ReferenceSearch extends LightningElement {
         getDataByFilter({ filterGroup: JSON.stringify(filterGroup) })
             .then(result => {
                 this.changeBooleanByKey('loading', true);
-                console.log("loading state [[getDataByFilter]]>>>>>>>>>>>>>>>>> " + this.loading)
-
+                // console.log("loading state [[getDataByFilter]]>>>>>>>>>>>>>>>>> " + this.loading)
                 if (result.success == true) {
                     console.log("result data : ", result.result);
                     this.setTable(result.result);

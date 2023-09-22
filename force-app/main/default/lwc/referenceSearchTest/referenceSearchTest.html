@@ -14,76 +14,77 @@
         </lightning-card>
 
         <template if:false={toggleInputCard}>
-        <lightning-card class="input_card">
-            <div class="searchArea" onkeydown={checkKeyboard}>
-                <div class="inner_searchArea">
-                    <div class="section">
-                        <div class="title">Object Name</div>
-                        <div class="searchBox">
-                            <lightning-input class="inputValue" type="search" placeholder="insert objectName"
-                                data-id="name"></lightning-input>
-                        </div>
-                    </div>
-                    <div class="section">
-                        <div class="title">Description</div>
-                        <div class="searchBox">
-                            <lightning-input class="inputValue" type="search" placeholder="insert description"
-                                data-id="description"></lightning-input>
-                        </div>
-                    </div>
-                    <div class="section">
-                        <div class="title">Api Version</div>
-                        <div class="searchBox">
-                            <lightning-input class="inputValue" type="search" placeholder="insert apiversion"
-                                data-id="apiversion"></lightning-input>
-                        </div>
-                    </div>
-                    <div class="section">
-                        <div class="title">Removed API</div>
-                        <div class="searchBox">
-                            <lightning-input class="selectedCheckbox" type="checkbox" name="" data-id="remove"
-                                        checked={isChecked}></lightning-input>
-                        </div>
-                    </div>
-                </div>
-                <div class="inner_searchArea">
-                    <div class="section">
-                        <div class="title">SpecialAccessRules</div>
-                        <div class="searchBox">
-                            <lightning-input class="inputValue" type="search" placeholder="insert specialAccessRules"
-                                data-id="specialAccessRules"></lightning-input>
-                        </div>
-                    </div>
-                    <div class="section">
-                        <div class="title">Usage</div>
-                        <div class="searchBox">
-                            <lightning-input class="inputValue" type="search" placeholder="insert usage"
-                                data-id="usage"></lightning-input>
-                        </div>
-                    </div>
-                    <div class="section">
-                        <div class="title">Memo</div>
-                        <div class="searchBox">
-                            <lightning-input class="inputValue" type="search" placeholder="insert memo"
-                                data-id="memo"></lightning-input>
-                        </div>
-                    </div>
-                </div>
-                <div class="inner_searchArea">
-                    <div class="sc_title">SupportedCalls</div>
-                    <div class="supported-calls-item slds-grid slds-wrap">
-                        <template for:each={supCallsItems} for:item="item" for:index="index">
-                            <div key={item.name} class="slds-col slds-size_1-of-6">
-                                <lightning-input class="selectedCheckbox" type="checkbox" label={item.label}
-                                    name={item.name} checked={item.checked} data-id="callsChecked"
-                                    style="margin-left: 30px; margin-top: 5px;">
-                                </lightning-input>
+            <lightning-card class="input_card">
+                <div class="searchArea" onkeydown={checkKeyboard}>
+                    <div class="inner_searchArea">
+                        <div class="section">
+                            <div class="title">Object Name</div>
+                            <div class="searchBox">
+                                <lightning-input class="inputValue" type="search" placeholder="insert objectName"
+                                    data-id="name"></lightning-input>
                             </div>
-                        </template>
+                        </div>
+                        <div class="section">
+                            <div class="title">Description</div>
+                            <div class="searchBox">
+                                <lightning-input class="inputValue" type="search" placeholder="insert description"
+                                    data-id="description"></lightning-input>
+                            </div>
+                        </div>
+                        <div class="section">
+                            <div class="title">Api Version</div>
+                            <div class="searchBox">
+                                <lightning-input class="inputValue" type="search" placeholder="insert apiversion"
+                                    data-id="apiversion"></lightning-input>
+                            </div>
+                        </div>
+                        <div class="section">
+                            <div class="title">Removed API</div>
+                            <div class="searchBox">
+                                <lightning-input class="selectedCheckbox" type="checkbox" name="" data-id="remove"
+                                    checked={isChecked}></lightning-input>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="inner_searchArea">
+                        <div class="section">
+                            <div class="title">SpecialAccessRules</div>
+                            <div class="searchBox">
+                                <lightning-input class="inputValue" type="search"
+                                    placeholder="insert specialAccessRules"
+                                    data-id="specialAccessRules"></lightning-input>
+                            </div>
+                        </div>
+                        <div class="section">
+                            <div class="title">Usage</div>
+                            <div class="searchBox">
+                                <lightning-input class="inputValue" type="search" placeholder="insert usage"
+                                    data-id="usage"></lightning-input>
+                            </div>
+                        </div>
+                        <div class="section">
+                            <div class="title">Memo</div>
+                            <div class="searchBox">
+                                <lightning-input class="inputValue" type="search" placeholder="insert memo"
+                                    data-id="memo"></lightning-input>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="inner_searchArea">
+                        <div class="sc_title">SupportedCalls</div>
+                        <div class="supported-calls-item slds-grid slds-wrap">
+                            <template for:each={supCallsItems} for:item="item" for:index="index">
+                                <div key={item.name} class="slds-col slds-size_1-of-6">
+                                    <lightning-input class="selectedCheckbox" type="checkbox" label={item.label}
+                                        name={item.name} checked={item.checked} data-id="callsChecked"
+                                        style="margin-left: 30px; margin-top: 5px;">
+                                    </lightning-input>
+                                </div>
+                            </template>
+                        </div>
                     </div>
                 </div>
-            </div>
-        </lightning-card>
+            </lightning-card>
         </template>
 
         <lightning-card class="result_card" title="검색 결과" icon-name="utility:expand_alt" onclick={toggleResultCard}>
@@ -92,25 +93,29 @@
                     <lightning-spinner alternative-text="Loading"></lightning-spinner>
                 </template>
                 <template if:true={loading}>
-                    <p>총 데이터 개수: {refAllData.length}</p> 
-                    <table class="slds-table slds-table_cell-buffer slds-table_bordered" aria-labelledby="element-with-table-label other-element-with-table-label">
+                    <p>총 데이터 개수: {refAllData.length}</p>
+                    <table class="slds-table slds-table_cell-buffer slds-table_bordered"
+                        aria-labelledby="element-with-table-label other-element-with-table-label">
                         <thead>
                             <tr class="slds-line-height_reset">
-                            <th class="" scope="col">
-                                <div class="slds-truncate">No</div>
-                            </th>
-                            <th class="" scope="col">
-                                <div class="slds-truncate">Name</div>
-                            </th>
-                            <th class="" scope="col">
-                                <div class="slds-truncate">Eng Label</div>
-                            </th>
-                            <th class="" scope="col">
-                                <div class="slds-truncate">Kor Label</div>
-                            </th>
-                            <th class="" scope="col">
-                                <div class="slds-truncate">Api Version</div>
-                            </th>
+                                <th class="" scope="col">
+                                    <div class="slds-truncate">No</div>
+                                </th>
+                                <th class="" scope="col">
+                                    <div class="slds-truncate">Name</div>
+                                </th>
+                                <th class="" scope="col">
+                                    <div class="slds-truncate">Eng Label</div>
+                                </th>
+                                <th class="" scope="col">
+                                    <div class="slds-truncate">Kor Label</div>
+                                </th>
+                                <th class="" scope="col">
+                                    <div class="slds-truncate">Api Version</div>
+                                </th>
+                                <th class="" scope="col">
+                                    <div class="slds-truncate">Associated Object Reference</div>
+                                </th>
                             </tr>
                         </thead>
                         <tbody class="refDataTbody">
@@ -118,8 +123,9 @@
                                 <tr key={item.Id}>
                                     <td>{index}</td>
                                     <td> <span>
-                                            <a href={item.objectReferenceDetailUrl} target="_blank" rel="noopener noreferrer" style="color: black;">
-                                            {item.name}
+                                            <a href={item.objectReferenceDetailUrl} target="_blank"
+                                                rel="noopener noreferrer" style="color: black;">
+                                                {item.name}
                                             </a>
                                             <a href={item.Docs_Link__c} target="_blank" rel="noopener noreferrer">
                                                 <lightning-icon icon-name="doctype:link" size="x-small"
@@ -130,6 +136,11 @@
                                     <td>{item.engLabel}</td>
                                     <td>{item.korLabel}</td>
                                     <td>{item.apiVersion}</td>
+                                    <td>
+                                        <lightning-combobox name="" value={item.selectedValue} options={item.aorNameOptions}
+                                            placeholder="" onchange={handleAorNameValue}>
+                                        </lightning-combobox>
+                                    </td>
                                 </tr>
                             </template>
                         </tbody>
