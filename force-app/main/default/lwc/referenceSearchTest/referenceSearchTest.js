@@ -145,7 +145,7 @@ export default class ReferenceSearch extends LightningElement {
         getDataByFilter({ filterGroup: JSON.stringify(filterGroup) })
             .then(result => {
                 this.changeBooleanByKey('loading', true);
-                // console.log("loading state [[getDataByFilter]]>>>>>>>>>>>>>>>>> " + this.loading)
+                 console.log("loading state [[getDataByFilter]]>>>>>>>>>>>>>>>>> " + this.loading)
                 if (result.success == true) {
                     console.log("result data : ", result.result);
                     this.setTable(result.result);
@@ -299,11 +299,8 @@ export default class ReferenceSearch extends LightningElement {
             let valA = a[key] || '';
             let valB = b[key] || '';
             
-            // 둘 다 빈 문자열이면 동일하게 취급
             if(valA === '' && valB === '') return 0;
-            // valA만 빈 문자열이면 오름차순에선 -1, 내림차순에선 1 반환
             if(valA === '') return this.sortDirection[key] === 'asc' ? -1 : 1;
-            // valB만 빈 문자열이면 오름차순에선 1, 내림차순에선 -1 반환
             if(valB === '') return this.sortDirection[key] === 'asc' ? 1 : -1;
             
             if (!isNaN(valA) && typeof valA === 'string') valA = parseFloat(valA);
