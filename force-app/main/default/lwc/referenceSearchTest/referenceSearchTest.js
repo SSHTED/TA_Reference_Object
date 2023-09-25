@@ -5,7 +5,7 @@ import getDataByFilter from '@salesforce/apex/ReferenceSearchController.getDataB
 export default class ReferenceSearch extends LightningElement {
     @api title = '기본제목';
     @track result = [];
-    @track loading = false;
+    @track loading = true;
     isButtonDisabled = false;
     toggleInputCard = false;
     searchCriteria = '';
@@ -20,7 +20,7 @@ export default class ReferenceSearch extends LightningElement {
     @wire(getInit)
     wiredInit({ error, data }) {
         if (data && data.result) {
-            this.changeBooleanByKey('loading', true);
+            this.changeBooleanByKey('loading', false);
             console.log(':::::::::::::::: wiredInit start :::::::::::::::: ');
             this.refAllData = data.result.refAllData;
             this.initialData = [...this.refAllData];  //복사본
@@ -67,10 +67,13 @@ export default class ReferenceSearch extends LightningElement {
                 };
             });
             console.log("refAllData : ", this.refAllData);
+
         } else {
             console.error(' setTable 에러 : ', error);
             console.error(' setTable 에러 refData  : ', refData);
         }
+        // this.changeBooleanByKey('loading', false);
+        // console.log("loading state [[setTable]]>>>>>>>>>>>>>>>>> " + this.loading)
         this.changeBooleanByKey('isButtonDisabled', false);
         console.log(":::::::::::::::: setTable end ::::::::::::::::");
     }
@@ -141,10 +144,10 @@ export default class ReferenceSearch extends LightningElement {
             }
         }
 
-        this.changeBooleanByKey('loading', false);
+        this.changeBooleanByKey('loading', true);
         getDataByFilter({ filterGroup: JSON.stringify(filterGroup) })
             .then(result => {
-                this.changeBooleanByKey('loading', true);
+                this.changeBooleanByKey('loading', false);
                  console.log("loading state [[getDataByFilter]]>>>>>>>>>>>>>>>>> " + this.loading)
                 if (result.success == true) {
                     console.log("result data : ", result.result);
@@ -314,4 +317,5 @@ export default class ReferenceSearch extends LightningElement {
         });
         console.log(":::::::::::::::: handleSort end ::::::::::::::::")
     }
+
 }

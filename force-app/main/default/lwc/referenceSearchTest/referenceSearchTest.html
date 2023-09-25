@@ -1,4 +1,5 @@
 <template>
+    <div class="searchRef">
     <!-- 헤더 영역 -->
     <lightning-card class="header_card" title="Reference Search" icon-name="standard:document">
         <p>{searchCriteria}</p>
@@ -89,10 +90,10 @@
     <!-- 검색 결과 영역 -->
     <lightning-card class="result_card" title="검색 결과" icon-name="utility:expand_alt" onclick={toggleResultCard}>
         <div class="loadedHolder">
-            <template if:false={loading}>
+            <template if:true={loading}>
                 <lightning-spinner alternative-text="Loading"></lightning-spinner>
             </template>
-            <template if:true={loading}>
+            <template if:false={loading}>
                 <p>총 데이터 : {refAllData.length}</p>
                 <table class="slds-table slds-table_cell-buffer slds-table_bordered"
                     aria-labelledby="element-with-table-label other-element-with-table-label">

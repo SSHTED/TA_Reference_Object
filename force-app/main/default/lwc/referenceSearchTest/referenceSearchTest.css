@@ -40,7 +40,18 @@
     
     /* 검색 결과 카드 영역*/
     .result_card {
-        width: 98.5%;
+        position: absolute;
+        top: 425px;
+        width: 101.5%;
+        margin: -13px;
+    }
+    
+    /*접은 상태 결과 카드 영역*/
+    .result_card_folded {
+        position: absolute;
+        top: 57px;
+        width: 101.5%;
+        margin: -13px;
     }
     
     /* 데이터 총 건수 표시 영역 */
