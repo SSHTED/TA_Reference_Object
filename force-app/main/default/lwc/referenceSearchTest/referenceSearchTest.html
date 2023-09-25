@@ -98,12 +98,12 @@
                     aria-labelledby="element-with-table-label other-element-with-table-label">
                     <thead>
                         <tr class="slds-line-height_reset">
-                            <th class="" scope="col"><div class="slds-truncate">No</div></th>
-                            <th class="" scope="col"><div class="slds-truncate">Name</div></th>
-                            <th class="" scope="col"><div class="slds-truncate">Eng Label</div></th>
-                            <th class="" scope="col"><div class="slds-truncate">Kor Label</div></th>
-                            <th class="" scope="col"><div class="slds-truncate">Api Version</div></th>
-                            <th class="" scope="col"><div class="slds-truncate">Associated Object Reference</div></th>
+                            <th class="" scope="col" data-key="index" onclick={handleSort}><div class="slds-truncate">No</div></th>
+                            <th class="" scope="col" data-key="name" onclick={handleSort}><div class="slds-truncate">Name</div></th>
+                            <th class="" scope="col" data-key="engLabel" onclick={handleSort}><div class="slds-truncate">Eng Label</div></th>
+                            <th class="" scope="col" data-key="korLabel" onclick={handleSort}><div class="slds-truncate">Kor Label</div></th>
+                            <th class="" scope="col" data-key="apiVersion" onclick={handleSort}><div class="slds-truncate">Api Version</div></th>
+                            <th class="" scope="col" data-key="associatedObjectReference" onclick={handleSort}><div class="slds-truncate">Associated Object Reference</div></th>
                             <!-- 동적으로 추가되는 thead -->
                             <template for:each={displayHeaders} for:item="header" for:index="index">
                                 <th key={header.key} data-key={header.key} onclick={handleSort} >

@@ -15,12 +15,13 @@ export default class ReferenceSearch extends LightningElement {
     supCallsItems = [];
     @track displayFields = {description: false, specialAccessRules: false,usage: false,memo: false,remove: false, SupportedCalls: false};
     displayHeaders = [];
+    sortDirection = {};
 
     @wire(getInit)
     wiredInit({ error, data }) {
         if (data && data.result) {
             this.changeBooleanByKey('loading', true);
-            console.log(':::::::::::::::: wiredInit :::::::::::::::: ');
+            console.log(':::::::::::::::: wiredInit start :::::::::::::::: ');
             this.refAllData = data.result.refAllData;
             this.initialData = [...this.refAllData];  //복사본
             this.supCallsList = data.result.callList;
@@ -29,16 +30,15 @@ export default class ReferenceSearch extends LightningElement {
                 return { label: `${val}`, name: `${val}`, checked: false };
             });
             console.log('data >>>>>>>>>>> ', data);
-
             this.setTable();
             this.updateSearchCriteria();
+            console.log(':::::::::::::::: wiredInit end :::::::::::::::: ');
         } else if (error) {
             console.error('wiredInit 에러 :', error);
         }
     }
 
     handleInput(event) {
-        console.log('스타일 적용하기 개빡세네 진짜');
         const inputElement = event.target;
         const inputValue = inputElement.value;
 
@@ -66,12 +66,12 @@ export default class ReferenceSearch extends LightningElement {
                 };
             });
             console.log("refAllData : ", this.refAllData);
-            console.log(":::::::::::::::: setTable end :::::::::::::::: ")
         } else {
             console.error(' setTable 에러 : ', error);
             console.error(' setTable 에러 refData  : ', refData);
         }
         this.changeBooleanByKey('isButtonDisabled', false);
+        console.log(":::::::::::::::: setTable end ::::::::::::::::");
     }
 
     handleAorNameValue(event) {
@@ -79,7 +79,7 @@ export default class ReferenceSearch extends LightningElement {
     }
 
     btnSearch() {
-        console.log(":::::::::::::::: btnSearch 시작 ::::::::::::::::")
+        console.log(":::::::::::::::: btnSearch start ::::::::::::::::")
         this.changeBooleanByKey('isButtonDisabled', true);
 
         const name = this.template.querySelector('[data-id="name"]').value;
@@ -162,11 +162,12 @@ export default class ReferenceSearch extends LightningElement {
         this.updateSearchCriteria(name, description, apiversion, remove, specialAccessRules, memo, supportedCalls);
         //동적 필드
         this.updateDisplayFields(description, specialAccessRules, usage, memo, remove, supportedCalls);
+        console.log(":::::::::::::::: btnSearch end ::::::::::::::::")
 
     }
 
     btnReset() {
-        console.log(":::::::::::::::: btnReset 시작 ::::::::::::::::");
+        console.log(":::::::::::::::: btnReset start ::::::::::::::::");
 
         const checkboxes = this.template.querySelectorAll('.selectedCheckbox');
         checkboxes.forEach(checkbox => {
@@ -180,6 +181,8 @@ export default class ReferenceSearch extends LightningElement {
         this.updateSearchCriteria();
         //동적 필드
         this.updateDisplayFields(false, false, false, false, false, false);
+        console.log(":::::::::::::::: btnReset end ::::::::::::::::")
+
     }
 
     // 입력받은 텍스트가 영어일 때 공백여부를 확인하기 위한 함수
@@ -200,7 +203,7 @@ export default class ReferenceSearch extends LightningElement {
     checkKeyboard(event) {
         if ((event.target.classList.contains('inputValue') || event.target.classList.contains('selectedCheckbox')) && event.key === "Enter") {
             this.btnSearch();
-            console.log("enter")
+            console.log(":::::::::::::::: enter ::::::::::::::::")
         }
     }
     isKoreanText(text) {
@@ -240,7 +243,7 @@ export default class ReferenceSearch extends LightningElement {
         this.displayFields.memo = memo ? true : false;
         this.displayFields.remove = remove ? true : false;
         this.displayFields.supportedCalls = supportedCalls && supportedCalls.length > 0 && supportedCalls[0] !== '' ? true : false;
-        console.log("this.displayFields.supportedCalls" ,this.displayFields.supportedCalls);
+        console.log("this.displayFields.supportedCalls : " ,this.displayFields.supportedCalls);
 
         this.displayHeaders = [
             { key: 'description', isActive: this.displayFields.description },
@@ -280,5 +283,36 @@ export default class ReferenceSearch extends LightningElement {
         }
     }
 
-      
+    handleSort(event) {
+        console.log(":::::::::::::::: handleSort start ::::::::::::::::")
+        const key = event.currentTarget.dataset.key; 
+        console.log("key : ", key)
+
+        // this.sortDirection[key]가 정의되지 않았을 때 'asc'로 설정
+        this.sortDirection[key] = this.sortDirection[key] || 'asc';
+        this.sortDirection[key] = this.sortDirection[key] === 'asc' ? 'desc' : 'asc';
+        console.log("sortDirection : ", this.sortDirection[key])
+
+        this.refAllData = [...this.refAllData].sort((a, b) => {
+            let valA = a[key] || '';
+            let valB = b[key] || '';
+            
+            // 둘 다 빈 문자열이면 동일하게 취급
+            if(valA === '' && valB === '') return 0;
+            // valA만 빈 문자열이면 오름차순에선 -1, 내림차순에선 1 반환
+            if(valA === '') return this.sortDirection[key] === 'asc' ? -1 : 1;
+            // valB만 빈 문자열이면 오름차순에선 1, 내림차순에선 -1 반환
+            if(valB === '') return this.sortDirection[key] === 'asc' ? 1 : -1;
+            
+            if (!isNaN(valA) && typeof valA === 'string') valA = parseFloat(valA);
+            if (!isNaN(valB) && typeof valB === 'string') valB = parseFloat(valB);
+            
+            if (typeof valA === 'string') valA = valA.toLowerCase();
+            if (typeof valB === 'string') valB = valB.toLowerCase();
+            
+            if (this.sortDirection[key] === 'asc') return valA > valB ? 1 : (valA < valB ? -1 : 0);
+            else return valA < valB ? 1 : (valA > valB ? -1 : 0);
+        });
+        console.log(":::::::::::::::: handleSort end ::::::::::::::::")
+    }
 }
