@@ -267,6 +267,12 @@ export default class ReferenceSearch extends LightningElement {
     toggleResultCard(event) {
         const clickedElement = event.target;
         if (clickedElement.classList.contains('result_card')) {
+            const cardElement = this.template.querySelector('.result_card');
+            cardElement.className = "result_card_folded";
+            this.changeBooleanByKey('toggleInputCard', !this.toggleInputCard);
+        } else if(clickedElement.classList.contains('result_card_folded')) {
+            const cardElement = this.template.querySelector('.result_card_folded');
+            cardElement.className = "result_card";
             this.changeBooleanByKey('toggleInputCard', !this.toggleInputCard);
         }
     }

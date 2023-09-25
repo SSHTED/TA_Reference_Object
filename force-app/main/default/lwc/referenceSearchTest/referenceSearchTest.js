@@ -182,11 +182,10 @@ export default class ReferenceSearch extends LightningElement {
             inputbox.value = '';
             this.handleInput({ target: inputbox });
         });
-        this.setTable(this.initialData);
-        this.updateSearchCriteria();
         this.toggleInputCard = false;
-        //동적 필드
-        this.updateDisplayFields(false, false, false, false, false, false);
+        // this.setTable(this.initialData);
+        // this.updateSearchCriteria();
+        // this.updateDisplayFields(false, false, false, false, false, false);
         console.log(":::::::::::::::: btnReset end ::::::::::::::::")
     }
 
@@ -228,7 +227,6 @@ export default class ReferenceSearch extends LightningElement {
         remove = false,
         specialAccessRules = '',
         memo = '',
-        supportedCalls = ''
     ) {
         this.searchCriteria = '';
         this.searchCriteria += name != '' ? `이름: ${name} | ` : '';
@@ -237,7 +235,6 @@ export default class ReferenceSearch extends LightningElement {
         this.searchCriteria += remove != '' ? `삭제된 API : ${remove ? 'Yes' : 'No'} | ` : '';
         this.searchCriteria += specialAccessRules != '' ? `Special Access Rules: ${specialAccessRules} | ` : '';
         this.searchCriteria += memo != '' ? `Memo: ${memo} | ` : '';
-        this.searchCriteria += supportedCalls != '' ? `Supported Calls: ${supportedCalls} ` : '';
     }
 
     // 동적으로 헤더,바디 추가
@@ -266,7 +263,15 @@ export default class ReferenceSearch extends LightningElement {
     //검색결과 확장 토글
     toggleResultCard(event) {
         const clickedElement = event.target;
+        this.isButtonDisabled = !this.isButtonDisabled;
+        console.log("isButtonDisabled >>>>>>>>>>>>>>>>>>>>>", this.isButtonDisabled)
         if (clickedElement.classList.contains('result_card')) {
+            const cardElement = this.template.querySelector('.result_card');
+            cardElement.className = "result_card_folded";
+            this.changeBooleanByKey('toggleInputCard', !this.toggleInputCard);
+        } else if(clickedElement.classList.contains('result_card_folded')) {
+            const cardElement = this.template.querySelector('.result_card_folded');
+            cardElement.className = "result_card";
             this.changeBooleanByKey('toggleInputCard', !this.toggleInputCard);
         }
     }
@@ -311,7 +316,7 @@ export default class ReferenceSearch extends LightningElement {
             
             if (typeof valA === 'string') valA = valA.toLowerCase();
             if (typeof valB === 'string') valB = valB.toLowerCase();
-            
+    
             if (this.sortDirection[key] === 'asc') return valA > valB ? 1 : (valA < valB ? -1 : 0);
             else return valA < valB ? 1 : (valA > valB ? -1 : 0);
         });
