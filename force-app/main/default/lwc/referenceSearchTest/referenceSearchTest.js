@@ -179,10 +179,10 @@ export default class ReferenceSearch extends LightningElement {
         });
         this.setTable(this.initialData);
         this.updateSearchCriteria();
+        this.toggleInputCard = false;
         //동적 필드
         this.updateDisplayFields(false, false, false, false, false, false);
         console.log(":::::::::::::::: btnReset end ::::::::::::::::")
-
     }
 
     // 입력받은 텍스트가 영어일 때 공백여부를 확인하기 위한 함수
@@ -258,7 +258,7 @@ export default class ReferenceSearch extends LightningElement {
         console.log("update display Headers : ", this.displayHeaders);
     }
 
-    //검색결과 토글
+    //검색결과 확장 토글
     toggleResultCard(event) {
         const clickedElement = event.target;
         if (clickedElement.classList.contains('result_card')) {
