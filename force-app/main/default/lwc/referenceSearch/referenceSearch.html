@@ -11,7 +11,7 @@
             </lightning-button-Group>
         </div>
     </lightning-card>
-
+      
     <!-- 검색 조건 영역 -->
     <template if:false={toggleInputCard}>
         <lightning-card class="input_card">
@@ -93,76 +93,49 @@
                 <lightning-spinner alternative-text="Loading"></lightning-spinner>
             </template>
             <template if:true={loading}>
-                <p>총 데이터 개수: {refAllData.length}</p>
-                <table class="slds-table slds-table_cell-buffer slds-table_bordered" aria-labelledby="element-with-table-label other-element-with-table-label">
+                <p>총 데이터 : {refAllData.length}</p>
+                <table class="slds-table slds-table_cell-buffer slds-table_bordered"
+                    aria-labelledby="element-with-table-label other-element-with-table-label">
                     <thead>
                         <tr class="slds-line-height_reset">
-                            <th class="" scope="col">
-                                <div class="slds-truncate">No</div>
-                            </th>
-                            <th class="" scope="col">
-                                <div class="slds-truncate">Name</div>
-                            </th>
-                            <th class="" scope="col">
-                                <div class="slds-truncate">Eng Label</div>
-                            </th>
-                            <th class="" scope="col">
-                                <div class="slds-truncate">Kor Label</div>
-                            </th>
-                            <th class="" scope="col">
-                                <div class="slds-truncate">Api Version</div>
-                            </th>
-                            <th class="" scope="col">
-                                <div class="slds-truncate">Associated Object Reference</div>
-                            </th>
-
-                            <!-- 동적으로 추가되는 헤더 -->
+                            <th class="" scope="col" data-key="no" onclick={handleSort}><div class="slds-truncate">No</div></th>
+                            <th class="" scope="col" data-key="name" onclick={handleSort}><div class="slds-truncate">Name</div></th>
+                            <th class="" scope="col" data-key="engLabel" onclick={handleSort}><div class="slds-truncate">Eng Label</div></th>
+                            <th class="" scope="col" data-key="korLabel" onclick={handleSort}><div class="slds-truncate">Kor Label</div></th>
+                            <th class="" scope="col" data-key="apiVersion" onclick={handleSort}><div class="slds-truncate">Api Version</div></th>
+                            <th class="" scope="col" data-key="associatedObjectReference" onclick={handleSort}><div class="slds-truncate">Associated Object Reference</div></th>
+                            <!-- 동적으로 추가되는 thead -->
                             <template for:each={displayHeaders} for:item="header" for:index="index">
-                                <th key={header.key}>
+                                <th key={header.key} data-key={header.key} onclick={handleSort} >
                                     <div class="slds-truncate">{header.key}</div>
                                 </th>
                             </template>
-
                         </tr>
                     </thead>
                     <tbody class="refDataTbody">
                         <template for:each={refAllData} for:item="item" for:index="index">
                             <tr key={item.Id}>
-                                <td>{index}</td>
+                                <td>{item.displayedIndex}</td>
                                 <td> <span>
                                         <a href={item.objectReferenceDetailUrl} target="_blank" rel="noopener noreferrer" style="color: black;">
                                             {item.name}
                                         </a>
-                                        <a href={item.Docs_Link__c} target="_blank" rel="noopener noreferrer">
-                                            <lightning-icon icon-name="doctype:link" size="x-small"
-                                                alternative-text="Open"></lightning-icon>
+                                        <a href={item.docsLink} target="_blank" rel="noopener noreferrer">
+                                            <lightning-icon icon-name="doctype:link" size="x-small" alternative-text="Open"></lightning-icon>
                                         </a>
                                     </span>
                                 </td>
                                 <td>{item.engLabel}</td>
                                 <td>{item.korLabel}</td>
                                 <td>{item.apiVersion}</td>
-                                <td>
-                                    <lightning-combobox class="associated" name="" value={item.selectedAorNameValue}
-                                        options={item.aorNameOptions} placeholder="" onchange={handleAorNameValue}>
-                                    </lightning-combobox>
-                                </td>
-                                <!-- 동적으로 추가되는 필드 -->
-                                <template if:true={displayFields.description}>
-                                    <td>{item.description}</td>
-                                </template>
-                                <template if:true={displayFields.specialAccessRules}>
-                                    <td>{item.specialAccessRules}</td>
-                                </template>
-                                <template if:true={displayFields.usage}>
-                                    <td>{item.usage}</td>
-                                </template>
-                                <template if:true={displayFields.memo}>
-                                    <td>{item.memo}</td>
-                                </template>
-                                <template if:true={displayFields.remove}>
-                                    <td>{item.remove}</td>
-                                </template>
+                                <td><lightning-combobox class="associated" name="" value={item.selectedAorNameValue} options={item.aorNameOptions} placeholder="" onchange={handleAorNameValue}></lightning-combobox></td>
+                                <!-- 동적으로 추가되는 tbody -->
+                                <template if:true={displayFields.description}><td>{item.description}</td></template>
+                                <template if:true={displayFields.specialAccessRules}><td>{item.specialAccessRules}</td></template>
+                                <template if:true={displayFields.usage}><td>{item.usage}</td></template>
+                                <template if:true={displayFields.memo}><td>{item.memo}</td></template>
+                                <template if:true={displayFields.remove}><td>{item.remove}</td></template>
+                                <template if:true={displayFields.supportedCalls}><td>{item.supportedCalls}</td></template>
                             </tr>
                         </template>
                     </tbody>

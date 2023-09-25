@@ -3,11 +3,17 @@
         display: none;
     }
     
+    template {
+        margin: 0;
+        padding: 0;
+    }
+    
     /* 헤더 영역*/
     .header_card {
         position: fixed;
-        top: 130px;
-        width: 98.5%;
+        top: 139px;
+        width: 100%;
+        margin: -12px;
         z-index: 1000;
     }
     
@@ -15,7 +21,7 @@
     .header_card p {
         float: left;
         position: relative;
-        top: -35px;
+        top: -33px;
         left: 200px;
         width: calc( 100% - 56vh );
         white-space: nowrap;
@@ -26,15 +32,15 @@
     /* 검색 조건 입력 카드 영역*/
     .input_card {
         position: fixed;
-        top: 187px;
-        width: 98.5%;
-        z-index: 1000;
+        top: 196px;
+        width: 100%;
+        margin: -12px;
+        z-index: 999;
     }
     
     /* 검색 결과 카드 영역*/
     .result_card {
-        position: relative;
-        top: 450px;
+        width: 98.5%;
     }
     
     /* 데이터 총 건수 표시 영역 */
@@ -87,6 +93,13 @@
         float: left;
     }
     
+    /* 텍스트가 입력된 inputbox 배경색 변경*/
+    .inputValue_filled {
+        width: 65%;
+        float: left;
+        --slds-c-input-color-background: rgb(250, 217, 147);
+    }
+    
     /* removedAPI 체크박스 위치 조정*/
     .section .selectedCheckbox {
         padding-top: 24px;
@@ -100,20 +113,13 @@
         font-weight: 500;
     }
     
-    
-    .associated {
-        margin-top: -20px;
-    }
-    
-    
-    
-    
-    lightning-input::placeholder {
-        opacity: 0.2;
-    }
-    
-    
+    /* 결과 영역 테이블 위치 조정 */
     .loadedHolder table {
         position: relative;
         top: -17px;
+    }
+    
+    /* 관련 오브젝트 콤보박스 위치 조정 */
+    .associated {
+        margin-top: -20px;
     }

@@ -55,11 +55,12 @@ export default class ReferenceSearch extends LightningElement {
             refData = this.refAllData;
         }
         if (Array.isArray(refData)) {
-            this.refAllData = refData.map(item => {
+            this.refAllData = refData.map((item, index) => {
                 const aorNameOptions = item.aorName.map(name => ({ label: name, value: name }));
-                const selectedAorNameValue = aorNameOptions.length > 0 ? aorNameOptions[0].value : ''; //AOR 존재 시 [0] 보이게
+                const selectedAorNameValue = aorNameOptions.length > 0 ? aorNameOptions[0].value : ''; // AOR 존재 시 [0] 보이게
                 return {
                     ...item,
+                    displayedIndex: index + 1, 
                     aorNameOptions,
                     selectedAorNameValue,
                     objectReferenceDetailUrl: `https://dkbmc--pms.sandbox.lightning.force.com/lightning/r/ObjectReference__c/${item.id}/view`
@@ -173,9 +174,10 @@ export default class ReferenceSearch extends LightningElement {
         checkboxes.forEach(checkbox => {
             checkbox.checked = false;
         });
-        const inputboxes = this.template.querySelectorAll('.inputValue');
+        const inputboxes = this.template.querySelectorAll('.inputValue_filled');
         inputboxes.forEach(inputbox => {
             inputbox.value = '';
+            this.handleInput({ target: inputbox });
         });
         this.setTable(this.initialData);
         this.updateSearchCriteria();
@@ -201,7 +203,7 @@ export default class ReferenceSearch extends LightningElement {
 
     // Enter
     checkKeyboard(event) {
-        if ((event.target.classList.contains('inputValue') || event.target.classList.contains('selectedCheckbox')) && event.key === "Enter") {
+        if ((event.target.classList.contains('inputValue') || event.target.classList.contains('inputValue_filled') || event.target.classList.contains('selectedCheckbox')) && event.key === "Enter") {
             this.btnSearch();
             console.log(":::::::::::::::: enter ::::::::::::::::")
         }
