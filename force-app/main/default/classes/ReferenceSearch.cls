@@ -319,8 +319,3 @@ public class ReferenceSearch {
         return o == null ? '' : String.valueOf(o);
     }
 }
-
-
-FIND '회사'  in all fields returning  objectReference__c  (      id,      name,      eng_Label__c,      kor_Label__c,      api_Version__c,      supported_Calls__c,      description__c,      remove__c,      supported_Calls_Description__c,      special_Access_Rules__c,      usage__c,      memo__c,      docs_Link__c,      (select id, name from objectReference__r)     
- where         
-  id != null  and remove__c = true  order by name  ) 

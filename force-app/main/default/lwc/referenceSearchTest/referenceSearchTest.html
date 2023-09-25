@@ -11,7 +11,7 @@
             </lightning-button-Group>
         </div>
     </lightning-card>
-
+      
     <!-- 검색 조건 영역 -->
     <template if:false={toggleInputCard}>
         <lightning-card class="input_card">
@@ -106,7 +106,7 @@
                             <th class="" scope="col"><div class="slds-truncate">Associated Object Reference</div></th>
                             <!-- 동적으로 추가되는 thead -->
                             <template for:each={displayHeaders} for:item="header" for:index="index">
-                                <th key={header.key}>
+                                <th key={header.key} data-key={header.key} onclick={handleSort} >
                                     <div class="slds-truncate">{header.key}</div>
                                 </th>
                             </template>
@@ -135,6 +135,8 @@
                                 <template if:true={displayFields.usage}><td>{item.usage}</td></template>
                                 <template if:true={displayFields.memo}><td>{item.memo}</td></template>
                                 <template if:true={displayFields.remove}><td>{item.remove}</td></template>
+                                <template if:true={displayFields.supportedCalls}><td>{item.supportedCalls}</td></template>
+
                             </tr>
                         </template>
                     </tbody>

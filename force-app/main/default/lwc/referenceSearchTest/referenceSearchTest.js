@@ -13,7 +13,7 @@ export default class ReferenceSearch extends LightningElement {
     refAllData = [];
     supCallsList = [];
     supCallsItems = [];
-    displayFields = {description: false, specialAccessRules: false,usage: false,memo: false,remove: false};
+    @track displayFields = {description: false, specialAccessRules: false,usage: false,memo: false,remove: false, SupportedCalls: false};
     displayHeaders = [];
 
     @wire(getInit)
@@ -161,8 +161,8 @@ export default class ReferenceSearch extends LightningElement {
         //헤더 검색조건
         this.updateSearchCriteria(name, description, apiversion, remove, specialAccessRules, memo, supportedCalls);
         //동적 필드
-        this.updateDisplayFields(description, specialAccessRules, usage, memo, remove);
-        
+        this.updateDisplayFields(description, specialAccessRules, usage, memo, remove, supportedCalls);
+
     }
 
     btnReset() {
@@ -179,7 +179,7 @@ export default class ReferenceSearch extends LightningElement {
         this.setTable(this.initialData);
         this.updateSearchCriteria();
         //동적 필드
-        this.updateDisplayFields(false, false, false, false, false);
+        this.updateDisplayFields(false, false, false, false, false, false);
     }
 
     // 입력받은 텍스트가 영어일 때 공백여부를 확인하기 위한 함수
@@ -233,12 +233,14 @@ export default class ReferenceSearch extends LightningElement {
     }
 
     // 동적으로 헤더,바디 추가
-    updateDisplayFields(description, specialAccessRules, usage, memo, remove) {
+    updateDisplayFields(description, specialAccessRules, usage, memo, remove, supportedCalls) {
         this.displayFields.description = description ? true : false;
         this.displayFields.specialAccessRules = specialAccessRules ? true : false;
         this.displayFields.usage = usage ? true : false;
         this.displayFields.memo = memo ? true : false;
         this.displayFields.remove = remove ? true : false;
+        this.displayFields.supportedCalls = supportedCalls && supportedCalls.length > 0 && supportedCalls[0] !== '' ? true : false;
+        console.log("this.displayFields.supportedCalls" ,this.displayFields.supportedCalls);
 
         this.displayHeaders = [
             { key: 'description', isActive: this.displayFields.description },
@@ -246,6 +248,7 @@ export default class ReferenceSearch extends LightningElement {
             { key: 'usage', isActive: this.displayFields.usage },
             { key: 'memo', isActive: this.displayFields.memo },
             { key: 'remove', isActive: this.displayFields.remove },
+            { key: 'supportedCalls', isActive: this.displayFields.supportedCalls },
         ].filter(header => header.isActive);
     
         console.log("update display Fields : ", this.displayFields);
@@ -277,4 +280,5 @@ export default class ReferenceSearch extends LightningElement {
         }
     }
 
+      
 }

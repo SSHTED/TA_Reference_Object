@@ -156,44 +156,45 @@ public class ReferenceSearchController {
         Map<String, Object> filterMap = (Map<String, Object>)JSON.deserializeUntyped(filterGroup);
         List<OrDataset> queryResultList = new List<OrDataset>();
         Map<String, String> soslFilterMap = new Map<String, String>(); // sosl로 가져와야하는 목록
+        List<List<SObject>> sObjectList = new List<List<SObject>>();
 
         String query = '';
+        String whereQuery = '';
+        String tempQuery = '';
         Boolean isSosl = false;
 
         try {
-            // [1] sosl 적용시켜야하는 필드가 있는 경우를 먼저 체크
+            // [1] sosl 적용시켜야하는 필드 text 가져오기
             query += getSoslQueryStr(filterMap, soslFilterMap);
 
-            // [2] query 변수가 비어있으면 soql 형식의, 비어있지 않으면 sosl 형식의 query form 가져오기
-            if(query == ''){
-                query = getSoqlForm();
-            } else {
-                query = 'FIND \'' + query + '\' ' + getSoslForm();
+            // [2] query 변수가 비어있지 않으면 isSosl true
+            if(query != ''){
                 isSosl = true;
             }
-            
-            // [3] sosl 체크가 끝나면 soql 적용할 필드 체크sl 체크가 끝나면 soql 적용할 필드 체크
-            query += getSoqlQueryStr(filterMap);
-            
-            // [4] 버전 존재여부에 따라 order by 값 넣기
-            if(String.isNotEmpty(objectToString(filterMap.get('ApiVersion')))){
-                query += ' order by Api_Version__c, name ';
-            } else {
-                query += ' order by name ';
-            }
 
-            // [5] sosl 일 때 쿼리 마지막에 close.( getSoslForm 함수 참고 )
+            // [3] soql 적용시켜야하는 필드 where 조건 가져오기
+            whereQuery += getSoqlWhereQuery(filterMap);
+
             if(isSosl == true){
-                query += ' ) ';
+                query = 'FIND \'' + query + '\' ' + getSoslForm() + whereQuery + ' ) '; // getSoslForm 함수 참고
+                // [4] isSosl true이면 sosl 쿼리로 where 조건에 넣을 id 가져오기
+                whereQuery += getWhereQueryForSoslId(query, soslFilterMap);
             }
             
-            // [6] soql, sosl 형식에 따라 쿼리 수행
-            System.debug('query >>>>>>>>>>>>> ' + query);
-            queryResultList = getQueryResultList(isSosl, query, soslFilterMap);
+            // [5] 버전 존재여부에 따라 order by 값 넣기
+            if(String.isNotEmpty(objectToString(filterMap.get('ApiVersion')))){
+                whereQuery += ' order by name, Api_Version__c ';
+            } else {
+                whereQuery += ' order by name ';
+            }
+            
+            query = getSoqlForm();
+            tempQuery = query + whereQuery;
+            // [6] soql 쿼리 수행
+            queryResultList = getQueryResultList(tempQuery);
             
             resultMap.put('result', queryResultList);
             resultMap.put('success', true);
-            System.debug('resultMap >>>>>>>>>>>>> ' + resultMap);
 
         } catch (Exception e) {
             resultMap.put('success', false);
@@ -203,7 +204,7 @@ public class ReferenceSearchController {
         return resultMap;
     }
 
-    // [1] sosl 적용시켜야하는 필드가 있는 경우를 먼저 체크
+    // [1] sosl 적용시켜야하는 필드 text 가져오기
     /*
         필드 타입이 긴 텍스트 영역(131072)로 선언된 경우 soql쿼리를 사용할 수 없다. sosl쿼리를 적용해야 한다.
     */
@@ -250,81 +251,78 @@ public class ReferenceSearchController {
         return query;
     }
 
-    // query가 null이 아니면 콤마 추가
-    private static String addCommaIfNotNull(String query, String filterName){
-        if(query == ''){
-            query += filterName;
-        } else {
-            query += ', ' + filterName;
-        }
-        return query;
-    }
-    
-    // [3] sosl 체크가 끝나면 soql 적용할 필드 체크
-    private static String getSoqlQueryStr(Map<String, Object> filterMap){
-        String query = '';
+    // [3] soql 적용시켜야하는 필드 where 조건 가져오기
+    private static String getSoqlWhereQuery(Map<String, Object> filterMap){
+        String whereQuery = '';
 
         // Name
         String name = objectToString(filterMap.get('Name'));
         if(String.isNotEmpty(name)) {
-            query += ' and name like \'%' + name + '%\' ';
+            whereQuery += ' and name like \'%' + name + '%\' ';
         }
         // Eng Label
         String engLabel = objectToString(filterMap.get('EngLabel'));
         if(String.isNotEmpty(engLabel)) {
-            query += ' and eng_Label__c like \'%' + engLabel + '%\' ';
+            whereQuery += ' and eng_Label__c like \'%' + engLabel + '%\' ';
         }
         // Kor Label
         String korLabel = objectToString(filterMap.get('KorLabel'));
         if(String.isNotEmpty(korLabel)) {
-            query += ' and kor_Label__c like \'%' + korLabel + '%\' ';
+            whereQuery += ' and kor_Label__c like \'%' + korLabel + '%\' ';
         }
         // Api Version
         String apiVersion = objectToString(filterMap.get('ApiVersion'));
         if(String.isNotEmpty(apiVersion)) {
-            query += ' and (api_Version__c <= ' + apiVersion + ' or api_Version__c = null) ';
+            whereQuery += ' and (api_Version__c <= ' + apiVersion + ' or api_Version__c = null) ';
         }
         // Supported Calls
         String supportedCalls = objectToString(filterMap.get('SupportedCalls'));
         if(String.isNotEmpty(supportedCalls)) {
-            query += ' and supported_Calls__c includes (\'' + supportedCalls + '\') ';
+            whereQuery += ' and supported_Calls__c includes (\'' + supportedCalls + '\') ';
         }
         // Remove
         String remove = objectToString(filterMap.get('Remove'));
         if(String.isNotEmpty(remove)) {
-            query += ' and remove__c = ' + remove + ' ';
+            whereQuery += ' and remove__c = ' + remove + ' ';
         }
         // Docs Link
         String docsLink = objectToString(filterMap.get('DocsLink'));
         if(String.isNotEmpty(docsLink)) {
-            query += ' and docs_Link__c like \'%' + docsLink + '%\' ';
+            whereQuery += ' and docs_Link__c like \'%' + docsLink + '%\' ';
         }
         
-        return query;
+        return whereQuery;
     }
 
-    // [5] soql, sosl 형식에 따라 쿼리 수행
-    private static List<OrDataset> getQueryResultList(Boolean isSosl, String query, Map<String, String> soslFilterMap){
-        List<ObjectReference__c> queryResultList = new List<ObjectReference__c>();
-        List<OrDataset> orDatasetList = new List<OrDataset>();
-        
-        try {
-            if(isSosl == true){
-                List<List<SObject>> querySoslResultList = Search.query(query);
-                for(List<ObjectReference__c> recordList : querySoslResultList){
-                    queryResultList = getRefinedResultList(recordList, soslFilterMap);
-                }
-            } else {
-                queryResultList = Database.query(query);
+    // query가 null이 아니면 콤마 추가
+    private static String addCommaIfNotNull(String query, String filterName){
+        if(query != ''){
+            filterName = ', ' + filterName;
+        }
+        return filterName;
+    }
+
+    // sosl로 soql의 where 조건에 넣을 id 가져오기
+    private static String getWhereQueryForSoslId(String query, Map<String, String> soslFilterMap){
+        List<ObjectReference__c> refinedOrList = new List<ObjectReference__c>();
+        List<String> idList = new List<String>();
+
+        String whereQuery = '';
+        List<List<SObject>> searchList = Search.query(query); //
+
+        if(searchList.size() > 0){
+            for(List<ObjectReference__c> recordList : searchList){
+                refinedOrList = getRefinedResultList(recordList, soslFilterMap);
             }
 
-            System.debug('queryResultList >>>>>>>>>>>>> \n' + queryResultList);
-            orDatasetList = setAorListInQueryResult(queryResultList);
-        } catch (QueryException e) {
-            System.debug('getQueryResultList 오류를 확인하세요 >>>>>>>>>>>>> ' + e.getMessage());
+            for(ObjectReference__c record : refinedOrList){
+                idList.add(String.valueOf(record.get('Id')));
+            }
+
+            whereQuery += ' AND Id IN (\'' + String.join(idList, '\', \'') + '\')';
         }
-        
-        return orDatasetList;
+
+        return whereQuery;
     }
 
     // sosl로 가져온 데이터 정제하여 가져오기
@@ -333,7 +331,7 @@ public class ReferenceSearchController {
         ALL FIELDS로 가져온 데이터를 한번 더 정제하여 필터를 적용한 필드의 데이터만 가져오기 위한 메서드
     */
     private static List<ObjectReference__c> getRefinedResultList(List<ObjectReference__c> recordList, Map<String, String> soslFilterMap){
-        List<ObjectReference__c> queryResultList = new List<ObjectReference__c>();
+        List<ObjectReference__c> orList = new List<ObjectReference__c>();
         
         try {
             for(ObjectReference__c record : recordList){
@@ -343,7 +341,7 @@ public class ReferenceSearchController {
                     String str = objectToString((String)record.get(key));
                     
                     if(String.isNotEmpty(str) && str.contains(soslFilterMap.get(key))){
-                        queryResultList.add(record);
+                        orList.add(record);
                     }
                 }
             }
@@ -351,7 +349,24 @@ public class ReferenceSearchController {
             System.debug('getRefinedResultList 오류를 확인하세요 >>>>>>>>>>>>> ' + e.getMessage());
         }
 
-        return queryResultList;
+        return orList;
+    }
+
+    // [5] soql 쿼리 수행
+    private static List<OrDataset> getQueryResultList(String tempQuery){
+        List<ObjectReference__c> queryResultList = new List<ObjectReference__c>();
+        List<OrDataset> orDatasetList = new List<OrDataset>();
+        
+        try {
+            System.debug('query >>>>>>>>>>>>>>>>>>> \n' + tempQuery);
+            queryResultList = Database.query(tempQuery);
+
+            orDatasetList = setAorListInQueryResult(queryResultList);
+        } catch (QueryException e) {
+            System.debug('getQueryResultList 오류를 확인하세요 >>>>>>>>>>>>> ' + e.getMessage());
+        }
+        
+        return orDatasetList;
     }
 
     // soql query form
@@ -382,20 +397,19 @@ public class ReferenceSearchController {
         return ' in all fields returning '
         + ' objectReference__c '
         + ' ( '
-        + '     id, '
-        + '     name, '
-        + '     eng_Label__c, '
-        + '     kor_Label__c, '
-        + '     api_Version__c, '
-        + '     supported_Calls__c, '
-        + '     description__c, '
-        + '     remove__c, '
-        + '     supported_Calls_Description__c, '
-        + '     special_Access_Rules__c, '
-        + '     usage__c, '
-        + '     memo__c, '
-        + '     docs_Link__c, '
-        + '     (select id, name from objectReference__r) '
+        + '     id '
+        + '     ,name '
+        + '     ,eng_Label__c '
+        + '     ,kor_Label__c '
+        + '     ,api_Version__c '
+        + '     ,supported_Calls__c '
+        + '     ,description__c '
+        + '     ,remove__c '
+        // + '     ,supported_Calls_Description__c '
+        + '     ,special_Access_Rules__c '
+        + '     ,usage__c '
+        + '     ,memo__c '
+        // + '     ,docs_Link__c '
         
         + '     where '
         + '         id != null '; // sql의 where 1=1 처럼 동적으로 편하게 where절을 추가 하기 위해
