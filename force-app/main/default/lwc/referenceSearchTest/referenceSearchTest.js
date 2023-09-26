@@ -16,6 +16,9 @@ export default class ReferenceSearch extends LightningElement {
     @track displayFields = {description: false, specialAccessRules: false,usage: false,memo: false,remove: false, SupportedCalls: false};
     displayHeaders = [];
     sortDirection = {};
+    // toast
+    isToastVisible = false;
+    toastMessage = '';
 
     @wire(getInit)
     wiredInit({ error, data }) {
@@ -36,6 +39,9 @@ export default class ReferenceSearch extends LightningElement {
             this.setTable();
             console.timeEnd('setTable');
             this.updateSearchCriteria();
+
+            console.log("Toast Init >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> ", this.isToastVisible)
+
             console.log(':::::::::::::::: wiredInit end :::::::::::::::: ');
 
             
@@ -63,7 +69,7 @@ export default class ReferenceSearch extends LightningElement {
         if (Array.isArray(refData)) {
             this.refAllData = refData.map((item, index) => {
                 const aorNameOptions = item.aorName.map(name => ({ label: name, value: name }));
-                const selectedAorNameValue = aorNameOptions.length > 0 ? aorNameOptions[0].value : ''; // AOR 존재 시 [0] 보이게
+                const selectedAorNameValue = aorNameOptions.length > 0 ? aorNameOptions[0].value : ''; 
                 return {
                     ...item,
                     displayedIndex: index + 1, 
@@ -90,7 +96,6 @@ export default class ReferenceSearch extends LightningElement {
 
     btnSearch() {
         console.log(":::::::::::::::: btnSearch start ::::::::::::::::")
-        this.changeBooleanByKey('isButtonDisabled', true);
 
         const name = this.template.querySelector('[data-id="name"]').value;
         const description = this.template.querySelector('[data-id="description"]').value;
@@ -119,12 +124,11 @@ export default class ReferenceSearch extends LightningElement {
         const removeChecked = this.template.querySelector('[data-id="remove"]');
         const remove = removeChecked.checked;
 
-        if (description && description.length < 2) {
+        console.log("this.isToastVisible >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> ", this.isToastVisible)
+        if (description  && description.length < 2) {
+            this.toastMessage = 'Description은 2글자 이상이어야 합니다.';
+            this.isToastVisible = true; 
 
-            //Alert lightning-toast 로 추후 변경 ********************************************************************
-
-            alert('Description은 2글자 이상이어야 합니다. 추후 변경 필요 ');
-            //alert 후 return 시 검색버튼 활성화 안됨 추후 수정
             return;
         }
 
@@ -152,6 +156,8 @@ export default class ReferenceSearch extends LightningElement {
         }
 
         this.changeBooleanByKey('loading', true);
+        this.changeBooleanByKey('isButtonDisabled', true);
+
         console.time('getDataByFilter');
         getDataByFilter({ filterGroup: JSON.stringify(filterGroup) })
             .then(result => {
@@ -320,8 +326,6 @@ export default class ReferenceSearch extends LightningElement {
     }
 
     handleSort(event) {
-        // event.stopPropagation();
-
         console.log(":::::::::::::::: handleSort start ::::::::::::::::")
         console.time('handleSort');
         const key = event.currentTarget.dataset.key; 
@@ -353,4 +357,8 @@ export default class ReferenceSearch extends LightningElement {
         console.log(":::::::::::::::: handleSort end ::::::::::::::::")
     }
 
+    handleToastClose() {
+        this.isToastVisible = false;
+    }
+    
 }

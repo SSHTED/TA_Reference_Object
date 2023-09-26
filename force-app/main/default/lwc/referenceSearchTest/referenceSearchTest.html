@@ -1,4 +1,5 @@
 <template>
+    <lightning-toast if:true={isToastVisible} title="toast_desctiption" message={toastMessage} variant="base" onclose={handleToastClose}></lightning-toast>
     <div class="searchRef">
         <!-- 헤더 영역 -->
         <lightning-card class="header_card" title="Reference Search" icon-name="standard:document">
@@ -117,7 +118,7 @@
                                     <div class="slds-truncate">Kor Label</div>
                                 </th>
                                 <th class="" scope="col" data-key="apiVersion" onclick={handleSort}>
-                                    <div class="slds-truncate">Api Ver</div>
+                                    <div class="slds-truncate">Api Version</div>
                                 </th>
                                 <th class="" scope="col" data-key="associatedObjectReference" onclick={handleSort}>
                                     <div class="slds-truncate">Associated Object Reference</div>
@@ -156,7 +157,7 @@
                                                 placeholder="" onchange={handleAorNameValue}></lightning-combobox>
                                         </template>
                                         <template if:false={item.selectedAorNameValue}>
-                                            <!-- 빈 <td>를 렌더링합니다. -->
+                                            <!-- 빈 <td>를 렌더링 -->
                                         </template>
                                     </td>
 
