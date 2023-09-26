@@ -25,14 +25,20 @@ export default class ReferenceSearch extends LightningElement {
             this.refAllData = data.result.refAllData;
             this.initialData = [...this.refAllData];  //복사본
             this.supCallsList = data.result.callList;
+            console.time('supCallsList.map');
             this.supCallsItems = this.supCallsList.map(val => {
                 val = val.replace('()', '');
                 return { label: `${val}`, name: `${val}`, checked: false };
             });
+            console.timeEnd('supCallsList.map');
             console.log('data >>>>>>>>>>> ', data);
+            console.time('setTable');
             this.setTable();
+            console.timeEnd('setTable');
             this.updateSearchCriteria();
             console.log(':::::::::::::::: wiredInit end :::::::::::::::: ');
+
+            
         } else if (error) {
             console.error('wiredInit 에러 :', error);
         }
@@ -125,6 +131,7 @@ export default class ReferenceSearch extends LightningElement {
         // filterGroup에 값을 저장하여 백엔드로 전달
         let filterGroup = {
             ApiVersion: apiversion,
+            ApiVersionType: 'before',/* html 작업 끝나고 after인지, before인지 값 가져와서 넣어야함. 임시로 하드코딩! */
             SupportedCalls: supportedCalls,
             Description: description,
             Remove: remove,
@@ -145,13 +152,17 @@ export default class ReferenceSearch extends LightningElement {
         }
 
         this.changeBooleanByKey('loading', true);
+        console.time('getDataByFilter');
         getDataByFilter({ filterGroup: JSON.stringify(filterGroup) })
             .then(result => {
+                console.timeEnd('getDataByFilter');
                 this.changeBooleanByKey('loading', false);
                  console.log("loading state [[getDataByFilter]]>>>>>>>>>>>>>>>>> " + this.loading)
                 if (result.success == true) {
                     console.log("result data : ", result.result);
+                    console.time('getDataByFilter setTable');
                     this.setTable(result.result);
+                    console.timeEnd('getDataByFilter setTable');
                 } else {
                     console.error('result 에러 : ', error);
                 }
@@ -295,6 +306,7 @@ export default class ReferenceSearch extends LightningElement {
 
     handleSort(event) {
         console.log(":::::::::::::::: handleSort start ::::::::::::::::")
+        console.time('handleSort');
         const key = event.currentTarget.dataset.key; 
         console.log("key : ", key)
 
@@ -320,6 +332,7 @@ export default class ReferenceSearch extends LightningElement {
             if (this.sortDirection[key] === 'asc') return valA > valB ? 1 : (valA < valB ? -1 : 0);
             else return valA < valB ? 1 : (valA > valB ? -1 : 0);
         });
+        console.timeEnd('handleSort');
         console.log(":::::::::::::::: handleSort end ::::::::::::::::")
     }
 
