@@ -23,22 +23,32 @@
                             <div class="title">Object Name</div>
                             <div class="searchBox">
                                 <lightning-input class="inputValue" type="search" placeholder="insert objectName"
-                                    data-id="name" onchange={handleInput}></lightning-input>
+                                    data-id="name" value={inputValues.name} onchange={handleInput}></lightning-input>
                             </div>
                         </div>
                         <div class="section">
                             <div class="title">Description</div>
                             <div class="searchBox">
                                 <lightning-input class="inputValue" type="search" placeholder="insert description"
-                                    data-id="description" onchange={handleInput}></lightning-input>
+                                    data-id="description" value={inputValues.description} onchange={handleInput}></lightning-input>
                             </div>
                         </div>
                         <div class="section">
                             <div class="title">Api Version</div>
                             <div class="searchBox">
                                 <lightning-input class="inputValue" type="search" placeholder="insert apiversion"
-                                    data-id="apiversion" onchange={handleInput}></lightning-input>
+                                    data-id="apiversion" value={inputValues.apiversion} onchange={handleInput}></lightning-input>
                             </div>
+                        <div class="versionRadioDiv">
+                            <lightning-radio-group
+                                name="versionRadioGroup"
+                                options={versionOptions}
+                                value={versionValue}
+                                type="radio"
+                                variant="label-hidden"
+                                data-id="apiversionType"
+                            ></lightning-radio-group>
+                        </div>
                         </div>
                         <div class="section">
                             <div class="title">Removed API</div>
@@ -52,23 +62,22 @@
                         <div class="section">
                             <div class="title">SpecialAccessRules</div>
                             <div class="searchBox">
-                                <lightning-input class="inputValue" type="search"
-                                    placeholder="insert specialAccessRules" data-id="specialAccessRules"
-                                    onchange={handleInput}></lightning-input>
+                            <lightning-input class="inputValue" type="search" placeholder="insert specialAccessRules"
+                                    data-id="specialAccessRules" value={inputValues.specialAccessRules} onchange={handleInput}></lightning-input>
                             </div>
                         </div>
                         <div class="section">
                             <div class="title">Usage</div>
                             <div class="searchBox">
                                 <lightning-input class="inputValue" type="search" placeholder="insert usage"
-                                    data-id="usage" onchange={handleInput}></lightning-input>
+                                    data-id="usage" value={inputValues.usage} onchange={handleInput}></lightning-input>
                             </div>
                         </div>
                         <div class="section">
                             <div class="title">Memo</div>
                             <div class="searchBox">
                                 <lightning-input class="inputValue" type="search" placeholder="insert memo"
-                                    data-id="memo" onchange={handleInput}></lightning-input>
+                                    data-id="memo" value={inputValues.memo} onchange={handleInput}></lightning-input>
                             </div>
                         </div>
                     </div>
@@ -79,7 +88,7 @@
                                 <div key={item.name} class="slds-col slds-size_1-of-6">
                                     <lightning-input class="selectedCheckbox" type="checkbox" label={item.label}
                                         name={item.name} checked={item.checked} data-id="callsChecked"
-                                        style="margin-left: 30px; margin-top: 5px;">
+                                        onchange={handleCheckboxChange} style="margin-left: 30px; margin-top: 5px;">
                                     </lightning-input>
                                 </div>
                             </template>
@@ -105,27 +114,16 @@
                         aria-labelledby="element-with-table-label other-element-with-table-label">
                         <thead>
                             <tr class="slds-line-height_reset">
-                                <th class="" scope="col" data-key="displayedIndex" onclick={handleSort}>
-                                    <div class="slds-truncate">No</div>
-                                </th>
-                                <th class="" scope="col" data-key="name" onclick={handleSort}>
-                                    <div class="slds-truncate">Name</div>
-                                </th>
-                                <th class="" scope="col" data-key="engLabel" onclick={handleSort}>
-                                    <div class="slds-truncate">Eng Label</div>
-                                </th>
-                                <th class="" scope="col" data-key="korLabel" onclick={handleSort}>
-                                    <div class="slds-truncate">Kor Label</div>
-                                </th>
-                                <th class="" scope="col" data-key="apiVersion" onclick={handleSort}>
-                                    <div class="slds-truncate">Api Version</div>
-                                </th>
-                                <th class="" scope="col" data-key="associatedObjectReference" onclick={handleSort}>
-                                    <div class="slds-truncate">Associated Object Reference</div>
-                                </th>
+                            <th class="" scope="col" data-key="displayedIndex" onclick={handleSort}><div class="slds-truncate">No</div></th>
+                            <th class="" scope="col" data-key="link"><div class="slds-truncate">Link</div></th>
+                            <th class="" scope="col" data-key="name" onclick={handleSort}><div class="slds-truncate">Name</div></th>
+                            <th class="" scope="col" data-key="engLabel" onclick={handleSort}><div class="slds-truncate">Eng Label</div></th>
+                            <th class="" scope="col" data-key="korLabel" onclick={handleSort}><div class="slds-truncate">Kor Label</div></th>
+                            <th class="" scope="col" data-key="apiVersion" onclick={handleSort}><div class="slds-truncate">Api Version</div></th>
+                            <th class="" scope="col" data-key="associatedObjectReference" onclick={handleSort}><div class="slds-truncate">Associated Object Reference</div></th>
                                 <!-- 동적으로 추가되는 thead -->
                                 <template for:each={displayHeaders} for:item="header" for:index="index">
-                                    <th key={header.key} data-key={header.key} onclick={handleSort}>
+                                <th key={header.key} data-key={header.key} onclick={handleSort} >
                                         <div class="slds-truncate">{header.key}</div>
                                     </th>
                                 </template>
@@ -135,14 +133,17 @@
                             <template for:each={refAllData} for:item="item" for:index="index">
                                 <tr key={item.Id}>
                                     <td>{item.displayedIndex}</td>
-                                    <td> <span>
-                                            <a href={item.objectReferenceDetailUrl} target="_blank"
-                                                rel="noopener noreferrer">
-                                                {item.name}
-                                            </a>
+                                <td>
+                                    <span>
                                             <a href={item.docsLink} target="_blank" rel="noopener noreferrer">
-                                                <lightning-icon icon-name="doctype:link" size="x-small"
-                                                    alternative-text="Open"></lightning-icon>
+                                            <lightning-icon icon-name="standard:link" size="x-small" alternative-text="Open"></lightning-icon>
+                                        </a>
+                                    </span>
+                                </td>
+                                <td>
+                                    <span>
+                                        <a href={item.objectReferenceDetailUrl} target="_blank" rel="noopener noreferrer">
+                                            {item.name}
                                             </a>
                                         </span>
                                     </td>
@@ -162,24 +163,12 @@
                                     </td>
 
                                     <!-- 동적으로 추가되는 tbody -->
-                                    <template if:true={displayFields.description}>
-                                        <td>{item.description}</td>
-                                    </template>
-                                    <template if:true={displayFields.specialAccessRules}>
-                                        <td>{item.specialAccessRules}</td>
-                                    </template>
-                                    <template if:true={displayFields.usage}>
-                                        <td>{item.usage}</td>
-                                    </template>
-                                    <template if:true={displayFields.memo}>
-                                        <td>{item.memo}</td>
-                                    </template>
-                                    <template if:true={displayFields.remove}>
-                                        <td>{item.remove}</td>
-                                    </template>
-                                    <template if:true={displayFields.supportedCalls}>
-                                        <td>{item.supportedCalls}</td>
-                                    </template>
+                                <template if:true={displayFields.description}><td>{item.description}</td></template>
+                                <template if:true={displayFields.specialAccessRules}><td>{item.specialAccessRules}</td></template>
+                                <template if:true={displayFields.usage}><td>{item.usage}</td></template>
+                                <template if:true={displayFields.memo}><td>{item.memo}</td></template>
+                                <template if:true={displayFields.remove}><td>{item.remove}</td></template>
+                                <template if:true={displayFields.supportedCalls}><td>{item.supportedCalls}</td></template>
                                 </tr>
                             </template>
                         </tbody>

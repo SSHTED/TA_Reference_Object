@@ -2,12 +2,16 @@ import { LightningElement, api, track, wire } from 'lwc';
 import getInit from '@salesforce/apex/ReferenceSearchController.getInit';
 import getDataByFilter from '@salesforce/apex/ReferenceSearchController.getDataByFilter';
 
+import { loadStyle } from 'lightning/platformResourceLoader';
+import referenceSearchCmmn from '@salesforce/resourceUrl/ReferenceSearch';
+
 export default class ReferenceSearch extends LightningElement {
     @api title = '기본제목';
     @track result = [];
     @track loading = true;
     isButtonDisabled = false;
     toggleInputCard = false;
+    checkStyleLoad = false;
     searchCriteria = '';
 
     refAllData = [];
@@ -19,7 +23,15 @@ export default class ReferenceSearch extends LightningElement {
     // toast
     isToastVisible = false;
     toastMessage = '';
+    versionValue = 'before';
+    @track inputValues ={name:'', description:'',apiversion:'',specialAccessRules:'',usage:'',memo:''};
 
+    get versionOptions() {
+        return [
+            { label: '이전 버전', value: 'before' },
+            { label: '이후 버전', value: 'after' },
+        ];
+    }
     @wire(getInit)
     wiredInit({ error, data }) {
         if (data && data.result) {
@@ -28,20 +40,15 @@ export default class ReferenceSearch extends LightningElement {
             this.refAllData = data.result.refAllData;
             this.initialData = [...this.refAllData];  //복사본
             this.supCallsList = data.result.callList;
-            console.time('supCallsList.map');
             this.supCallsItems = this.supCallsList.map(val => {
                 val = val.replace('()', '');
                 return { label: `${val}`, name: `${val}`, checked: false };
             });
-            console.timeEnd('supCallsList.map');
             console.log('data >>>>>>>>>>> ', data);
-            console.time('setTable');
+            console.time('setTable >>>>>>>>>>>>>> ');
             this.setTable();
-            console.timeEnd('setTable');
+            console.timeEnd('setTable >>>>>>>>>>>>>> ');
             this.updateSearchCriteria();
-
-            console.log("Toast Init >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> ", this.isToastVisible)
-
             console.log(':::::::::::::::: wiredInit end :::::::::::::::: ');
 
             
@@ -50,14 +57,17 @@ export default class ReferenceSearch extends LightningElement {
         }
     }
 
-    handleInput(event) {
-        const inputElement = event.target;
-        const inputValue = inputElement.value;
-
-        if (inputValue.trim() !== "") {
-            inputElement.className = "inputValue_filled";
-        } else {
-            inputElement.className = "inputValue";
+    renderedCallback() {
+        if(!this.checkStyleLoad){
+            Promise.all([
+                loadStyle( this, referenceSearchCmmn + "/referenceSearchCmmn.css" )
+                ]).then(() => {
+                    this.checkStyleLoad = true;
+                    console.log( 'Files loaded' );
+                })
+                .catch(error => {
+                    console.log( '못불러옴' + JSON.stringify(error) );
+            });
         }
     }
 
@@ -84,8 +94,6 @@ export default class ReferenceSearch extends LightningElement {
             console.error(' setTable 에러 : ', error);
             console.error(' setTable 에러 refData  : ', refData);
         }
-        // this.changeBooleanByKey('loading', false);
-        // console.log("loading state [[setTable]]>>>>>>>>>>>>>>>>> " + this.loading)
         this.changeBooleanByKey('isButtonDisabled', false);
         console.log(":::::::::::::::: setTable end ::::::::::::::::");
     }
@@ -100,6 +108,7 @@ export default class ReferenceSearch extends LightningElement {
         const name = this.template.querySelector('[data-id="name"]').value;
         const description = this.template.querySelector('[data-id="description"]').value;
         const apiversion = this.template.querySelector('[data-id="apiversion"]').value;
+        const apiversionType = this.template.querySelector('[data-id="apiversionType"]').value;
         const specialAccessRules = this.template.querySelector('[data-id="specialAccessRules"]').value;
         const usage = this.template.querySelector('[data-id="usage"]').value;
         const memo = this.template.querySelector('[data-id="memo"]').value;
@@ -135,7 +144,7 @@ export default class ReferenceSearch extends LightningElement {
         // filterGroup에 값을 저장하여 백엔드로 전달
         let filterGroup = {
             ApiVersion: apiversion,
-            ApiVersionType: 'before',/* html 작업 끝나고 after인지, before인지 값 가져와서 넣어야함. 임시로 하드코딩! */
+            ApiVersionType: apiversionType,/* html 작업 끝나고 after인지, before인지 값 가져와서 넣어야함. 임시로 하드코딩! */
             SupportedCalls: supportedCalls,
             Description: description,
             Remove: remove,
@@ -158,17 +167,17 @@ export default class ReferenceSearch extends LightningElement {
         this.changeBooleanByKey('loading', true);
         this.changeBooleanByKey('isButtonDisabled', true);
 
-        console.time('getDataByFilter');
+        console.time('getDataByFilter>>>>>>>>>>>>>>');
         getDataByFilter({ filterGroup: JSON.stringify(filterGroup) })
             .then(result => {
-                console.timeEnd('getDataByFilter');
+                console.timeEnd('getDataByFilter >>>>>>>>>>>>>> ');
                 this.changeBooleanByKey('loading', false);
                  console.log("loading state [[getDataByFilter]]>>>>>>>>>>>>>>>>> " + this.loading)
                 if (result.success == true) {
                     console.log("result data : ", result.result);
-                    console.time('getDataByFilter setTable');
+                    console.time('getDataByFilter setTable >>>>>>>>>>>>>> ');
                     this.setTable(result.result);
-                    console.timeEnd('getDataByFilter setTable');
+                    console.timeEnd('getDataByFilter setTable >>>>>>>>>>>>>> ');
                 } else {
                     console.error('result 에러 : ', error);
                 }
@@ -189,20 +198,20 @@ export default class ReferenceSearch extends LightningElement {
 
     btnReset() {
         console.log(":::::::::::::::: btnReset start ::::::::::::::::");
-
         const checkboxes = this.template.querySelectorAll('.selectedCheckbox');
         checkboxes.forEach(checkbox => {
             checkbox.checked = false;
         });
+        // inputValues 객체 초기화
+        for (let key in this.inputValues) {
+            this.inputValues[key] = '';
+        }
         const inputboxes = this.template.querySelectorAll('.inputValue_filled');
         inputboxes.forEach(inputbox => {
             inputbox.value = '';
             this.handleInput({ target: inputbox });
         });
         this.toggleInputCard = false;
-        // this.setTable(this.initialData);
-        // this.updateSearchCriteria();
-        // this.updateDisplayFields(false, false, false, false, false, false);
         console.log(":::::::::::::::: btnReset end ::::::::::::::::")
     }
 
@@ -214,7 +223,7 @@ export default class ReferenceSearch extends LightningElement {
         // 문자열 중간에 있는 공백 여부 확인
         for (let i = 0; i < str.length; i++) {
             if (str[i] === ' ') {
-                result = true; // 중간에 공백이 있으면 true 반환
+                result = true; 
             }
         }
         return result;
@@ -327,7 +336,7 @@ export default class ReferenceSearch extends LightningElement {
 
     handleSort(event) {
         console.log(":::::::::::::::: handleSort start ::::::::::::::::")
-        console.time('handleSort');
+        console.time('handleSort >>>>>>>>>>>>>> ');
         const key = event.currentTarget.dataset.key; 
         console.log("key : ", key)
 
@@ -353,12 +362,37 @@ export default class ReferenceSearch extends LightningElement {
             if (this.sortDirection[key] === 'asc') return valA > valB ? 1 : (valA < valB ? -1 : 0);
             else return valA < valB ? 1 : (valA > valB ? -1 : 0);
         });
-        console.timeEnd('handleSort');
+        console.timeEnd('handleSort >>>>>>>>>>>>>> ');
         console.log(":::::::::::::::: handleSort end ::::::::::::::::")
     }
 
     handleToastClose() {
         this.isToastVisible = false;
+    }
+
+    // 입력 조건 유지 Input
+    handleInput(event) {
+        const inputElement = event.target;
+        const inputId = inputElement.dataset.id; //  data-id 
+        const inputValue = inputElement.value;
+    
+        if (inputValue.trim() !== "") {
+            inputElement.className = "inputValue_filled";
+        } else {
+            inputElement.className = "inputValue";
+        }
+        // inputValues 상태를 업데이트합니다.
+        this.inputValues = { ...this.inputValues, [inputId]: inputValue };
+    }
+    // 입력 조건 유지 Checkbox
+    handleCheckboxChange(event) {
+        const name = event.target.name; 
+        const checked = event.target.checked; 
+    
+        // supCallsItems 배열에서 해당 항목을 찾아 checked 값을 업데이트합니다.
+        this.supCallsItems = this.supCallsItems.map(item => 
+            item.name === name ? { ...item, checked } : item
+        );
     }
     
 }
