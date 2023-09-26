@@ -243,7 +243,7 @@ export default class ReferenceSearch extends LightningElement {
         this.searchCriteria += name != '' ? `이름: ${name} | ` : '';
         this.searchCriteria += description != '' ? `Description: ${description} | ` : '';
         this.searchCriteria += apiversion != '' ? `Api Version: ${apiversion} | ` : '';
-        this.searchCriteria += remove != '' ? `삭제된 API : ${remove ? 'Yes' : 'No'} | ` : '';
+        this.searchCriteria += remove != '' ? `API 삭제여부 : ${remove ? 'Y' : 'N'} | ` : '';
         this.searchCriteria += specialAccessRules != '' ? `Special Access Rules: ${specialAccessRules} | ` : '';
         this.searchCriteria += memo != '' ? `Memo: ${memo} | ` : '';
     }
@@ -276,14 +276,29 @@ export default class ReferenceSearch extends LightningElement {
         const clickedElement = event.target;
         this.isButtonDisabled = !this.isButtonDisabled;
         console.log("isButtonDisabled >>>>>>>>>>>>>>>>>>>>>", this.isButtonDisabled)
-        if (clickedElement.classList.contains('result_card')) {
+        console.log("clickedElement >>>>>>>>>>>>>>>>>>>>>", clickedElement)
+        if (clickedElement.classList.contains('expand')) {
+            console.log("if >> contains('.expand') >>>>>>>>>>>>>>>>>>>>> 진입")
             const cardElement = this.template.querySelector('.result_card');
+            const pElement = this.template.querySelector('.totalData_p');
+            const tableElement = this.template.querySelector('.loadedHolder table');
             cardElement.className = "result_card_folded";
+            clickedElement.className = "expand_folded";
+            pElement.className = "totalData_p_folded";
+            tableElement.style = "top: 0";
             this.changeBooleanByKey('toggleInputCard', !this.toggleInputCard);
-        } else if(clickedElement.classList.contains('result_card_folded')) {
+            console.log("toggleInputCard >>>>>>>>>>>>>>>>>>>>>", this.toggleInputCard)
+        } else if(clickedElement.classList.contains('expand_folded')) {
+            console.log("else if >> contains('expand') >>>>>>>>>>>>>>>>>>>>> 진입")
             const cardElement = this.template.querySelector('.result_card_folded');
+            const pElement = this.template.querySelector('.totalData_p_folded');
+            const tableElement = this.template.querySelector('.loadedHolder table');
             cardElement.className = "result_card";
+            clickedElement.className = "expand";
+            pElement.className = "totalData_p";
+            tableElement.style = "top: -17px";
             this.changeBooleanByKey('toggleInputCard', !this.toggleInputCard);
+            console.log("toggleInputCard >>>>>>>>>>>>>>>>>>>>>", this.toggleInputCard)
         }
     }
 
@@ -305,6 +320,8 @@ export default class ReferenceSearch extends LightningElement {
     }
 
     handleSort(event) {
+        // event.stopPropagation();
+
         console.log(":::::::::::::::: handleSort start ::::::::::::::::")
         console.time('handleSort');
         const key = event.currentTarget.dataset.key; 

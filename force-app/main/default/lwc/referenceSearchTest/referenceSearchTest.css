@@ -54,7 +54,28 @@
     /* top을 calc로 변경 예정 */
     .result_card_folded {
         position: absolute;
-        top: 57px;
+        /* top: 57px; */
+        top: calc( 100% - 86.4vh );
+        width: 101.5%;
+        margin: -13px;
+    }
+
+    .expand {
+        position: absolute;
+        left: calc( 100% - 92.5vw );
+        top: 10px;
+    }
+
+    .totalData_p_folded {
+        position: absolute;
+        left: calc( 100% - 91vw );
+        top: 20px;
+    }
+
+    .expand_folded {
+        position: absolute;
+        left: calc( 100% - 92vw );
+        top: 24px;
         width: 101.5%;
         margin: -13px;
     }
