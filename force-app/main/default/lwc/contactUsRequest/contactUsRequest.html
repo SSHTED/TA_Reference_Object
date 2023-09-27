@@ -7,13 +7,13 @@
                 <div class="article_name"><article>
                     <article>Category<abbr class="slds-required" title="required">* </abbr></article>
                 </article></div>
-
+            
                 <select class="custom-combobox" onchange={handleChange}>
                     <template for:each={options} for:item="option">
                         <option key={option.value} value={option.value}>{option.label}</option>
                     </template>
                 </select>
-
+            
             </lightning-layout-item>
             <lightning-layout-item size="6"></lightning-layout-item>
 
