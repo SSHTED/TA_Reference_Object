@@ -23,21 +23,21 @@
                             <div class="title">Object Name</div>
                             <div class="searchBox">
                                 <lightning-input class="inputValue" type="search" placeholder="insert objectName"
-                                    data-id="name" onchange={handleInput}></lightning-input>
+                                    data-id="name" value={inputValues.name} onchange={handleInput}></lightning-input>
                             </div>
                         </div>
                         <div class="section">
                             <div class="title">Description</div>
                             <div class="searchBox">
                                 <lightning-input class="inputValue" type="search" placeholder="insert description"
-                                    data-id="description" onchange={handleInput}></lightning-input>
+                                    data-id="description" value={inputValues.description} onchange={handleInput}></lightning-input>
                             </div>
                         </div>
                         <div class="section">
                             <div class="title">Api Version</div>
                             <div class="searchBox">
                                 <lightning-input class="inputValue" type="search" placeholder="insert apiversion"
-                                    data-id="apiversion" onchange={handleInput}></lightning-input>
+                                    data-id="apiversion" value={inputValues.apiversion} onchange={handleInput}></lightning-input>
                             </div>
                         <div class="versionRadioDiv">
                             <lightning-radio-group
@@ -63,21 +63,21 @@
                             <div class="title">SpecialAccessRules</div>
                             <div class="searchBox">
                             <lightning-input class="inputValue" type="search" placeholder="insert specialAccessRules"
-                                    data-id="specialAccessRules" onchange={handleInput}></lightning-input>
+                                    data-id="specialAccessRules" value={inputValues.specialAccessRules} onchange={handleInput}></lightning-input>
                             </div>
                         </div>
                         <div class="section">
                             <div class="title">Usage</div>
                             <div class="searchBox">
                                 <lightning-input class="inputValue" type="search" placeholder="insert usage"
-                                    data-id="usage" onchange={handleInput}></lightning-input>
+                                    data-id="usage" value={inputValues.usage} onchange={handleInput}></lightning-input>
                             </div>
                         </div>
                         <div class="section">
                             <div class="title">Memo</div>
                             <div class="searchBox">
                                 <lightning-input class="inputValue" type="search" placeholder="insert memo"
-                                    data-id="memo" onchange={handleInput}></lightning-input>
+                                    data-id="memo" value={inputValues.memo} onchange={handleInput}></lightning-input>
                             </div>
                         </div>
                     </div>
@@ -88,7 +88,7 @@
                                 <div key={item.name} class="slds-col slds-size_1-of-6">
                                     <lightning-input class="selectedCheckbox" type="checkbox" label={item.label}
                                         name={item.name} checked={item.checked} data-id="callsChecked"
-                                        style="margin-left: 30px; margin-top: 5px;">
+                                        onchange={handleCheckboxChange} style="margin-left: 30px; margin-top: 5px;">
                                     </lightning-input>
                                 </div>
                             </template>
@@ -99,7 +99,7 @@
         </template>
 
         <!-- 검색 결과 영역 -->
-        <lightning-card class="result_card" title="검색 결과" style="height:460px">
+        <lightning-card class="result_card" title="검색 결과">
             <div class="slds-m-around_medium">
                 <lightning-icon class="expand" icon-name="utility:expand_alt" size="small"
                     onclick={toggleResultCard}></lightning-icon>

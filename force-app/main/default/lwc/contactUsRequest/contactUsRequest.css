@@ -1,0 +1,24 @@
+.custom-box {
+    text-align: center;
+    background-color: #f4f6f9;
+    padding: 1rem;
+    border: 1px solid #d8dde6;
+}
+
+.card {
+    border: 1px solid #ccc; /* 원하는 색상 값으로 변경 가능 */
+}
+
+.custom-title {
+    font-size: 25px; /* 원하는 크기로 조정 */
+}
+
+.title_header{
+    text-indent: 17px;
+}
+
+.layout_first{
+    border: 1px solid #d1d1d1;
+    margin: 25px;
+}
+

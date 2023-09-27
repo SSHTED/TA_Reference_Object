@@ -48,7 +48,6 @@ export default class ReferenceSearch extends LightningElement {
             console.time('setTable >>>>>>>>>>>>>> ');
             this.setTable();
             console.timeEnd('setTable >>>>>>>>>>>>>> ');
-            this.updateSearchCriteria();
             console.log(':::::::::::::::: wiredInit end :::::::::::::::: ');
 
             
@@ -157,6 +156,7 @@ export default class ReferenceSearch extends LightningElement {
 
         console.log("filterGroup : " + JSON.stringify(filterGroup));
 
+
         // 한글이면 KorLabel, 영문이면 Name, space들어간 영문이면 EngLabel
         if (objectNameLanguage == 'kor') {
             filterGroup.KorLabel = name;
@@ -166,12 +166,14 @@ export default class ReferenceSearch extends LightningElement {
             } else {
                 filterGroup.Name = name;
             }
+        } else {
+            return;
         }
 
         this.changeBooleanByKey('loading', true);
         this.changeBooleanByKey('isButtonDisabled', true);
 
-        console.time('getDataByFilter>>>>>>>>>>>>>>');
+        console.time('getDataByFilter >>>>>>>>>>>>>> ');
         getDataByFilter({ filterGroup: JSON.stringify(filterGroup) })
             .then(result => {
                 console.timeEnd('getDataByFilter >>>>>>>>>>>>>> ');
@@ -247,17 +249,19 @@ export default class ReferenceSearch extends LightningElement {
     checkObjectNameLang(text) {
         let language = '';
         
-        if(/^[a-zA-Z\s]+$/.test(text)){
-            language = 'eng';
-        } else if(/[가-힣]/.test(text)){
-            language = 'kor';
-        } else {
-            console.error('Object Name을 확인해주세요. ex) 계 or Account or case ...');
-            
-            this.toastMessage = '한글(ex. 계), 영문, 띄어쓰기만 입력 가능합니다.';
-            this.isToastVisible = true; 
+        if(text != ''){
+            if(/^[a-zA-Z\s]+$/.test(text)){
+                language = 'eng';
+            } else if(/[가-힣]/.test(text)){
+                language = 'kor';
+            } else {
+                console.error('Object Name을 확인해주세요. ex) 계 or Account or case ...');
+                
+                this.toastMessage = 'Object Named에는 한글(ex. 계), 영문, 띄어쓰기만 입력 가능합니다.';
+                this.isToastVisible = true; 
 
-            return;
+                language = false;
+            }
         }
 
         return language;
@@ -268,33 +272,43 @@ export default class ReferenceSearch extends LightningElement {
         if(obj == '' || obj == undefined){
             obj = {};
         }
+        if(obj.Name){
+            obj.Name = obj.Name != '' ? obj.Name : '';
+        } else if(obj.KorLabel){
+            obj.Name = obj.KorLabel != '' ? obj.KorLabel : '';
+        } else if(obj.EngLabel){
+            obj.Name = obj.EngLabel != '' ? obj.EngLabel : '';
+        } else {
+            obj.Name = '';
+        }
 
         this.searchCriteria = '';
-        this.searchCriteria += obj.name != '' || obj.name != undefined ? `이름: ${obj.name} | ` : '';
-        this.searchCriteria += obj.description || obj.name != undefined != '' ? `Description: ${obj.description} | ` : '';
-        this.searchCriteria += obj.apiversion || obj.name != undefined != '' ? `Api Version: ${obj.apiversion} | ` : '';
-        this.searchCriteria += obj.remove || obj.name != undefined != '' ? `API 삭제여부 : ${obj.remove ? 'Y' : 'N'} | ` : '';
-        this.searchCriteria += obj.specialAccessRules || obj.name != undefined != '' ? `Special Access Rules: ${obj.specialAccessRules} | ` : '';
-        this.searchCriteria += obj.memo || obj.name != undefined != '' ? `Memo: ${obj.memo} | ` : '';
+        if(obj.Name != '' && obj.Name != undefined) this.searchCriteria += `Object Name: ${obj.Name} | `;
+        if(obj.Description != '' && obj.Description != undefined) this.searchCriteria += `Description: ${obj.Description} | `;
+        if(obj.ApiVersion != '' && obj.ApiVersion != undefined) this.searchCriteria += `Api Version: ${obj.ApiVersion} | `;
+        if(obj.Remove != '' && obj.Remove != undefined) this.searchCriteria += `Removed API: ${obj.Remove} | `;
+        if(obj.SpecialAccessRules != '' && obj.SpecialAccessRules != undefined) this.searchCriteria += `Special Access Rules: ${obj.SpecialAccessRules} | `;
+        if(obj.Memo != '' && obj.Memo != undefined) this.searchCriteria += `Memo: ${obj.Memo} | `;
+        if(obj.Usage != '' && obj.Usage != undefined) this.searchCriteria += `Usage: ${obj.Usage} | `;
     }
 
     // 동적으로 헤더,바디 추가
     setSearchResultFields(obj) {
-        this.displayFields.description = obj.description ? true : false;
-        this.displayFields.specialAccessRules = obj.specialAccessRules ? true : false;
-        this.displayFields.usage = obj.usage ? true : false;
-        this.displayFields.memo = obj.memo ? true : false;
-        this.displayFields.remove = obj.remove ? true : false;
-        this.displayFields.supportedCalls = obj.supportedCalls && obj.supportedCalls.length > 0 && obj.supportedCalls[0] !== '' ? true : false;
+        this.displayFields.description = obj.Description ? true : false;
+        this.displayFields.remove = obj.Remove ? true : false;
+        this.displayFields.specialAccessRules = obj.SpecialAccessRules ? true : false;
+        this.displayFields.memo = obj.Memo ? true : false;
+        this.displayFields.usage = obj.Usage ? true : false;
+        this.displayFields.supportedCalls = obj.SupportedCalls && obj.SupportedCalls.length > 0 && obj.SupportedCalls[0] !== '' ? true : false;
         console.log("this.displayFields.supportedCalls : " ,this.displayFields.supportedCalls);
 
         this.displayHeaders = [
-            { key: 'description', isActive: this.displayFields.description },
-            { key: 'specialAccessRules', isActive: this.displayFields.specialAccessRules },
-            { key: 'usage', isActive: this.displayFields.usage },
-            { key: 'memo', isActive: this.displayFields.memo },
-            { key: 'remove', isActive: this.displayFields.remove },
-            { key: 'supportedCalls', isActive: this.displayFields.supportedCalls },
+            { key: 'Description', isActive: this.displayFields.description },
+            { key: 'SpecialAccessRules', isActive: this.displayFields.specialAccessRules },
+            { key: 'Usage', isActive: this.displayFields.usage },
+            { key: 'Memo', isActive: this.displayFields.memo },
+            { key: 'Remove', isActive: this.displayFields.remove },
+            { key: 'SupportedCalls', isActive: this.displayFields.supportedCalls },
         ].filter(header => header.isActive);
     
         console.log("update display Fields : ", this.displayFields);

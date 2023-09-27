@@ -1,9 +1,0 @@
-/* .c-container{
-    margin-top : -15px;
-}  */
-
-
-.left-section, .right-section {
-     float: left;  
-    width: 50%; /* 각 섹션을 화면의 반씩 차지하도록 설정 */
-}
