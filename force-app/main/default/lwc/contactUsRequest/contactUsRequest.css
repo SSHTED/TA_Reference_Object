@@ -5,10 +5,6 @@
     border: 1px solid #d8dde6;
 }
 
-.card {
-    border: 1px solid #ccc; /* 원하는 색상 값으로 변경 가능 */
-}
-
 .custom-title {
     font-size: 25px; /* 원하는 크기로 조정 */
 }
@@ -19,6 +15,42 @@
 
 .layout_first{
     border: 1px solid #d1d1d1;
-    margin: 25px;
+    margin: 16px;
 }
+
+
+.article_name {
+    font-size: 20px; /* 텍스트 크기 변경 */
+    font-weight: bold; /* 텍스트를 굵게 만듭니다. */
+}
+
+
+.custom-combobox {
+    border: none; /* 테두리 제거 */
+}
+
+
+
+
+
+
+
+.submit_button{
+    text-align: center;
+
+}
+
+.large_button {
+    display: inline-block;
+    width: 150px ;
+    height: 60px ;
+    font-size: 20px ;
+    line-height: 60px  ;
+}
+
+
+
+
+
+
 
