@@ -27,7 +27,7 @@ public class ReferenceSearchController {
     public static Map<String, Object> getInit() {
         Map<String, Object> resultMap = new Map<String, Object>();
         Map<String, Object> valueMap = new Map<String, Object>();
-        List<String> fieldList = new List<String>();
+        // List<String> fieldList = new List<String>();
 
         try {
             // 필터 적용할 필드 목록 가져오기
@@ -37,19 +37,23 @@ public class ReferenceSearchController {
                 Schema.SObjectField 형태의 타입은 object에 담을 수 없는 것으로 보인다.
                 object는 여러 타입을 허용한다. ex) Integer, String, List, Map...
             */
-            List<Schema.SObjectField> tempFieldList = getFilterList();
-            for(Schema.SObjectField item : tempFieldList){
-                fieldList.add(String.valueOf(item));
-            }
+            // List<Schema.SObjectField> tempFieldList = getFilterList();
+            // for(Schema.SObjectField item : tempFieldList){
+            //     fieldList.add(String.valueOf(item));
+            // }
 
             // Supported Calls 목록 가져오기
             Set<String> callList = getSupportedCallsList();
+
+            // Api Version 목록 가져오기
+            String apiVersionStr = getApiVersionList();
             
             // reference 전체데이터 가져오기
             List<OrDataset> refAllData = getRefAllData();
 
-            valueMap.put('fieldList', fieldList);
+            // valueMap.put('fieldList', fieldList);
             valueMap.put('callList', callList);
+            valueMap.put('apiVersionStr', apiVersionStr);
             valueMap.put('refAllData', refAllData);
             
             resultMap.put('result', valueMap);
@@ -90,6 +94,44 @@ public class ReferenceSearchController {
             }
         }
         return uniqueCalls;
+    }
+
+    // Api Version 목록 가져오기
+    private static String getApiVersionList(){
+    // public static void getApiVersionList(){
+        List<String> apiList = new List<String>();
+
+        Map<String, Object> returnDataMap = new Map<String, Object>();
+        String endpoint = System.URL.getSalesforceBaseUrl().getHost();
+        String resBody = null;
+        
+        Httprequest httpReq = new Httprequest();
+        HttpResponse httpRes = new HttpResponse();
+        Http http = new Http();
+
+        httpReq.setMethod('GET');          
+        httpReq.setEndpoint('https://' + endpoint + '/services/data');                       
+        httpReq.setTimeout(120000);                    
+        httpReq.setHeader('Authorization', 'Bearer ' + System.UserInfo.getSessionId());
+        httpReq.setHeader('Content-Type', 'application/json');    
+
+        if(!Test.isRunningTest()) {
+            httpRes = http.send(httpReq);            
+        } else {
+            System.debug('테스트로 실행됨 >>>>>>>>>>>>>>>>>>>>>>>>>>>> \n');
+            String blStr= '[{"label":"Spring \'19","url":"/services/data/v45.0","version":"45.0"}]';
+            Blob bl = Blob.valueof(blStr);
+            httpRes.setBody(blStr);
+            httpRes.setStatusCode(200);
+        }
+
+        resBody = httpRes.getBody();
+        System.debug('result >>>>>>>>>>>>>>>>>>>> \n' + resBody);
+
+        return resBody;   
+        // returnDataMap.put('result', resBody);
+        // returnDataMap.put('endpoint', endpoint);
+        // return returnDataMap;
     }
 
     // reference 전체데이터 가져오기
@@ -156,7 +198,6 @@ public class ReferenceSearchController {
         Map<String, Object> filterMap = (Map<String, Object>)JSON.deserializeUntyped(filterGroup);
         List<OrDataset> queryResultList = new List<OrDataset>();
         Map<String, String> soslFilterMap = new Map<String, String>(); // sosl로 가져와야하는 목록
-        List<List<SObject>> sObjectList = new List<List<SObject>>();
 
         String query = '';
         String whereQuery = '';
@@ -272,8 +313,11 @@ public class ReferenceSearchController {
         }
         // Api Version
         String apiVersion = objectToString(filterMap.get('ApiVersion'));
-        if(String.isNotEmpty(apiVersion)) {
+        String apiVersionType = objectToString(filterMap.get('ApiVersionType'));
+        if(String.isNotEmpty(apiVersion) && apiVersionType == 'before') {
             whereQuery += ' and (api_Version__c <= ' + apiVersion + ' or api_Version__c = null) ';
+        } else if(String.isNotEmpty(apiVersion) && apiVersionType == 'after'){
+            whereQuery += ' and (api_Version__c >= ' + apiVersion + ' ) ';
         }
         // Supported Calls
         String supportedCalls = objectToString(filterMap.get('SupportedCalls'));

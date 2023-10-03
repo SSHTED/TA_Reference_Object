@@ -22,7 +22,7 @@
                         <div class="section">
                             <div class="title">Object Name</div>
                             <div class="searchBox">
-                                <lightning-input class="inputValue" type="search" placeholder="insert objectName"
+                                <lightning-input class="inputValue" type="search" placeholder="insert Name or Eng or Kor"
                                     data-id="name" value={inputValues.name} onchange={handleInput}></lightning-input>
                             </div>
                         </div>
@@ -34,21 +34,60 @@
                             </div>
                         </div>
                         <div class="section">
-                            <div class="title">Api Version</div>
-                            <div class="searchBox">
-                                <lightning-input class="inputValue" type="search" placeholder="insert apiversion"
-                                    data-id="apiversion" value={inputValues.apiversion} onchange={handleInput}></lightning-input>
+                            <div class="title">
+                                Api Version
+                                <div class="tooltip">
+                                    <lightning-button-icon icon-name="utility:question_mark" class="apiVersionHelp"></lightning-button-icon>
+                                    <p class="tooltipText">
+                                        이전 버전은 이전에 출시된 api들을 출력합니다.<br>
+                                        이후 버전은 이후에 출시된 api들을 출력합니다.<br><br><br>
+
+                                        7~20 버전은 Summer '22부터 사용이 중지되었습니다.
+                                        <a href='https://help.salesforce.com/s/articleView?id=release-notes.rn_api_retirement_7_20.htm&release=236&type=5' target="_blank">
+                                            <lightning-icon icon-name="utility:link" title="link" class=""></lightning-icon>
+                                        </a><br><br><br>
+
+
+                                        21~30 버전은 Summer '23부터 사용이 중지되었습니다.
+                                        <a href='https://help.salesforce.com/s/articleView?id=release-notes.rn_api_upcoming_retirement.htm&release=242&type=5' target="_blank">
+                                            <lightning-icon icon-name="utility:link" title="link" class=""></lightning-icon>
+                                        </a>
+                                    </p>
+                                    <!-- <p class="tooltipText">
+                                    </p>
+                                    
+                                    <p class="tooltipText">
+                                    </p> -->
+                                    
+                                </div>
                             </div>
-                        <div class="versionRadioDiv">
-                            <lightning-radio-group
-                                name="versionRadioGroup"
-                                options={versionOptions}
-                                value={versionValue}
-                                type="radio"
-                                variant="label-hidden"
-                                data-id="apiversionType"
-                            ></lightning-radio-group>
-                        </div>
+
+                            <div>
+                                <lightning-combobox
+                                    class="versionCombobox"
+                                    name="apiVersion"
+                                    options={apiVersionOptions}
+                                    value={apiVersionVal}
+                                    placeholder="Select Version"
+                                    onchange={handleCombobox}
+                                    data-id="apiversion"
+                                    ></lightning-combobox>
+                                    
+                                    <!-- <div class="searchBox">
+                                        <lightning-input class="inputValue" type="search" placeholder="insert apiversion"
+                                        data-id="apiversion" value={inputValues.apiversion} onchange={handleInput}></lightning-input>
+                                    </div> -->
+                                    
+                                <lightning-radio-group
+                                    class="versionRadioGroup"
+                                    name="versionRadioGroup"
+                                    options={versionTypeOptions}
+                                    value={apiVersionTypeValue}
+                                    type="radio"
+                                    variant="label-hidden"
+                                    data-id="apiversionType"
+                                ></lightning-radio-group>
+                            </div>
                         </div>
                         <div class="section">
                             <div class="title">Removed API</div>
@@ -99,17 +138,21 @@
         </template>
 
         <!-- 검색 결과 영역 -->
-        <lightning-card class="result_card" title="검색 결과">
+        <lightning-card class="result_card">
             <div class="slds-m-around_medium">
                 <lightning-icon class="expand" icon-name="utility:expand_alt" size="small"
                     onclick={toggleResultCard}></lightning-icon>
+                <span class="searchResult">검색 결과</span>
+                <template if:false={loading}>
+                    <span class="totalData_p">총 데이터 : {refAllData.length}</span>
+                </template>
             </div>
             <div class="loadedHolder">
                 <template if:true={loading}>
                     <lightning-spinner alternative-text="Loading"></lightning-spinner>
                 </template>
                 <template if:false={loading}>
-                    <p class="totalData_p">총 데이터 : {refAllData.length}</p>
+                    <!-- <p class="totalData_p">총 데이터 : {refAllData.length}</p> -->
                     <table class="slds-table slds-table_cell-buffer slds-table_bordered"
                         aria-labelledby="element-with-table-label other-element-with-table-label">
                         <thead>
