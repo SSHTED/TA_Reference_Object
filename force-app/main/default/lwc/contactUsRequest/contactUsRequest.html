@@ -7,7 +7,6 @@
                 <div class="article_name">
                     <article>Category<abbr class="slds-required" title="required">* </abbr></article>
                 </div>
-            
                 <label for="category_id"></label>
                 <select class="custom_combobox" id="category_id" onchange={handleCategoryChange}>
                     <template for:each={categoryOptions} for:item="option">
@@ -15,8 +14,7 @@
                     </template>
                 </select>
             </lightning-layout-item>
-            <lightning-layout-item size="6">
-            </lightning-layout-item>
+            <lightning-layout-item size="6"></lightning-layout-item>
 
             <lightning-layout-item size="6" padding="around-small">
                 <div class="article_name">
@@ -27,6 +25,7 @@
                     <input type="text" id="inputEmail_id" name="inputEmail_id" class="no_border" />
                 </div>
             </lightning-layout-item> 
+            <lightning-layout-item size="6"></lightning-layout-item>
 
             <lightning-layout-item size="12" padding="around-small">
                 <div class="custom_input">
@@ -52,16 +51,30 @@
             </lightning-layout-item>
             <lightning-layout-item size="6"></lightning-layout-item>
 
-            <lightning-layout-item size="6" padding="around-small">
-                 <div class="custom_input">
-                    <lightning-input class="custom-file-input" type="file" label="Attachment" ></lightning-input>
+            <lightning-layout-item size="12" padding="around-small">
+                <div class="custom_input">
+                    <lightning-file-upload
+                        label="Attachment"
+                        name="fileUploader"
+                        accept={acceptedFormats}
+                        onuploadfinished={handleUploadFinished}
+                        multiple>
+                    </lightning-file-upload>
                 </div>
-                <lightning-pill items={fileItems} onremove={handleRemove}></lightning-pill>
-
+                <template for:each={fileItems} for:item="fileItem" for:index="index">
+                    <lightning-pill
+                        key={fileItem.Id}
+                        label={fileItem.name}
+                        name={index}
+                        onremove={handleUploadRemove}
+                        removable>
+                        <lightning-icon icon-name={fileItem.iconName}></lightning-icon>
+                    </lightning-pill>
+                </template>
             </lightning-layout-item>
 
             <lightning-layout-item class="submit_button" size="12" padding="around-small">
-                <lightning-button class="large_button" variant="brand" label="Submit" onclick={handleClick}></lightning-button>
+                <lightning-button class="large_button" variant="brand" label="Submit" onclick={handleSaveClick}></lightning-button>
             </lightning-layout-item>
 
         </lightning-layout>

@@ -20,9 +20,6 @@ public without sharing class ContactUsRequest {
         return resultMap;
     }
 
-
-
-
     private static Set<String> getCategoryPicklistValues() {
         Set<String> picklistValues = new Set<String>();
         Schema.DescribeFieldResult fieldResult = Contact_Us__c.Category__c.getDescribe();
