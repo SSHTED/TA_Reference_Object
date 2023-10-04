@@ -4,33 +4,42 @@
         <article class="title_header">For general business inquiries, please contact your Sales Representatives. </article>
         <lightning-layout multiple-rows class="layout_first">
             <lightning-layout-item size="6" padding="around-small">
-                <div class="article_name"><article>
+                <div class="article_name">
                     <article>Category<abbr class="slds-required" title="required">* </abbr></article>
-                </article></div>
+                </div>
             
-                <select class="custom-combobox" onchange={handleChange}>
+                <label for="category_id"></label>
+                <select class="custom_combobox" id="category_id" onchange={handleChange}>
                     <template for:each={options} for:item="option">
                         <option key={option.value} value={option.value}>{option.label}</option>
                     </template>
                 </select>
-            
             </lightning-layout-item>
-            <lightning-layout-item size="6"></lightning-layout-item>
+            <lightning-layout-item size="6">
+            </lightning-layout-item>
 
             <lightning-layout-item size="6" padding="around-small">
-                <div class="custom-box"><article>Inquiry From</article></div>
-                <div class="custom-box"><p>Your Email</p></div>                 
-                <!-- 인풋박스? -->
+                <div class="article_name">
+                    <article>Inquiry Form</article>
+                </div>
+                 <div class="custom_input">
+                    <label for="inputEmail_id">Your Email<abbr class="slds-required" title="required">* </abbr></label>
+                    <input type="text" id="inputEmail_id" name="inputEmail_id" class="no_border" />
+                </div>
             </lightning-layout-item> 
 
             <lightning-layout-item size="12" padding="around-small">
-                <div class="custom-box"><p>subject</p></div> 
-                <!-- 인풋박스? -->
+                <div class="custom_input">
+                    <label for="subject_id">Subject<abbr class="slds-required" title="required">* </abbr></label>
+                    <input type="text" id="subject_id" name="subject_id" class="no_border" />
+                </div>
             </lightning-layout-item>
 
             <lightning-layout-item size="12" padding="around-small">
-                <div class="custom-box"><p>Description</p></div> 
-                <!-- input-rich-text -->
+                <div class="custom_input">
+                    <label for="description_id">Description<abbr class="slds-required" title="required">*</abbr></label>
+                    <textarea id="description_id" name="description_id" class="full_border"></textarea>
+                </div>
             </lightning-layout-item>
 
             <lightning-layout-item size="6" padding="around-small">
