@@ -43,14 +43,17 @@
             </lightning-layout-item>
 
             <lightning-layout-item size="6" padding="around-small">
-                <div class="custom-box"><p>Collaborators</p></div> 
-                <!-- 인풋박스? Add CC email with 'Enter Key' -->
+                <div class="custom_input">
+                    <label for="collaborators_id">Collaborators</label>
+                    <textarea id="collaborators_id" name="collaborators_id" class="no_border" placeholder="Add CC email with 'Enter key'"></textarea>
+                </div>
+                <lightning-pill items={items} onremove={handleRemove}></lightning-pill>
+
             </lightning-layout-item>
             <lightning-layout-item size="6"></lightning-layout-item>
 
             <lightning-layout-item size="6" padding="around-small">
-                 <!-- Attachment files -->
-                <div class="slds-p-around_medium lgc-bg">
+                 <div class="custom_input">
                     <lightning-input type="file" label="Attachment"></lightning-input>
                 </div>
             </lightning-layout-item>
