@@ -3,6 +3,7 @@ import getInit from '@salesforce/apex/ContactUsRequest.getInit';
 
 export default class ContactUsRequest extends LightningElement {
     error;
+    @api myRecordId;
     categoryOptions = [];
     fileItems = [];
     selectedCategoryOpt = '';
@@ -78,7 +79,6 @@ export default class ContactUsRequest extends LightningElement {
 
 
     handleSaveClick(){
-
     }
 
 
