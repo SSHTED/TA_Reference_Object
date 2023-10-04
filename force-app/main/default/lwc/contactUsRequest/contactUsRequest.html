@@ -9,8 +9,8 @@
                 </div>
             
                 <label for="category_id"></label>
-                <select class="custom_combobox" id="category_id" onchange={handleChange}>
-                    <template for:each={options} for:item="option">
+                <select class="custom_combobox" id="category_id" onchange={handleCategoryChange}>
+                    <template for:each={categoryOptions} for:item="option">
                         <option key={option.value} value={option.value}>{option.label}</option>
                     </template>
                 </select>
@@ -47,19 +47,20 @@
                     <label for="collaborators_id">Collaborators</label>
                     <textarea id="collaborators_id" name="collaborators_id" class="no_border" placeholder="Add CC email with 'Enter key'"></textarea>
                 </div>
-                <lightning-pill items={items} onremove={handleRemove}></lightning-pill>
+                <lightning-pill items={collaboratorsItems} onremove={handleRemove}></lightning-pill>
 
             </lightning-layout-item>
             <lightning-layout-item size="6"></lightning-layout-item>
 
             <lightning-layout-item size="6" padding="around-small">
                  <div class="custom_input">
-                    <lightning-input type="file" label="Attachment"></lightning-input>
+                    <lightning-input class="custom-file-input" type="file" label="Attachment" ></lightning-input>
                 </div>
+                <lightning-pill items={fileItems} onremove={handleRemove}></lightning-pill>
+
             </lightning-layout-item>
 
             <lightning-layout-item class="submit_button" size="12" padding="around-small">
-                <!-- 버튼 -->
                 <lightning-button class="large_button" variant="brand" label="Submit" onclick={handleClick}></lightning-button>
             </lightning-layout-item>
 
