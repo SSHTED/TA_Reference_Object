@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<LightningComponentBundle xmlns="http://soap.sforce.com/2006/04/metadata" fqn="RelatedList">
+    <apiVersion>58.0</apiVersion>
+    <isExposed>true</isExposed>
+    <targets>
+        <target>lightning__RecordPage</target><!-- 레코드 페이지 -->
+        <target>lightning__AppPage</target><!-- 앱 페이지 -->
+        <target>lightning__HomePage</target><!-- 홈 페이지 -->
+        <target>lightning__Tab</target><!-- Lightning 구성 요소 탭 -->
+    </targets>
+    <targetConfigs>
+        <targetConfig targets="lightning__RecordPage">
+            
+            <property name="relationPosition" type="String" label="관계 위치" datasource="Myself, Parent" default="Myself"/>
+            <!-- <property name="relatedObjectApiName" type="String" label="Related Object API Name" datasource="apex://RelatedListCustomController" default="Case" description="관계 필드 API 이름"/> -->
+            <!-- <property name="relatedObjectApiName" type="String" label="Related Object API Name" datasource="" default="Contacts" description="관계 필드 API 이름"/> -->
+            <property name="relatedObjectApiName" type="String" label="관계 필드 API 이름" datasource="" default="Employee__c"/>
+            <!-- <property name="relatedObjectApiName" type="String" label="Related Object API Name" datasource="" default="PMS_Certificate__c" description="관계 필드 API 이름"/> -->
+            <property name="customIcon" type="String" label="사용자 정의 아이콘"/>
+            <property name="customTitle" type="String" label="사용자 정의 제목"/>
+            <property name="viewType" type="String" label="보기 방식 변경" datasource="List, Tile" default="List"/>
+            <property name="themeColor" type="String" label="테마 색상 변경" datasource="white, red, orange, yellow, green, blue" default="white"/>
+
+            <property name="activationCreateBtn" type="Boolean" label="새로만들기 버튼 생성 여부" default="false"/>
+            <property name="activationSelectedDeleteBtn" type="Boolean" label="선택 삭제 버튼 생성 여부"/>
+            <property name="downloadBtn" type="Boolean" label="파일 다운로드 버튼 생성 여부" default="false"/>
+            <property name="changeOwnerBtn" type="Boolean" label="소유자 변경 버튼 생성 여부" default="false"/>
+
+            <property name="setFieldCount" type="Integer" label="필드 개수 설정"/>
+            <property name="maxRow" type="Integer" label="최대 행 수"/>
+            
+            <property name="sectionFirstOpen" type="Boolean" label="섹션 초기 오픈 여부" default="true"/>
+            <property name="activationNo" type="Boolean" label="no 활성화 여부" default="false"/>
+
+        </targetConfig>
+    </targetConfigs>
+</LightningComponentBundle>

@@ -69,12 +69,12 @@ public class ReferenceSearchController {
     }
 
     // 필터 적용할 필드 목록 가져오기
-    private static List<Schema.SObjectField> getFilterList() {
-        Schema.SObjectType targetType = Schema.getGlobalDescribe().get('ObjectReference__c');
-        Map<String, Schema.SObjectField> fieldMap = targetType.getDescribe().fields.getMap();
+    // private static List<Schema.SObjectField> getFilterList() {
+    //     Schema.SObjectType targetType = Schema.getGlobalDescribe().get('ObjectReference__c');
+    //     Map<String, Schema.SObjectField> fieldMap = targetType.getDescribe().fields.getMap();
 
-        return fieldMap.values();
-    }
+    //     return fieldMap.values();
+    // }
 
     // Supported Calls 목록 가져오기
     private static Set<String> getSupportedCallsList() {
@@ -102,21 +102,21 @@ public class ReferenceSearchController {
         List<String> apiList = new List<String>();
 
         Map<String, Object> returnDataMap = new Map<String, Object>();
-        String endpoint = System.URL.getSalesforceBaseUrl().getHost();
+        String endpoint = DomainCreator.getOrgMyDomainHostname(); // ex. dkbmc--pms.sandbox.my.salesforce.com
         String resBody = null;
         
         Httprequest httpReq = new Httprequest();
         HttpResponse httpRes = new HttpResponse();
         Http http = new Http();
 
-        httpReq.setMethod('GET');          
-        httpReq.setEndpoint('https://' + endpoint + '/services/data');                       
-        httpReq.setTimeout(120000);                    
+        httpReq.setMethod('GET');
+        httpReq.setEndpoint('https://' + endpoint + '/services/data');
+        httpReq.setTimeout(120000);
         httpReq.setHeader('Authorization', 'Bearer ' + System.UserInfo.getSessionId());
         httpReq.setHeader('Content-Type', 'application/json');    
 
         if(!Test.isRunningTest()) {
-            httpRes = http.send(httpReq);            
+            httpRes = http.send(httpReq);
         } else {
             System.debug('테스트로 실행됨 >>>>>>>>>>>>>>>>>>>>>>>>>>>> \n');
             String blStr= '[{"label":"Spring \'19","url":"/services/data/v45.0","version":"45.0"}]';
@@ -128,7 +128,7 @@ public class ReferenceSearchController {
         resBody = httpRes.getBody();
         System.debug('result >>>>>>>>>>>>>>>>>>>> \n' + resBody);
 
-        return resBody;   
+        return resBody;
         // returnDataMap.put('result', resBody);
         // returnDataMap.put('endpoint', endpoint);
         // return returnDataMap;
@@ -136,14 +136,20 @@ public class ReferenceSearchController {
 
     // reference 전체데이터 가져오기
     private static List<OrDataset> getRefAllData() {
-        String soql = ' select '
-                     + '   id, name, eng_Label__c, kor_Label__c, api_Version__c, description__c, supported_Calls__c, special_Access_Rules__c, usage__c, docs_Link__c, memo__c, remove__c, supported_Calls_Description__c, (select id, name from objectReference__r) '
-                     + ' from '
-                     + '   objectReference__c '
-                     + ' order by '
-                     + '   name ';
-        List<ObjectReference__c> queryResult = Database.query(soql);
-        List<OrDataset> orDatasetList = setAorListInQueryResult(queryResult);
+        List<OrDataset> orDatasetList = new List<OrDataset>();
+        
+        try {
+            String soql = ' select '
+                        + '   id, name, eng_Label__c, kor_Label__c, api_Version__c, description__c, supported_Calls__c, special_Access_Rules__c, usage__c, docs_Link__c, memo__c, remove__c, supported_Calls_Description__c, (select id, name from objectReference__r) '
+                        + ' from '
+                        + '   objectReference__c '
+                        + ' order by '
+                        + '   name ';
+            List<ObjectReference__c> queryResult = Database.query(soql);
+            orDatasetList = setAorListInQueryResult(queryResult);
+        } catch (QueryException e) {
+            System.debug('Message를 확인하세요 >>>>>>>>>>>>> ' + e.getMessage());
+        }
 
         return orDatasetList;
     }
@@ -207,6 +213,7 @@ public class ReferenceSearchController {
         try {
             // [1] sosl 적용시켜야하는 필드 text 가져오기
             query += getSoslQueryStr(filterMap, soslFilterMap);
+            System.debug('getSoslQueryStr query >>>' + query);
 
             // [2] query 변수가 비어있지 않으면 isSosl true
             if(query != ''){
@@ -249,6 +256,7 @@ public class ReferenceSearchController {
     /*
         필드 타입이 긴 텍스트 영역(131072)로 선언된 경우 soql쿼리를 사용할 수 없다. sosl쿼리를 적용해야 한다.
     */
+    @TestVisible
     private static String getSoslQueryStr(Map<String, Object> filterMap, Map<String, String> soslFilterMap){
         String query = '';
         Map<String, String> tempMap = new Map<String, String>();
@@ -256,7 +264,7 @@ public class ReferenceSearchController {
         // Description
         String description = objectToString(filterMap.get('Description'));
         if(String.isNotEmpty(description)) {
-            query += description;
+            query += addCommaIfNotNull(query, description);
 
             soslFilterMap.put('Description__c', description);
         }
@@ -292,7 +300,18 @@ public class ReferenceSearchController {
         return query;
     }
 
+    // query가 null이 아니면 콤마 추가
+    private static String addCommaIfNotNull(String query, String filterName){
+        if(query != ''){
+            filterName = ', *' + filterName + '*';
+        } else {
+            filterName = '*' + filterName + '*';
+        }
+        return filterName;
+    }
+
     // [3] soql 적용시켜야하는 필드 where 조건 가져오기
+    @TestVisible
     private static String getSoqlWhereQuery(Map<String, Object> filterMap){
         String whereQuery = '';
 
@@ -338,20 +357,14 @@ public class ReferenceSearchController {
         return whereQuery;
     }
 
-    // query가 null이 아니면 콤마 추가
-    private static String addCommaIfNotNull(String query, String filterName){
-        if(query != ''){
-            filterName = ', ' + filterName;
-        }
-        return filterName;
-    }
-
     // sosl로 soql의 where 조건에 넣을 id 가져오기
+    @TestVisible
     private static String getWhereQueryForSoslId(String query, Map<String, String> soslFilterMap){
         List<ObjectReference__c> refinedOrList = new List<ObjectReference__c>();
         List<String> idList = new List<String>();
 
         String whereQuery = '';
+        System.debug('sosl query >>>>>>>>>>>>>>>>>>> \n' + query);
         List<List<SObject>> searchList = Search.query(query); //
 
         if(searchList.size() > 0){
@@ -374,11 +387,13 @@ public class ReferenceSearchController {
         sosl로 데이터를 가져올 때 ALL FIELDS 로 가져오는데 그렇게 되면 필터값을 적용하지 않은 필드도 가져온다.
         ALL FIELDS로 가져온 데이터를 한번 더 정제하여 필터를 적용한 필드의 데이터만 가져오기 위한 메서드
     */
+    @TestVisible
     private static List<ObjectReference__c> getRefinedResultList(List<ObjectReference__c> recordList, Map<String, String> soslFilterMap){
         List<ObjectReference__c> orList = new List<ObjectReference__c>();
         
         try {
             for(ObjectReference__c record : recordList){
+                
                 List<String> keyList = new List<String>(soslFilterMap.keySet());
                 
                 for(String key : keyList){
@@ -437,6 +452,7 @@ public class ReferenceSearchController {
     }
 
     // sosl query form
+    @TestVisible
     private static String getSoslForm() {
         return ' in all fields returning '
         + ' objectReference__c '

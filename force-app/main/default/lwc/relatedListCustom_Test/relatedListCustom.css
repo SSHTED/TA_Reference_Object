@@ -1,0 +1,50 @@
+.themeColor_red {
+    --sds-c-card-color-background: #FF6347;
+}
+
+.themeColor_orange {
+    --sds-c-card-color-background: #FFA500;
+}
+
+.themeColor_yellow {
+    --sds-c-card-color-background: #feffb5;
+}
+
+.themeColor_green {
+    --sds-c-card-color-background: #98FB98;
+}
+
+.themeColor_blue {
+    --sds-c-card-color-background: #AFEEEE;
+}
+
+.newRecordModal {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 1000;
+    width: 933px;
+    outline: 2px solid whitesmoke;
+    border-radius: 3px;
+}
+
+.inner_modal_body {
+    margin: 0 auto;
+    width: 175px;
+    line-height: 25px;
+}
+
+.inner_modal_body .modal_label {
+    font-size: 17px;
+    margin-bottom: 5px;
+}
+
+.viewAll{
+    margin-bottom: -8px;
+    padding: 7px;
+    width: 100%;
+    height: 35px;
+    text-align: center;
+    background-color: #F3F3F3;
+}

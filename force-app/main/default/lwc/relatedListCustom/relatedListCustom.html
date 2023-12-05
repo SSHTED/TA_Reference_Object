@@ -1,0 +1,196 @@
+<template>
+    <lightning-card class={customClass}>
+        <div class="slds-card__header slds-grid" style="margin-top:-16px;">
+            <header class="slds-media slds-media_center slds-has-flexi-truncate">
+                <div class="slds-media__figure">
+                    <span class="" title="account">
+                        <!-- 여기에 헤더 아이콘 들어가고 -->
+                        <lightning-icon icon-name={customIcon} size="small"></lightning-icon>
+                    </span>
+                </div>
+                <div class="slds-media__body">
+                    <h2 class="slds-card__header-title">
+                        <a href="#" class="slds-card__header-link slds-truncate" title="Accounts">
+                            <!-- 여기에 헤더 타이틀 들어가고 -->
+                            <span>{customTitle}&nbsp;({MyData.length})</span>
+                        </a>
+                        <!-- <span>({MyData.length})</span> -->
+                        <span class="slds-m-left_small">[{Lv1ObjectName}]&nbsp;({level2DataCount})</span>
+                        <!-- <span>({level2DataCount})</span>  -->
+                    </h2>
+                </div>
+
+                <lightning-button-group>
+                    <template if:true={activationCreateBtn}>
+                        <lightning-button label="새로 만들기" value="new" onclick={handleCellEvent}></lightning-button>
+                    </template>
+                    <template if:true={activationSelectedDeleteBtn}>
+                        <lightning-button label="선택 항목 삭제" value="delete" onclick={handleCellEvent}></lightning-button>
+                    </template>
+                    <template if:true={downloadBtn}>
+                        <lightning-button label="엑셀 파일 다운로드" value="excel" onclick={handleCellEvent}></lightning-button>
+                    </template>
+                    <template if:true={changeOwnerBtn}>
+                        <lightning-button label="소유자 변경" value="changeOwner" onclick={handleCellEvent}></lightning-button>
+                    </template>
+                </lightning-button-group>
+
+                <lightning-button label={buttonLabel} onclick={handleExpandTableData} style="margin-left:10px;"></lightning-button>
+            </header>
+        </div>
+
+        <template if:true={isTableVisible}>
+            <div class="main">
+                <table class="slds-table slds-table_bordered slds-table_fixed-layout slds-table_resizable-cols" role="grid">
+                    <thead>
+                        <tr class="slds-line-height_reset" style="height: 30px;">
+                            <!-- 체크박스 헤더 -->
+                            <template if:true={activationCheckedFields}>
+                                <th class="slds-text-align_center slds-cell_action-mode" scope="col">
+                                    <input type="checkbox" name="select-all" onclick={handleSelectAllChange} />
+                                </th>
+                            </template>
+                            <!-- Index -->
+                            <template if:true={activationNo}>
+                                <th class="slds-text-align_center slds-cell_action-mode" scope="col">
+                                    No
+                                </th>
+                            </template>
+                            <!-- 컬럼 헤더들 -->
+                            <template for:each={columns} for:item="col">
+                                <th key={col.fieldName} class="slds-is-resizable slds-text-align_center slds-is-sortable slds-cell_action-mode" scope="col">
+                                    {col.label}
+                                </th>
+                            </template>
+                        </tr>
+                    </thead>
+                    <!-- 테이블 본문 -->
+                    <tbody>
+                        <template for:each={MyData} for:item="row">
+                            <tr key={row.Id} class="slds-hint-parent" aria-selected={row.selected} onclick={toggleLv2data} data-id={row.Id}>
+                                <!-- 선택 체크박스 -->
+                                <template if:true={activationCheckedFields}>
+                                    <td class="slds-text-align_center slds-cell_action-mode">
+                                        <input type="checkbox" 
+                                            name="options" 
+                                            checked={row.selected} 
+                                            data-id={row.Id} 
+                                            onchange={handleRowSelection} />
+                                    </td>
+                                </template>
+                                <!-- 인덱스 셀 -->
+                                <template if:true={activationNo}>
+                                    <td class="slds-text-align_center slds-cell_action-mode">
+                                        {row.index}
+                                    </td>
+                                </template>
+                                <!-- 데이터 셀들 -->
+                                <template for:each={row.displayValues} for:item="cell">
+                                    <td title={cell.value} key={cell.key} class="slds-text-align_center slds-cell_action-mode">
+                                        <template if:true={cell.url}>
+                                            <a href={cell.url} target="_blank" class="name-link">{cell.value}</a>
+                                        </template>
+                                        <template if:false={cell.url}>
+                                            {cell.value}
+                                        </template>
+                                    </td>
+                                </template>
+                                <!-- 액션 버튼 -->
+                                <td class="slds-cell_action-mode">
+                                    <lightning-button-menu alternative-text="More Actions" onselect={handleCellEvent} data-id={row.Id}>
+                                        <lightning-menu-item value="edit" label="Edit" data-id={row.Id}></lightning-menu-item>
+                                        <lightning-menu-item value="delete" label="Delete" data-id={row.Id}></lightning-menu-item>
+                                    </lightning-button-menu>
+                                </td>
+                            </tr>
+
+                            <!-- 상세 정보 섹션 -->
+                            <template if:true={row.showDetails}>
+                                <tr key={row.Id}>
+                                    <td></td>
+                                    <td colspan={columnCount}>
+                                        <!-- 상세 정보 테이블 -->
+                                        <table class="slds-table slds-table_bordered slds-table_fixed-layout">
+                                            <!-- 상세 정보 컬럼 헤더 -->
+                                            <thead>
+                                                <tr>
+                                                    <template if:true={activationNo}>
+                                                        <th class="slds-text-align_center slds-cell_action-mode" scope="col">
+                                                            No
+                                                        </th>
+                                                    </template>
+                                                    <template for:each={level2Columns} for:item="col">
+                                                        <th key={col.fieldName} class="slds-text-align_center slds-is-resizable slds-is-sortable slds-cell_action-mode" scope="col">
+                                                            {col.label}
+                                                        </th>
+                                                    </template>
+                                                </tr>
+                                            </thead>
+                                            <!-- 상세 정보 데이터 로우 -->
+                                            <tbody>
+                                                <template for:each={row.formattedLevel2Data} for:item="detailRow">
+                                                    <tr key={detailRow.rowKey}>
+                                                        <!-- 레벨 2 인덱스 셀 -->
+                                                        <template if:true={activationNo}>
+                                                            <td class="slds-text-align_center slds-cell_action-mode">
+                                                                {detailRow.index}
+                                                            </td>
+                                                        </template>
+                                                        <!-- 레벨 2 데이터 셀들 -->
+                                                        <template for:each={detailRow.data} for:item="detailCell">
+                                                            <td title={detailCell.value} class="slds-text-align_center" key={detailCell.key}>
+                                                                {detailCell.value}
+                                                            </td>
+                                                        </template>
+                                                    </tr>
+                                                </template>
+                                            </tbody>
+                                        </table>
+                                    </td>
+                                </tr>
+                            </template>
+                        </template>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="viewAll">
+                <a href={viewAllUrl}>View All</a>
+            </div>
+        </template>
+
+        <footer class="slds-card__footer" style="background-color:#FFFFFF; margin-bottom: -8px;">
+            <lightning-icon 
+                icon-name={tableToggleIcon} 
+                alternative-text="Toggle" 
+                size="small" 
+                class=""
+                onclick={handleTableAllData}>
+            </lightning-icon>
+        </footer>
+    </lightning-card>
+
+    <!-- 새로 만들기 모달 -->
+    <template if:true={isModalOpen}>
+        <div class="newRecordModal">
+            <lightning-modal-header title="Select Record Type" label="">
+                <p style="font-size:20px;">Select Record Type</p>
+            </lightning-modal-header>
+            <lightning-modal-body>
+                <div class="inner_modal_body">
+                    <p class="modal_label">{selectRecordName}</p>
+                    <lightning-radio-group name="recordType"
+                                    value={selectedRecordTypeId}
+                                    options={recordTypeOptions}
+                                    onchange={handleEventChange}
+                                    class="selectRecordType">
+                    </lightning-radio-group>
+                </div>
+            </lightning-modal-body>
+            <lightning-modal-footer>
+                <lightning-button variant="neutral" label="Cancel" onclick={handleModal}></lightning-button>
+                <lightning-button variant="brand" label="Proceed" onclick={handleProceed}></lightning-button>
+            </lightning-modal-footer>
+        </div>
+    </template>
+</template>
